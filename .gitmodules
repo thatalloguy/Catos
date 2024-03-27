@@ -1,0 +1,6 @@
+[submodule "Thirdparty/tinystl"]
+	path = Thirdparty/tinystl
+	url = https://github.com/mendsley/tinystl
+[submodule "Thirdparty/doctest"]
+	path = Thirdparty/doctest
+	url = https://github.com/doctest/doctest
