@@ -3,6 +3,3 @@
 //
 #include <registry.h>
 
-
-void catos::test_func() {
-}

@@ -4,10 +4,16 @@
 
 #pragma once
 
-
 namespace catos {
 
-    void test_func();
+
+    class Registry {
+
+    public:
+        void test() {};
+    private:
+
+    };
 
 }
 

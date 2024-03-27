@@ -6,8 +6,6 @@ int main() {
 
     tinystl::string test = "ELLO\n";
 
-    printf(test.c_str() );
 
-    catos::test_func();
     return 0;
 }
