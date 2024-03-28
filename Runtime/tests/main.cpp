@@ -8,7 +8,7 @@
 namespace catos::tests {
 
     TEST_CASE("REGISTRY::GET_TYPE_NAME") {
-        CHECK((tinystl::string) "int" == (tinystl::string) catos::TypeUtils::getTypeName<int>());
+        CHECK((tinystl::string) "int" == catos::type_utils::get_type_name<int>());
     }
 
 
