@@ -6,11 +6,11 @@
 #
 #### Planned Features / ToDo
 
--[ ] Reflection system
--[ ] ECS 
--[ ] Asset manager (inspired by the truth)
--[ ] Semi-RHI
--[ ] Dynamic Editor (via the reflection)
+- [ ] Reflection system
+- [ ] ECS 
+- [ ] Asset manager (inspired by the truth)
+- [ ] Semi-RHI
+- [ ] Dynamic Editor (via the reflection)
 #
 ##### Ideas for the engine
 
