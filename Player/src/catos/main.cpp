@@ -7,23 +7,26 @@ using namespace catos;
 
 struct Foo {
     float data = 2;
-    int data2 = 4;
 };
-
-struct Bar {
-    float my_data;
-};
-
 
 int main() {
 
 
     Registry registry;
 
-    registry.register_class<Foo>().property("data", &Foo::data2);
-    registry.register_class<Bar>();
+    Foo foo;
 
-    registry.print_current_register();
+
+    foo.data = 4;
+
+    auto& field = registry.register_class<Foo>().property("data", &Foo::data);
+
+
+    Property* test = field.get_property("data");
+
+    float* testFloat = (float*) (test->get_value(&foo));
+
+    std::cout << "TEST: " << *testFloat << "\n";
 
     return 0;
 }
