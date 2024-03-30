@@ -4,22 +4,13 @@
 
 #
 #
-
-##### What is catos engine?
-catos engine is a simple modern ligthweight game engine.
-#
-##### What is so simple about the catos engine?
-Unlike other engines catos isnt meant to have everything.
-Catos is meant to be build on.
-#
-#
 #### Planned Features / ToDo
 
--[ ] Reflection system
--[ ] ECS 
--[ ] Asset manager (inspired by the truth)
--[ ] Semi-RHI
--[ ] Dynamic Editor (via the reflection)
+- [ ] Reflection system
+- [ ] ECS 
+- [ ] Asset manager (inspired by the truth)
+- [ ] Semi-RHI
+- [ ] Dynamic Editor (via the reflection)
 #
 ##### Ideas for the engine
 
