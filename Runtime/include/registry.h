@@ -29,7 +29,7 @@ namespace catos {
     public:
 
         constexpr PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {};
-
+        
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));

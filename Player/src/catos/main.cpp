@@ -24,7 +24,7 @@ int main() {
 
     Property* test = field.get_property("data");
 
-    float* testFloat = (float*) (test->get_value(&foo));
+    auto* testFloat = (float*) (test->get_value(&foo));
 
     std::cout << "TEST: " << *testFloat << "\n";
 
