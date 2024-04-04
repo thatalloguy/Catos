@@ -48,7 +48,7 @@ namespace catos {
     public:
         ///PropertyImpl exist in order to avoid having to deal with templates at the user-side.
 
-        constexpr PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {
+        PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {
                 type_name = type_utils::get_type_name<U>();
                 type_hash = type_utils::get_type_hash<U>();
         };
@@ -110,7 +110,7 @@ namespace catos {
     public:
 
         ///TODO write docs
-        constexpr MethodImpl(U T::* funcPtr) : functionPtr(funcPtr) {
+        MethodImpl(U T::* funcPtr) : functionPtr(funcPtr) {
             return_type_name = type_utils::get_type_name<U>();
         };
 
@@ -134,7 +134,7 @@ namespace catos {
 
         template<typename T, typename U>
         /// Registers a property with a name and a member pointer (Returns itself).
-        constexpr Type& property(const char*  property_name, U T::* member) {
+        Type& property(const char*  property_name, U T::* member) {
 
 
 
@@ -148,7 +148,7 @@ namespace catos {
 
         /// Registers a method with a name and a member function pointer (returns the Type object again).
         template<typename T, typename U>
-        constexpr Type& method(const char* method_name, U T::* method) {
+        Type& method(const char* method_name, U T::* method) {
 
             return *this;
         }
@@ -175,14 +175,14 @@ namespace catos {
 
         /// Runs the method with the given name. (Takes an name)
         template<typename T, typename ...Args>
-        constexpr T invoke_method(const char* method_name) {
+        T invoke_method(const char* method_name) {
 
         };
 
 
         /// Runs the method with the given name. (Takes an name)
         template<typename T, typename ...Args>
-        constexpr T invoke_method(Method* method) {
+        T invoke_method(Method* method) {
 
         };
 
@@ -199,7 +199,7 @@ namespace catos {
 
         template<typename A>
         /// With this function you register a class to the Registry
-        constexpr Type& register_class() {
+        Type& register_class() {
 
             size_t hash = type_utils::get_type_hash<A>();
 
@@ -216,15 +216,15 @@ namespace catos {
 
         /// Used to bind an instance to an type
         template<typename A>
-        constexpr void bind(const void* instance) {
+        void bind(const void* instance) {
             _instance_register[type_utils::get_type_hash<A>()] = instance;
         };
 
         /// Returns the regist
         template<typename A>
-        constexpr A* get() {
-            const A* obj = static_cast<const A*>(_instance_register[type_utils::get_type_hash<A>()]);
-            return (A *) obj;
+         A* get() {
+            A* obj = (A*) (_instance_register[type_utils::get_type_hash<A>()]);
+            return obj;
         }
 
         //TODO Dummy function!!!
