@@ -45,10 +45,10 @@ namespace catos::tests {
 
         foo.data = 4;
 
-        registry.bind_instance<Foo>(&foo);
+        registry.bind<Foo>(&foo);
 
 
-        auto* test = registry.get_instance<Foo>();
+        auto* test = registry.get<Foo>();
 
         CHECK(test->data == foo.data);
     }

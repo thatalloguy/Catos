@@ -27,9 +27,9 @@ int main() {
              .property("data", &Foo::data);
 
 
-    registry.bind_instance<Foo>(&foo);
+    registry.bind<Foo>(&foo);
 
-    auto* test = registry.get_instance<Foo>();
+    auto* test = registry.get<Foo>();
 
 
 

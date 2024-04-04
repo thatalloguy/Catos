@@ -111,7 +111,7 @@ namespace catos {
 
     //Type
     /// Typeinfo is an object that holds all information about a specific type.
-    class TypeInfo {
+    class Type {
 
     public:
 
@@ -122,7 +122,7 @@ namespace catos {
 
         template<typename T, typename U>
         /// Registers a property with a name and a member pointer (Returns itself).
-        constexpr TypeInfo& property(const char*  property_name, U T::* member) {
+        constexpr Type& property(const char*  property_name, U T::* member) {
 
 
 
@@ -160,13 +160,13 @@ namespace catos {
 
         template<typename A>
         /// With this function you register a class to the Registry
-        constexpr TypeInfo& register_class() {
+        constexpr Type& register_class() {
 
             size_t hash = type_utils::get_type_hash<A>();
 
             // This means the user is trying to register a new type!
             if (_register.find(hash) == _register.end()) {
-                _register.insert(pair<size_t, TypeInfo>(hash, TypeInfo{.type_hash = hash, .name=  type_utils::get_type_name<A>()  }));
+                _register.insert(pair<size_t, Type>(hash, Type{.type_hash = hash, .name=  type_utils::get_type_name<A>()  }));
             }
 
 
@@ -177,12 +177,13 @@ namespace catos {
 
         /// Used to bind an instance to an type
         template<typename A>
-        constexpr void bind_instance(const void* instance) {
+        constexpr void bind(const void* instance) {
             _instance_register[type_utils::get_type_hash<A>()] = instance;
         };
 
+        /// Returns the regist
         template<typename A>
-        constexpr A* get_instance() {
+        constexpr A* get() {
             const A* obj = static_cast<const A*>(_instance_register[type_utils::get_type_hash<A>()]);
             return (A *) obj;
         }
@@ -191,7 +192,7 @@ namespace catos {
         /// Prints out the items in the Registry
         void print_current_register() {
             for (auto val : _register) {
-                TypeInfo& info = val.second;
+                Type& info = val.second;
                 std::cout <<  info.name.c_str() << " { \n";
 
                 for (auto& prop : info.properties) {
@@ -206,11 +207,9 @@ namespace catos {
 
 
     private:
-        unordered_map<size_t, TypeInfo> _register;
+        unordered_map<size_t, Type> _register;
         unordered_map<size_t, const void* > _instance_register;
     };
-
-
 }
 
 
