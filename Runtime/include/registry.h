@@ -27,6 +27,7 @@ namespace catos {
         virtual const char* get_name() = 0;
         virtual const char* get_type_name() = 0;
         virtual size_t& get_type_hash() = 0;
+
         virtual void set_name(const char* name) = 0;
     };
 
@@ -93,19 +94,30 @@ namespace catos {
 
         virtual ~Method() {};
 
-        //template<typename ...Args>
-        virtual void* invoke(const void* obj_ptr) = 0;//, Args &&...args) = 0;
-
         virtual const char* get_name() = 0;
         virtual void set_name(const char* name) = 0;
     };
 
     template<typename T, typename U>
     class MethodImpl : public Method {
-
     private:
         U T::* functionPtr;
+
         const char* name;
+        string return_type_name;
+
+
+    public:
+
+        ///TODO write docs
+        constexpr MethodImpl(U T::* funcPtr) : functionPtr(funcPtr) {
+            return_type_name = type_utils::get_type_name<U>();
+        };
+
+        const char* get_name() {return name;};
+
+        const char* get_return_type_name() {return return_type_name.c_str(); };
+
     };
 
 
@@ -134,6 +146,13 @@ namespace catos {
             return *this;
         }
 
+        /// Registers a method with a name and a member function pointer (returns the Type object again).
+        template<typename T, typename U>
+        constexpr Type& method(const char* method_name, U T::* method) {
+
+            return *this;
+        }
+
         /// Returns a property object based on the name given.
         Property* get_property(const char* property_name) {
           auto it = properties.find(property_name);
@@ -149,7 +168,27 @@ namespace catos {
           return nullptr;
         };
 
+        ///Returns a method object based on the name given.
+        Method* get_method(const char* method_name) {
+
+        };
+
+        /// Runs the method with the given name. (Takes an name)
+        template<typename T, typename ...Args>
+        constexpr T invoke_method(const char* method_name) {
+
+        };
+
+
+        /// Runs the method with the given name. (Takes an name)
+        template<typename T, typename ...Args>
+        constexpr T invoke_method(Method* method) {
+
+        };
+
+
         unordered_map<string , Property* > properties;
+        unordered_map<string , Method* > methods;
     };
 
     //Core system :)_
