@@ -173,7 +173,19 @@ namespace catos {
             return _register[hash];
         };
 
+        //TODO add more util funcs
 
+        /// Used to bind an instance to an type
+        template<typename A>
+        constexpr void bind_instance(const void* instance) {
+            _instance_register[type_utils::get_type_hash<A>()] = instance;
+        };
+
+        template<typename A>
+        constexpr A* get_instance() {
+            const A* obj = static_cast<const A*>(_instance_register[type_utils::get_type_hash<A>()]);
+            return (A *) obj;
+        }
 
         //TODO Dummy function!!!
         /// Prints out the items in the Registry
@@ -191,9 +203,11 @@ namespace catos {
         }
 
 
+
+
     private:
         unordered_map<size_t, TypeInfo> _register;
-
+        unordered_map<size_t, const void* > _instance_register;
     };
 
 

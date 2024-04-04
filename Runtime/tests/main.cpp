@@ -35,6 +35,23 @@ namespace catos::tests {
 
         CHECK(foo.data == *testFloat);
     }
+
+    TEST_CASE("REGISTRY::INSTANCES") {
+
+        Registry registry;
+
+        Foo foo;
+
+
+        foo.data = 4;
+
+        registry.bind_instance<Foo>(&foo);
+
+
+        auto* test = registry.get_instance<Foo>();
+
+        CHECK(test->data == foo.data);
+    }
 }
 
 

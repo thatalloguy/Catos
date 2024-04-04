@@ -23,13 +23,15 @@ int main() {
 
     foo.data = 4;
 
-    auto& field = registry.register_class<Foo>().property("data", &Foo::data);
+    registry.register_class<Foo>()
+             .property("data", &Foo::data);
 
 
-    Property* test = field.get_property("data");
+    registry.bind_instance<Foo>(&foo);
 
-    //auto* testFloat = (float*) (test->get_value(&foo));
-    //std::cout << "TEST: " << *testFloat << "\n";
+    auto* test = registry.get_instance<Foo>();
+
+
 
     registry.print_current_register();
 
