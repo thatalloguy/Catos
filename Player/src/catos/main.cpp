@@ -7,6 +7,10 @@ using namespace catos;
 
 struct Foo {
     float data = 2;
+
+    float get_float(float in) {
+        return in  + 1.2f;
+    };
 };
 
 int main() {
@@ -24,9 +28,10 @@ int main() {
 
     Property* test = field.get_property("data");
 
-    auto* testFloat = (float*) (test->get_value(&foo));
+    //auto* testFloat = (float*) (test->get_value(&foo));
+    //std::cout << "TEST: " << *testFloat << "\n";
 
-    std::cout << "TEST: " << *testFloat << "\n";
+    registry.print_current_register();
 
     return 0;
 }
