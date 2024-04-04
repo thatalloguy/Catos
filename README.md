@@ -7,8 +7,9 @@
 #### Planned Features / ToDo
 
 - [ ] Reflection system
-- [ ] ECS 
 - [ ] Asset manager (inspired by the truth)
+- [ ] ECS 
+- [ ] C# scripting
 - [ ] Semi-RHI
 - [ ] Dynamic Editor (via the reflection)
 #

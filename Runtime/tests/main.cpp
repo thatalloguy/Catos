@@ -4,7 +4,7 @@
 
 #include <type_utils.h>
 #include <TINYSTL/string.h>
-#include "registry.h"
+#include <registry.h>
 
 struct Foo {
     float data = 2;
@@ -32,7 +32,7 @@ namespace catos::tests {
 
         auto* testFloat = (float*) (test->get_value(&foo));
 
-        
+
         CHECK(foo.data == *testFloat);
     }
 }
