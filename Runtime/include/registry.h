@@ -64,7 +64,7 @@ namespace catos {
         /// Use Get value (which can be cased to the desired type) to return an value of an instance.
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
-            return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
+            return reinterpret_cast<void*>((&(obj->*memberPtr)));
         }
 
 
@@ -96,6 +96,7 @@ namespace catos {
 
         virtual const char* get_name() = 0;
         virtual void set_name(const char* name) = 0;
+        virtual void* invoke(const void* objPtr);
     };
 
     template<typename T, typename U>
@@ -118,6 +119,17 @@ namespace catos {
 
         const char* get_return_type_name() {return return_type_name.c_str(); };
 
+        void set_name(const char* new_name) override {
+            name = new_name;
+        };
+
+
+        /// Runs the method.
+        void* invoke(const void* instance) override {
+            const T* obj = static_cast<const T*>(instance);
+
+            return nullptr;
+        };
     };
 
 
@@ -150,6 +162,9 @@ namespace catos {
         template<typename T, typename U>
         Type& method(const char* method_name, U T::* method) {
 
+            methods[method_name] = new MethodImpl<T, U>(method);
+            methods[method_name]->set_name(method_name);
+
             return *this;
         }
 
@@ -170,22 +185,24 @@ namespace catos {
 
         ///Returns a method object based on the name given.
         Method* get_method(const char* method_name) {
+            auto it = methods.find(method_name);
 
+
+            if (it != methods.end()) {
+                return it->second;
+            }
+
+            //TODO replace with logger
+            std::cerr << "Could not find Method\n";
+
+            return nullptr;
         };
 
-        /// Runs the method with the given name. (Takes an name)
-        template<typename T, typename ...Args>
-        T invoke_method(const char* method_name) {
-
-        };
 
 
-        /// Runs the method with the given name. (Takes an name)
-        template<typename T, typename ...Args>
-        T invoke_method(Method* method) {
-
-        };
-
+        ///Checks wether or not the ptr is a nullptr;
+        static bool is_valid(Property* ptr) { return ptr != nullptr; };
+        static bool is_valid(Method*   ptr) { return ptr != nullptr; };
 
         unordered_map<string , Property* > properties;
         unordered_map<string , Method* > methods;

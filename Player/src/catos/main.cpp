@@ -9,8 +9,9 @@ struct Foo {
     float data = 2;
 
 
-    float tester(float bob) {
-        return bob + 1.2f;
+    void tester() {
+        std::cout << "HEYYY\n";
+        //return bob + 2.0f;
     }
 };
 
@@ -24,7 +25,7 @@ int main() {
 
     foo.data = 4;
 
-    registry.register_class<Foo>()
+    auto foo_info = registry.register_class<Foo>()
              .property("data", &Foo::data)
              .method("tester", &Foo::tester);
 
@@ -34,13 +35,18 @@ int main() {
     auto* test = registry.get<Foo>();
 
 
-
+    Method* test_func = foo_info.get_method("tester");
+    if (!foo_info.is_valid(test_func)) {
+        exit(-3);
+    }
 
     auto ptr2 = (&Foo::tester);
 
-    auto tester = (foo.*ptr2)(1);
+    test_func->invoke(&foo);
 
-    std::cout << "te " << tester << "\n";
+
+    (foo.*ptr2)();
+
 
     registry.print_current_register();
 
