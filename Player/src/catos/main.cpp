@@ -10,8 +10,7 @@ struct Foo {
 
 
     void tester() {
-        std::cout << "HEYYY\n";
-        //return bob + 2.0f;
+        std::cout << "HEYYY " <<  "\n";
     }
 };
 
@@ -40,12 +39,7 @@ int main() {
         exit(-3);
     }
 
-    auto ptr2 = (&Foo::tester);
-
-    test_func->invoke(&foo);
-
-
-    (foo.*ptr2)();
+    foo_info.execute_method<void>(&foo, test_func, 1);
 
 
     registry.print_current_register();

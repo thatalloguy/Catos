@@ -64,7 +64,7 @@ namespace catos {
         /// Use Get value (which can be cased to the desired type) to return an value of an instance.
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
-            return reinterpret_cast<void*>((&(obj->*memberPtr)));
+            return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
         }
 
 
@@ -96,13 +96,13 @@ namespace catos {
 
         virtual const char* get_name() = 0;
         virtual void set_name(const char* name) = 0;
-        virtual void* invoke(const void* objPtr);
+        virtual void execute(const void* objPtr, void* resultPtr) const = 0;
     };
 
-    template<typename T, typename U>
+    template<typename T, typename R, typename... Args>
     class MethodImpl : public Method {
     private:
-        U T::* functionPtr;
+        R(T::* functionPtr)(Args...);
 
         const char* name;
         string return_type_name;
@@ -111,8 +111,8 @@ namespace catos {
     public:
 
         ///TODO write docs
-        MethodImpl(U T::* funcPtr) : functionPtr(funcPtr) {
-            return_type_name = type_utils::get_type_name<U>();
+        MethodImpl( R(T::* funcPtr)(Args...)) : functionPtr(funcPtr) {
+            return_type_name = type_utils::get_type_name<R>();
         };
 
         const char* get_name() {return name;};
@@ -123,13 +123,13 @@ namespace catos {
             name = new_name;
         };
 
+        void execute(const void* objPtr, void* resultPtr) const override {
+            T* obj = (T* ) static_cast<const T*>(objPtr);
+            R* result = **(obj->*functionPtr)();
+            *static_cast<R*>(resultPtr) = result;
+        }
 
-        /// Runs the method.
-        void* invoke(const void* instance) override {
-            const T* obj = static_cast<const T*>(instance);
 
-            return nullptr;
-        };
     };
 
 
@@ -159,10 +159,10 @@ namespace catos {
         }
 
         /// Registers a method with a name and a member function pointer (returns the Type object again).
-        template<typename T, typename U>
-        Type& method(const char* method_name, U T::* method) {
+        template<typename T, typename R, typename... Args>
+        constexpr Type& method(const char* method_name, R(T::* method)(Args...)) {
 
-            methods[method_name] = new MethodImpl<T, U>(method);
+            methods[method_name] = new MethodImpl<T, R, Args...>(method);
             methods[method_name]->set_name(method_name);
 
             return *this;
@@ -198,7 +198,12 @@ namespace catos {
             return nullptr;
         };
 
-
+        template<typename R, typename T, typename... Args>
+        void* execute_method(const T& instance, Method* func, Args... args) {
+            void* result = nullptr;
+            func->execute(&instance, &result);
+            return result;
+        };
 
         ///Checks wether or not the ptr is a nullptr;
         static bool is_valid(Property* ptr) { return ptr != nullptr; };
