@@ -96,7 +96,7 @@ namespace catos {
 
         virtual const char* get_name() = 0;
         virtual void set_name(const char* name) = 0;
-        virtual void execute(const void* objPtr, void* resultPtr) const = 0;
+        virtual void invoke() = 0;
     };
 
     template<typename T, typename R, typename... Args>
@@ -115,7 +115,7 @@ namespace catos {
             return_type_name = type_utils::get_type_name<R>();
         };
 
-        const char* get_name() {return name;};
+        const char* get_name() override {return name;};
 
         const char* get_return_type_name() {return return_type_name.c_str(); };
 
@@ -123,14 +123,13 @@ namespace catos {
             name = new_name;
         };
 
-        void execute(const void* objPtr, void* resultPtr) const override {
-            T* obj = (T* ) static_cast<const T*>(objPtr);
-            R* result = **(obj->*functionPtr)();
-            *static_cast<R*>(resultPtr) = result;
+        void invoke(void* obj, const Args&... args) override {
+            (static_cast<T*>(obj).*functionPtr)(args...);
         }
 
 
     };
+
 
 
     //Type
@@ -198,12 +197,13 @@ namespace catos {
             return nullptr;
         };
 
-        template<typename R, typename T, typename... Args>
-        void* execute_method(const T& instance, Method* func, Args... args) {
-            void* result = nullptr;
-            func->execute(&instance, &result);
-            return result;
-        };
+
+        template<typename... Ts>
+        void invoke(Method* meth, const void* instance, const Ts&... args) {
+            return (instance.*meth->invoke(args...));
+        }
+
+
 
         ///Checks wether or not the ptr is a nullptr;
         static bool is_valid(Property* ptr) { return ptr != nullptr; };
