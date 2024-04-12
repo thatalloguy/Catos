@@ -8,6 +8,10 @@
 
 struct Foo {
     float data = 2;
+
+    float get_data() {
+        return data;
+    }
 };
 
 namespace catos::tests {
@@ -51,6 +55,30 @@ namespace catos::tests {
         auto* test = registry.get<Foo>();
 
         CHECK(test->data == foo.data);
+    }
+
+    TEST_CASE("REGISTRY::METHODS") {
+
+        Registry registry;
+
+        Foo foo;
+
+
+        foo.data = 4;
+
+        auto& field = registry.register_class<Foo>()
+                .property("data", &Foo::data)
+                .method("get_data", &Foo::get_data);
+
+
+
+
+        Property* test = field.get_property("data");
+        Method* meth = field.get_method("get_data");
+        auto* testFloat = (float*) (test->get_value(&foo));
+
+
+        CHECK(*testFloat == meth->invoke_function<float>(&foo));
     }
 }
 

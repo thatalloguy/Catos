@@ -84,51 +84,55 @@ namespace catos {
         };
     };
 
-    //Method ;-;
+    //Method ;-; | I DID IT RAHHHHHHH
 
-    ///abstract class see MethodImpl for further documentation
-    class Method {
-    public:
-        ///Stores an member pointer to a field of an type.
-        /// NOTE see the PropertyImpl for further documentation
 
-        virtual ~Method() {};
 
-        virtual const char* get_name() = 0;
-        virtual void set_name(const char* name) = 0;
-        virtual void invoke() = 0;
-    };
-
-    template<typename T, typename R, typename... Args>
-    class MethodImpl : public Method {
-    private:
-        R(T::* functionPtr)(Args...);
-
-        const char* name;
-        string return_type_name;
-
+    template<typename ReturnType, class ClassType, typename... Args>
+    class MethodInvoker{
 
     public:
 
-        ///TODO write docs
-        MethodImpl( R(T::* funcPtr)(Args...)) : functionPtr(funcPtr) {
-            return_type_name = type_utils::get_type_name<R>();
+        ReturnType (ClassType::* memPtr)(Args...);
+        MethodInvoker(ReturnType (ClassType::* ptr)(Args...)) {
+            memPtr = ptr;
         };
 
-        const char* get_name() override {return name;};
-
-        const char* get_return_type_name() {return return_type_name.c_str(); };
-
-        void set_name(const char* new_name) override {
-            name = new_name;
-        };
-
-        void invoke(void* obj, const Args&... args) override {
-            (static_cast<T*>(obj).*functionPtr)(args...);
+        static ReturnType callFunction(void* FuncInst, void* instance, Args... args) {
+            return (static_cast<ClassType*>(instance)->*static_cast<MethodInvoker<ReturnType, ClassType, Args...>*>(FuncInst)->memPtr)(args...);
         }
-
-
     };
+
+
+
+    class Method {
+
+    public:
+        template<typename ReturnType, class ClassType, typename... Args>
+        Method(ReturnType(ClassType::* method)(Args...)) {
+            _mFunc = MethodInvoker<ReturnType, ClassType, Args...>(method);
+
+            ptr = &MethodInvoker<ReturnType, ClassType, Args...>::callFunction;
+        };
+
+
+        template<typename R, typename... Args>
+        R invoke_function(void* instance, Args... args) {
+            return std::any_cast<R(*)(void*, void*, Args...)>(ptr)(&_mFunc, instance, args...);
+        };
+
+        template<typename... Args>
+        void invoke_function(void* instance, Args... args) {
+            std::any_cast<void(*)(void*, void*, Args...)>(ptr)(&_mFunc, instance, args...);
+        };
+
+    private:
+        std::any ptr;
+        std::any _mFunc;
+    };
+
+
+
 
 
 
@@ -158,11 +162,9 @@ namespace catos {
         }
 
         /// Registers a method with a name and a member function pointer (returns the Type object again).
-        template<typename T, typename R, typename... Args>
-        constexpr Type& method(const char* method_name, R(T::* method)(Args...)) {
-
-            methods[method_name] = new MethodImpl<T, R, Args...>(method);
-            methods[method_name]->set_name(method_name);
+        template<typename ClassT, typename ReturnV, typename... Args>
+        constexpr Type& method(const char* method_name, ReturnV(ClassT::* ptr)(Args...)) {
+            methods[method_name] = new Method{ptr};
 
             return *this;
         }
@@ -186,23 +188,12 @@ namespace catos {
         Method* get_method(const char* method_name) {
             auto it = methods.find(method_name);
 
-
             if (it != methods.end()) {
                 return it->second;
             }
 
-            //TODO replace with logger
-            std::cerr << "Could not find Method\n";
-
             return nullptr;
         };
-
-
-        template<typename... Ts>
-        void invoke(Method* meth, const void* instance, const Ts&... args) {
-            return (instance.*meth->invoke(args...));
-        }
-
 
 
         ///Checks wether or not the ptr is a nullptr;
@@ -242,11 +233,17 @@ namespace catos {
             _instance_register[type_utils::get_type_hash<A>()] = instance;
         };
 
-        /// Returns the regist
+        /// Returns the registered instance
         template<typename A>
          A* get() {
             A* obj = (A*) (_instance_register[type_utils::get_type_hash<A>()]);
             return obj;
+        }
+
+        /// Returns the registered Type
+        template<typename A>
+        Type& get_type() {
+            return (_register[type_utils::get_type_hash<A>()]);
         }
 
         //TODO Dummy function!!!
