@@ -75,6 +75,8 @@ namespace catos::tests {
 
         Property* test = field.get_property("data");
         Method* meth = field.get_method("get_data");
+
+
         auto* testFloat = (float*) (test->get_value(&foo));
 
 
