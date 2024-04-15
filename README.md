@@ -9,10 +9,13 @@ https://github.com/thatalloguy/Catos/wiki
 #
 #### Planned Features / ToDo
 
-- [ ] Reflection system
+- [x] Reflection system
+- - [ ] constructors
+- - [x] Methods
+- - [x] Properties
 - [ ] Asset manager (inspired by the truth)
-- [ ] ECS 
-- [ ] C# scripting
+- [ ] ECS or EC (unsure atm).
+- [ ] C# scripting or Node base (unsure atm)
 - [ ] Semi-RHI
 - [ ] Dynamic Editor (via the reflection)
 #

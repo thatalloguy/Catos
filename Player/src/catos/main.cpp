@@ -5,8 +5,12 @@
 using namespace catos;
 
 
-struct Foo {
-    float data = 2;
+class Foo {
+public:
+    float data;
+
+
+    Foo(float _data) : data(_data) {}
 
 
     void tester() {
@@ -14,14 +18,25 @@ struct Foo {
     }
 };
 
+template<typename T>
+class ConstructorInvoker {
+public:
+    template<typename... Args>
+    T operator()(Args... args)const {
+        return T(std::forward<Args>(args)...);
+    }
+};
 
-
+template<typename Fn, typename... Args>
+auto invoke(Fn f, Args... args) {
+    return f(args...);
+}
 
 int main() {
 
     Registry registry;
 
-    Foo foo;
+    Foo foo{3};
 
 
     foo.data = 4;
@@ -30,22 +45,6 @@ int main() {
              .property("data", &Foo::data)
              .method("tester", &Foo::tester);
 
-
-    registry.bind<Foo>(&foo);
-
-    auto* test = registry.get<Foo>();
-
-
-    Method* test_func = foo_info.get_method("tester");
-    if (!foo_info.is_valid(test_func)) {
-        exit(-3);
-    }
-
-    //foo_info.execute_method(&foo, test_func);
-
-    Method* method = registry.get_type<Foo>().get_method("tester");
-    method->invoke_function(test);
-    registry.print_current_register();
 
 
 
