@@ -10,7 +10,7 @@ https://github.com/thatalloguy/Catos/wiki
 #### Planned Features / ToDo
 
 - [x] Reflection system
-- - [ ] ~~ constructors ~~
+- - [ ] ~~constructors~~
 - - [x] Methods
 - - [x] Properties
 - [ ] EC.
