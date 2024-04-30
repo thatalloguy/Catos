@@ -10,14 +10,19 @@ https://github.com/thatalloguy/Catos/wiki
 #### Planned Features / ToDo
 
 - [x] Reflection system
-- - [ ] constructors
+- - [ ] ~~ constructors ~~
 - - [x] Methods
 - - [x] Properties
-- [ ] Asset manager (inspired by the truth)
-- [ ] ECS or EC (unsure atm).
+- [ ] EC.
+- - [ ] Entity Creation.
+- - [ ] Central system for handling entities.
+- - [ ] Base component
+- - [ ] Transform component
+
+- [ ] Resource manager
 - [ ] C# scripting or Node base (unsure atm)
-- [ ] Semi-RHI
 - [ ] Dynamic Editor (via the reflection)
+- [ ] Atomus implementation.
 #
 ##### Ideas for the engine
 
