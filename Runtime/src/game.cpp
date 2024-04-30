@@ -26,7 +26,22 @@ namespace catos {
 
 
     ////////////// SCENE
-    Scene::Scene(cstr name) {
+    Scene::Scene(cstr name) : _name(name) {
 
+    }
+
+    cstr Scene::getName() {
+        return _name;
+    }
+
+    shared_ptr<Entity> Scene::getEntity(cstr name) {
+
+        auto it = entityTable.find(name);
+
+        if (it != entityTable.end()) {
+            return it->second;
+        } else {
+            return nullptr;
+        }
     }
 }

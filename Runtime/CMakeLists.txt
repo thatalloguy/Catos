@@ -1,4 +1,6 @@
-add_library(catos-runtime INTERFACE)
+add_library(catos-runtime INTERFACE
+        include/entity.cpp
+        include/entity.h)
 target_include_directories(catos-runtime INTERFACE include)
 
 

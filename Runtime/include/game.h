@@ -29,6 +29,7 @@ namespace catos {
 
     private:
         unordered_map<cstr, shared_ptr<Entity>> entityTable;
+        cstr _name;
 
     };
 
