@@ -24,6 +24,10 @@ https://github.com/thatalloguy/Catos/wiki
 - [ ] Dynamic Editor (via the reflection)
 - [ ] Atomus implementation.
 #
+### EC system blueprint.
+![image](https://github.com/thatalloguy/Catos/assets/51132972/f8a23b4e-8511-40bb-9648-cb252d856b83)
+#
+
 ##### Ideas for the engine
 
 ###### - Vulkan renderer (+ opengl):
