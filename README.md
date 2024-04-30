@@ -28,6 +28,9 @@ https://github.com/thatalloguy/Catos/wiki
 ![image](https://github.com/thatalloguy/Catos/assets/51132972/f8a23b4e-8511-40bb-9648-cb252d856b83)
 #
 
+### Rendering with
+https://github.com/thatalloguy/Atomus
+
 ##### Ideas for the engine
 
 ###### - Vulkan renderer (+ opengl):

@@ -7,7 +7,8 @@
 
 namespace catos {
 
-    shared_ptr<Scene> catos::Game::getScene(const char *name) {
+    ///////GAME=
+    shared_ptr<Scene> catos::Game::getScene(cstr name) {
 
         auto it = sceneTable.find(name);
 
@@ -20,5 +21,12 @@ namespace catos {
 
     void catos::Game::createScene(cstr name) {
         //TODO
+    }
+
+
+
+    ////////////// SCENE
+    Scene::Scene(cstr name) {
+
     }
 }

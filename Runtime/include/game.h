@@ -12,7 +12,25 @@ using namespace std;
 
 namespace catos {
 
-    struct Scene{};
+    struct Entity;
+
+    class Scene {
+
+    public:
+        Scene(cstr name);
+        ~Scene() = default;
+
+        cstr getName();
+
+
+        //entity stuff
+        shared_ptr<Entity> getEntity(cstr name);
+
+
+    private:
+        unordered_map<cstr, shared_ptr<Entity>> entityTable;
+
+    };
 
     ///Holds any information about the game
     struct GameConfig {
@@ -23,13 +41,14 @@ namespace catos {
     class Game {
 
     public:
-        Game() {};
-        ~Game() {};
+        Game() = default;
+        ~Game() = default;
 
         GameConfig& getConfig() { return config; };
 
         //Scene handling
         void createScene(cstr name);
+        void changeSceneName(cstr oldName, cstr newName);
         shared_ptr<Scene> getScene(const char* name);
 
     private:
