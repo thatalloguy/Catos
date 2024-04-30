@@ -4,13 +4,21 @@
 
 #include "game.h"
 
+
 namespace catos {
 
     shared_ptr<Scene> catos::Game::getScene(const char *name) {
-        return shared_ptr<Scene>();
+
+        auto it = sceneTable.find(name);
+
+        if (it != sceneTable.end()) {
+            return it->second;
+        } else {
+            return nullptr;
+        }
     }
 
-    void catos::Game::createScene(string name) {
-
+    void catos::Game::createScene(cstr name) {
+        //TODO
     }
 }

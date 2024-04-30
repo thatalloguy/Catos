@@ -29,7 +29,7 @@ namespace catos {
         GameConfig& getConfig() { return config; };
 
         //Scene handling
-        void createScene(string name);
+        void createScene(cstr name);
         shared_ptr<Scene> getScene(const char* name);
 
     private:
