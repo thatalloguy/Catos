@@ -16,22 +16,22 @@ namespace catos {
     class Scene {
 
     public:
-        Scene(str name);
+        Scene(cstr name);
         ~Scene() = default;
 
-        str getName();
+        cstr getName();
 
 
         //entity stuff
-        std::shared_ptr<Entity> getEntity(str name);
-        std::shared_ptr<Entity>  newEntity(str name);
-        std::shared_ptr<Entity> changeEntityName(str oldName, str newName);
+        std::shared_ptr<Entity> getEntity(cstr name);
+        std::shared_ptr<Entity>  newEntity(cstr name);
+        std::shared_ptr<Entity> changeEntityName(cstr oldName, cstr newName);
 
 
 
     private:
         std::unordered_map<str, std::shared_ptr<Entity>> entityTable;
-        str _name;
+        cstr _name;
 
     };
 
@@ -50,15 +50,15 @@ namespace catos {
         GameConfig& getConfig() { return config; };
 
         //Scene handling
-        std::shared_ptr<Scene> createScene(str name);
-        std::shared_ptr<Scene> changeSceneName(str oldName, str newName);
-        std::shared_ptr<Scene> getScene(str name);
+        std::shared_ptr<Scene> createScene(cstr name);
+        std::shared_ptr<Scene> changeSceneName(cstr oldName, cstr newName);
+        std::shared_ptr<Scene> getScene(cstr name);
 
     private:
         GameConfig config;
 
 
-        std::unordered_map<str , std::shared_ptr<Scene>> sceneTable;
+        std::unordered_map<str, std::shared_ptr<Scene>> sceneTable;
 
     };
 

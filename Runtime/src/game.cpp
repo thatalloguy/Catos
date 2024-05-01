@@ -8,7 +8,7 @@
 namespace catos {
 
     ///////GAME=
-    std::shared_ptr<Scene> catos::Game::getScene(str name) {
+    std::shared_ptr<Scene> catos::Game::getScene(cstr  name) {
 
         auto it = sceneTable.find(name);
 
@@ -19,7 +19,7 @@ namespace catos {
         }
     }
 
-    std::shared_ptr<Scene> catos::Game::createScene(str name) {
+    std::shared_ptr<Scene> catos::Game::createScene(cstr  name) {
 
         auto newScene = std::make_shared<Scene>(name);
 
@@ -28,7 +28,7 @@ namespace catos {
         return newScene;
     }
 
-    std::shared_ptr<Scene> Game::changeSceneName(str oldName, str newName) {
+    std::shared_ptr<Scene> Game::changeSceneName(cstr oldName,cstr newName) {
         auto oldN = sceneTable.find(oldName);
         auto newN = sceneTable.find(newName);
 
@@ -42,15 +42,15 @@ namespace catos {
 
 
     ////////////// SCENE
-    Scene::Scene(str name) : _name(name) {
+    Scene::Scene(cstr  name) : _name(name) {
 
     }
 
-    str Scene::getName() {
+    cstr Scene::getName() {
         return _name;
     }
 
-    std::shared_ptr<Entity> Scene::getEntity(str name) {
+    std::shared_ptr<Entity> Scene::getEntity(cstr  name) {
         auto it = entityTable.find(name);
 
         if (it != entityTable.end()) {
@@ -60,16 +60,17 @@ namespace catos {
         }
     }
 
-    std::shared_ptr<Entity> Scene::newEntity(str name) {
+    std::shared_ptr<Entity> Scene::newEntity(cstr  name) {
 
-        auto newEntity = std::make_shared<Entity>();
+        str nam = std::string_view(name);
+        auto newEntity = std::make_shared<Entity>(nam);
 
         entityTable.emplace(name, newEntity);
 
         return newEntity;
     }
 
-    std::shared_ptr<Entity> Scene::changeEntityName(str oldName, str newName) {
+    std::shared_ptr<Entity> Scene::changeEntityName(cstr  oldName, cstr newName) {
         auto oldN = entityTable.find(oldName);
         auto newN = entityTable.find(newName);
 

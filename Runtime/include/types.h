@@ -6,4 +6,5 @@
 
 #include <string>
 
-typedef std::string str;
+typedef std::string_view str;
+typedef const char*  cstr;
