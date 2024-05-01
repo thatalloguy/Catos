@@ -89,6 +89,7 @@ namespace catos {
 
 
     template<typename ReturnType, class ClassType, typename... Args>
+    /// MethodInvoker invokes the method (with args) given at creation.
     class MethodInvoker{
 
     public:
@@ -97,14 +98,14 @@ namespace catos {
         MethodInvoker(ReturnType (ClassType::* ptr)(Args...)) {
             memPtr = ptr;
         };
-
+        /// Runs the function
         static ReturnType callFunction(void* FuncInst, void* instance, Args... args) {
             return (static_cast<ClassType*>(instance)->*static_cast<MethodInvoker<ReturnType, ClassType, Args...>*>(FuncInst)->memPtr)(args...);
         }
     };
 
 
-
+    /// Stores a function pointer for running it.
     class Method {
 
     public:
