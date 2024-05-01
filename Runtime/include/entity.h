@@ -28,7 +28,7 @@ namespace catos {
         template<class Comp>
         Comp* getComponent();
 
-        Component* getComponent(cstr name);
+        Component* getComponent(str name);
 
         template<class Comp>
         void addComponent(Component* component);
@@ -41,7 +41,7 @@ namespace catos {
 
     private:
         ///TODO should i allow mutliple components of the same type?
-        std::unordered_map<cstr, Component*> componentTable;
+        std::unordered_map<str, Component*> componentTable;
     };
 
 

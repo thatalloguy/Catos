@@ -9,7 +9,6 @@
 #include "types.h"
 #include "entity.h"
 
-using namespace std;
 
 namespace catos {
 
@@ -17,21 +16,22 @@ namespace catos {
     class Scene {
 
     public:
-        Scene(cstr name);
+        Scene(str name);
         ~Scene() = default;
 
-        cstr getName();
+        str getName();
 
 
         //entity stuff
-        shared_ptr<Entity> getEntity(cstr name);
-        shared_ptr<Entity>  newEntity(cstr name);
+        std::shared_ptr<Entity> getEntity(str name);
+        std::shared_ptr<Entity>  newEntity(str name);
+        std::shared_ptr<Entity> changeEntityName(str oldName, str newName);
 
 
 
     private:
-        unordered_map<cstr, shared_ptr<Entity>> entityTable;
-        cstr _name;
+        std::unordered_map<str, std::shared_ptr<Entity>> entityTable;
+        str _name;
 
     };
 
@@ -50,15 +50,15 @@ namespace catos {
         GameConfig& getConfig() { return config; };
 
         //Scene handling
-        shared_ptr<Scene> createScene(cstr name);
-        shared_ptr<Scene> changeSceneName(cstr oldName, cstr newName);
-        shared_ptr<Scene> getScene(const char* name);
+        std::shared_ptr<Scene> createScene(str name);
+        std::shared_ptr<Scene> changeSceneName(str oldName, str newName);
+        std::shared_ptr<Scene> getScene(str name);
 
     private:
         GameConfig config;
 
 
-        unordered_map<cstr , shared_ptr<Scene>> sceneTable;
+        std::unordered_map<str , std::shared_ptr<Scene>> sceneTable;
 
     };
 

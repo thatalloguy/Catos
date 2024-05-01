@@ -4,4 +4,6 @@
 #pragma once
 
 
-typedef const char* cstr;
+#include <string>
+
+typedef std::string str;

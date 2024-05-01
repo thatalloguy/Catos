@@ -19,7 +19,7 @@ Comp* Entity::getComponent() {
 
 }
 
-Component* Entity::getComponent(cstr name) {
+Component* Entity::getComponent(str name) {
     return componentTable[name];
 }
 

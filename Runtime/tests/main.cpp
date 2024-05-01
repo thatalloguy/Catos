@@ -4,7 +4,9 @@
 
 #include <type_utils.h>
 #include <TINYSTL/string.h>
+
 #include <registry.h>
+#include <game.h>
 
 struct Foo {
     float data = 2;
@@ -81,6 +83,32 @@ namespace catos::tests {
 
 
         CHECK(*testFloat == meth->invoke_function<float>(&foo));
+    }
+
+    TEST_CASE("GAME::SCENES") {
+        Game game;
+
+        auto s1 = game.createScene("test");
+
+        CHECK(s1 == game.getScene("test"));
+
+        game.changeSceneName("test", "test2");
+
+        CHECK(s1 == game.getScene("test2"));
+    }
+
+    TEST_CASE("SCENES::ENTITIES") {
+        Game game;
+
+        auto scene = game.createScene("test");
+
+        auto bob = scene->newEntity("bob");
+
+        CHECK(bob == scene->getEntity("bob"));
+
+        scene->changeEntityName("bob", "henk");
+
+        CHECK(bob == scene->getEntity("henk"));
     }
 }
 

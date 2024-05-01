@@ -8,7 +8,7 @@
 namespace catos {
 
     ///////GAME=
-    shared_ptr<Scene> catos::Game::getScene(cstr name) {
+    std::shared_ptr<Scene> catos::Game::getScene(str name) {
 
         auto it = sceneTable.find(name);
 
@@ -19,7 +19,7 @@ namespace catos {
         }
     }
 
-    shared_ptr<Scene> catos::Game::createScene(cstr name) {
+    std::shared_ptr<Scene> catos::Game::createScene(str name) {
 
         auto newScene = std::make_shared<Scene>(name);
 
@@ -28,7 +28,7 @@ namespace catos {
         return newScene;
     }
 
-    shared_ptr<Scene> Game::changeSceneName(cstr oldName, cstr newName) {
+    std::shared_ptr<Scene> Game::changeSceneName(str oldName, str newName) {
         auto oldN = sceneTable.find(oldName);
         auto newN = sceneTable.find(newName);
 
@@ -42,15 +42,15 @@ namespace catos {
 
 
     ////////////// SCENE
-    Scene::Scene(cstr name) : _name(name) {
+    Scene::Scene(str name) : _name(name) {
 
     }
 
-    cstr Scene::getName() {
+    str Scene::getName() {
         return _name;
     }
 
-    shared_ptr<Entity> Scene::getEntity(cstr name) {
+    std::shared_ptr<Entity> Scene::getEntity(str name) {
         auto it = entityTable.find(name);
 
         if (it != entityTable.end()) {
@@ -60,12 +60,24 @@ namespace catos {
         }
     }
 
-    shared_ptr<Entity> Scene::newEntity(cstr name) {
+    std::shared_ptr<Entity> Scene::newEntity(str name) {
 
         auto newEntity = std::make_shared<Entity>();
 
         entityTable.emplace(name, newEntity);
 
         return newEntity;
+    }
+
+    std::shared_ptr<Entity> Scene::changeEntityName(str oldName, str newName) {
+        auto oldN = entityTable.find(oldName);
+        auto newN = entityTable.find(newName);
+
+        if (oldN != entityTable.end() && newN == entityTable.end()) { // Both names are valid
+            entityTable.emplace(newName, oldN->second); // move the value to the new name
+            entityTable.erase(oldName); // remove the value of the old name
+        }
+
+        return getEntity(newName);
     }
 }
