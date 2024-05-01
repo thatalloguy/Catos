@@ -34,7 +34,8 @@ https://github.com/thatalloguy/Atomus
 
 ###### - Vulkan renderer (+ opengl):
 After ive finished the asset manager i will continue dev on my personal vulkan renderer.
-After that I am hoping to write a RHI so that i can support multiple graphic api's
+After that I am hoping to write a RHI so that i can support multiple graphic api's.
+- UPDATE: I finished Atomus (vulkan renderer) and i dont think il create an RHI anytime soon 😅.
 
 ###### - C# as scripting lang
 I really like C# and i would like to have it as my scripting lang.
