@@ -1,6 +1,6 @@
 // engine includes
 #include <registry.h>
-
+#include <pocketpy.h>
 
 using namespace catos;
 
@@ -44,7 +44,6 @@ int main() {
     auto foo_info = registry.register_class<Foo>()
              .property("data", &Foo::data)
              .method("tester", &Foo::tester);
-
 
 
 
