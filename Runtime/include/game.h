@@ -7,12 +7,12 @@
 #include <iostream>
 
 #include "types.h"
+#include "entity.h"
 
 using namespace std;
 
 namespace catos {
 
-    struct Entity;
 
     class Scene {
 
@@ -25,6 +25,8 @@ namespace catos {
 
         //entity stuff
         shared_ptr<Entity> getEntity(cstr name);
+        shared_ptr<Entity>  newEntity(cstr name);
+
 
 
     private:
@@ -48,8 +50,8 @@ namespace catos {
         GameConfig& getConfig() { return config; };
 
         //Scene handling
-        void createScene(cstr name);
-        void changeSceneName(cstr oldName, cstr newName);
+        shared_ptr<Scene> createScene(cstr name);
+        shared_ptr<Scene> changeSceneName(cstr oldName, cstr newName);
         shared_ptr<Scene> getScene(const char* name);
 
     private:
