@@ -13,11 +13,10 @@ https://github.com/thatalloguy/Catos/wiki
 - - [ ] ~~constructors~~
 - - [x] Methods
 - - [x] Properties
-- [ ] EC.
+- [x] EC.
 - - [x] Entity Creation.
 - - [x] Central system for handling entities.
 - - [x] Base component
-- - [ ] Transform component
 
 - [ ] C# scripting
 - [ ] Resource manager
