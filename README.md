@@ -14,13 +14,13 @@ https://github.com/thatalloguy/Catos/wiki
 - - [x] Methods
 - - [x] Properties
 - [ ] EC.
-- - [ ] Entity Creation.
-- - [ ] Central system for handling entities.
-- - [ ] Base component
+- - [x] Entity Creation.
+- - [x] Central system for handling entities.
+- - [x] Base component
 - - [ ] Transform component
 
+- [ ] C# scripting
 - [ ] Resource manager
-- [ ] C# scripting or Node base (unsure atm)
 - [ ] Dynamic Editor (via the reflection)
 - [ ] Atomus implementation.
 #
