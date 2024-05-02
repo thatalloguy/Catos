@@ -49,8 +49,8 @@ int main() {
     foo.data = 4;
 
     auto foo_info = registry.register_class<Foo>()
-             .property("data", &Foo::data)
-             .method("tester", &Foo::tester);
+             .property("data", &Foo::data, "dummy")
+             .method("tester", &Foo::tester, "dummy");
 
 
     return 0;

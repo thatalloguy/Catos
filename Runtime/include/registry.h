@@ -36,6 +36,7 @@ namespace catos {
 
         virtual void set_name(const char* name) = 0;
 
+        cstr desc = "NONE";
     };
 
     /// PropertyImpl implements Property and holds an member function pointer. Used to get an value of an field of an Type's instance.
@@ -53,8 +54,8 @@ namespace catos {
 
         ///PropertyImpl exist in order to avoid having to deal with templates at the user-side.
         PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {
-                type_name = type_utils::get_type_name<U>();
-                type_hash = type_utils::get_type_hash<U>();
+            type_name = type_utils::get_type_name<U>();
+            type_hash = type_utils::get_type_hash<U>();
         };
 
         /// Set the name of the property
@@ -134,7 +135,9 @@ namespace catos {
         };
 
 
+        cstr desc = "NONE";
     private:
+
         std::any ptr;
         std::any _mFunc;
     };
@@ -156,12 +159,14 @@ namespace catos {
 
         template<typename T, typename U>
         /// Registers a property with a name and a member pointer (Returns itself).
-        TypeInfo& property(const char*  property_name, U T::* member) {
+        TypeInfo& property(const char*  property_name, U T::* member, cstr description) {
 
 
 
             properties[property_name] = new PropertyImpl<T, U>(member);
             properties[property_name]->set_name(property_name);
+            properties[property_name]->desc = description;
+
 
 
             // Return itself so that we can keep adding properties without having to write the instance again.
@@ -170,8 +175,9 @@ namespace catos {
 
         /// Registers a method with a name and a member function pointer (returns the Type object again).
         template<typename ClassT, typename ReturnV, typename... Args>
-        constexpr TypeInfo& method(const char* method_name, ReturnV(ClassT::* ptr)(Args...)) {
+        constexpr TypeInfo& method(const char* method_name, ReturnV(ClassT::* ptr)(Args...), cstr description) {
             methods[method_name] = new Method{ptr};
+            methods[method_name]->desc = description;
 
 
 
@@ -180,17 +186,17 @@ namespace catos {
 
         /// Returns a property object based on the name given.
         Property* get_property(const char* property_name) {
-          auto it = properties.find(property_name);
+            auto it = properties.find(property_name);
 
 
-          if (it != properties.end()) {
-              return it->second;
-          }
+            if (it != properties.end()) {
+                return it->second;
+            }
 
-          //TODO replace with logger
-          std::cerr << "Could not find property\n";
+            //TODO replace with logger
+            std::cerr << "Could not find property\n";
 
-          return nullptr;
+            return nullptr;
         };
 
         ///Returns a method object based on the name given.
@@ -251,7 +257,8 @@ namespace catos {
                 }
 
                 for (auto prop : type.second.properties) {
-                    out << "  " << prop.first << " = None\n";
+                    out << R"(      """ )" << prop.second->desc <<  R"( """ )" << std::endl;
+                    out << "      " << prop.first << " = None\n";
                 }
 
                 for (auto meth : type.second.methods) {
@@ -259,17 +266,19 @@ namespace catos {
 
 
                     if (meth.first == "init" || meth.first == "Init") {
-
-                        out << "  def __init__(self):\n   pass\n";
+                        out << R"(      """ )" << meth.second->desc <<   R"(    """ )" << std::endl;
+                        out << "      def __init__(self):\n            pass\n";
                     } else {
-                        out << "  def " << meth.first << "(self):\n";
-                        out << "       pass\n";
+                        out << "      def " << meth.first << "(self):\n";
+                        out << R"(          """ )" << meth.second->desc <<   R"( """ )" << std::endl;
+                        out << "          pass\n";
                     }
                 }
             }
 
             out.close();
         }
+
 
         /// Used to bind an instance to an type
         template<typename A>
@@ -279,7 +288,7 @@ namespace catos {
 
         /// Returns the registered instance
         template<typename A>
-         A* get() {
+        A* get() {
             A* obj = (A*) (_instance_register[type_utils::get_type_hash<A>()]);
             return obj;
         }
@@ -313,6 +322,3 @@ namespace catos {
         std::unordered_map<size_t, const void* > _instance_register;
     };
 }
-
-
-

@@ -34,7 +34,7 @@ namespace catos::tests {
 
         foo.data = 4;
 
-        auto& field = registry.register_class<Foo>().property("data", &Foo::data);
+        auto& field = registry.register_class<Foo>().property("data", &Foo::data, "dummy");
 
 
         Property* test = field.get_property("data");
@@ -72,16 +72,16 @@ namespace catos::tests {
         foo.data = 4;
 
         auto& field = registry.register_class<Foo>()
-                .property("data", &Foo::data)
-                .method("get_data", &Foo::get_data);
+                .property("data", &Foo::data, "dummy variable")
+                .method("get_data", &Foo::get_data, "Returns the data of Foo");
 
         registry.register_class<Game>()
-                .method("init", &Game::init);
+                .method("init", &Game::init, "Initializes the game");
 
         registry.register_class<ScriptComponent>()
-                .method("init", &ScriptComponent::init)
-                .method("update", &ScriptComponent::update)
-                .method("destroy", &ScriptComponent::destroy);
+                .method("init", &ScriptComponent::init, "Initializes the Object, gets ran at the beginning")
+                .method("update", &ScriptComponent::update, "update function gets called every tick")
+                .method("destroy", &ScriptComponent::destroy, "Gets called when the object is destroyed");
 
 
 
