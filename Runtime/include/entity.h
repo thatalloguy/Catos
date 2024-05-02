@@ -24,7 +24,7 @@ namespace catos {
         virtual void destroy() {};
     };
 
-
+    /// A basic script template, made for python scripts to inherit from. NOT USABLE FOR CPP USERS!
     class ScriptComponent {
     public:
         PY_CLASS(ScriptComponent, catos, ScriptComponent)
@@ -50,11 +50,13 @@ namespace catos {
         }
     };
 
+    /// Script (Component) handles a python scripts, acts like a component.
+    /// WARNING The component Must inherit from (catos.ScriptComponent) in order for the script class to recognize it.
     class Script : public Component {
 
     public:
 
-        /// The component Must have catos.ScriptComponent before it in order for the script class to recognize it.
+        /// Needs source code of a python file. Finds the Component class in the code and binds to it.
         void attachScript(std::string& srcCode, VM* vm) {
             auto end = srcCode.find("(catos.ScriptComponent");
             auto start = srcCode.find("class ");
@@ -66,17 +68,29 @@ namespace catos {
             }
         }
 
+        /// Runs the __init__ function of the python script
         void init() override {
             inst = _vm->call(obj);
         };
 
+        /// Runs the update function of the python script
         void update() override {
-            _vm->call_method(inst, "update");
+            if (inst) {
+                _vm->call_method(inst, "update");
+            }
         };
 
+        /// Runs the destroy function of the python script, and handles their memory
         void destroy() override {
-            _vm->call_method(inst, "destroy");
+            if (inst) {
+                _vm->call_method(inst, "destroy");
+            }
         };
+        void _gc_mark() const{
+
+            PK_OBJ_MARK(obj);
+            PK_OBJ_MARK(inst);
+        }
 
     private:
         std::string componentName;
