@@ -19,3 +19,5 @@ add_library(catos-headers INTERFACE)
 
 add_subdirectory(Player)
 add_subdirectory(Runtime)
+
+target_link_libraries(catos-runtime-static PUBLIC pocketpy)

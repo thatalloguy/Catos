@@ -9,7 +9,6 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC src/*.cpp src/*.h src/*.c src/*.hpp)
 add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC})
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
-target_link_libraries(catos-runtime-static PUBLIC pocketpy)
 
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST tests/*.h tests/*.hpp tests/*.c tests/*.cpp)

@@ -2,13 +2,16 @@
 /// Created by allos on 4/30/2024.
 ///
 #pragma once
+
+#include <pocketpy.h>
+
 #include <string>
 #include <unordered_map>
 #include <iostream>
-
 #include "types.h"
 #include "entity.h"
 
+using namespace pkpy;
 
 namespace catos {
 
@@ -16,23 +19,23 @@ namespace catos {
     class Scene {
 
     public:
-        Scene(cstr name);
+        Scene(cstr Name);
         ~Scene() = default;
 
-        /// Returns the name of the scene
+        /// Returns the Game of the scene
         cstr getName();
 
 
         ///entity stuff
 
-        /// Returns an entity via name;
-        std::shared_ptr<Entity> getEntity(cstr name);
+        /// Returns an entity via Game;
+        std::shared_ptr<Entity> getEntity(cstr Name);
 
-        /// Creates a new entity with a name, returns the newly created entity
-        std::shared_ptr<Entity>  newEntity(cstr name);
+        /// Creates a new entity with a Game, returns the newly created entity
+        std::shared_ptr<Entity>  newEntity(cstr Name);
         
-        /// Changes the name of the entity, returns the changed entity.
-        std::shared_ptr<Entity> changeEntityName(cstr oldName, cstr newName);
+        /// Changes the Game of the entity, returns the changed entity.
+        std::shared_ptr<Entity> changeEntityName(cstr oldGame, cstr newGame);
 
 
 
@@ -51,18 +54,41 @@ namespace catos {
     class Game {
 
     public:
+        PY_CLASS(Game, catos, Game)
         Game() = default;
         ~Game() = default;
+
+        void init() {
+            std::cout << "INIT OF GAME OBJECT FROM CPP \n";
+        };
 
         GameConfig& getConfig() { return config; };
 
         ///Scene handling
-        /// Creates a scene via a name, returns the newly created scene.
-        std::shared_ptr<Scene> createScene(cstr name);
-        /// Changes the name of a scene, returns the changed scene.
-        std::shared_ptr<Scene> changeSceneName(cstr oldName, cstr newName);
-        /// Returns the scene via the name
-        std::shared_ptr<Scene> getScene(cstr name);
+        /// Creates a scene via a Game, returns the newly created scene.
+        std::shared_ptr<Scene> createScene(cstr Game);
+        /// Changes the Game of a scene, returns the changed scene.
+        std::shared_ptr<Scene> changeSceneName(cstr oldGame, cstr newGame);
+        /// Returns the scene via the Game
+        std::shared_ptr<Scene> getScene(cstr Game);
+        
+        // POCKETPY IMPL
+        bool operator==(Game other) {
+            return false; // bob is unique ;)
+        }
+
+        Game* _() {
+            return this;
+        }
+
+        static void _register(VM* vm, PyObject* mod, PyObject* type){
+            //PY_STRUCT_LIKE(Game)
+
+
+            _bind(vm, type, "__init__(self)", &Game::init);
+
+
+        }
 
     private:
         GameConfig config;

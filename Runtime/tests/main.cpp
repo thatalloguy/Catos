@@ -1,12 +1,15 @@
-
+#pragma once
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
 
 #include <type_utils.h>
 #include <TINYSTL/string.h>
 
-#include <registry.h>
-#include <game.h>
+#include "registry.h"
+#include "game.h"
+
+using namespace pkpy;
+
 
 struct Foo {
     float data = 2;
@@ -19,7 +22,7 @@ struct Foo {
 namespace catos::tests {
 
     TEST_CASE("REGISTRY::GET_TYPE_NAME") {
-        CHECK((tinystl::string) "int" == catos::type_utils::get_type_name<int>());
+        CHECK((std::string) "int" == catos::type_utils::get_type_name<int>());
     }
 
     TEST_CASE("REGISTRY::FIELDS") {
@@ -72,6 +75,9 @@ namespace catos::tests {
                 .property("data", &Foo::data)
                 .method("get_data", &Foo::get_data);
 
+        registry.register_class<Game>()
+                .method("init", &Game::init);
+
 
 
 
@@ -83,6 +89,8 @@ namespace catos::tests {
 
 
         CHECK(*testFloat == meth->invoke_function<float>(&foo));
+
+        registry.gen_python_bindings_file();
     }
 
     TEST_CASE("GAME::SCENES") {
@@ -109,6 +117,20 @@ namespace catos::tests {
         scene->changeEntityName("bob", "henk");
 
         CHECK(bob == scene->getEntity("henk"));
+    }
+
+    TEST_CASE("POCKETPY") {
+
+        pkpy::VM* vm = new VM();
+        PyObject* mod = vm->new_module("catos");
+        std::ifstream inputFile("../../test.py");
+        std::string str((std::istreambuf_iterator<char>(inputFile)),
+                        std::istreambuf_iterator<char>());
+
+        Game::register_class(vm, mod);
+        vm->exec(str);
+
+        delete vm;
     }
 }
 

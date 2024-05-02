@@ -1,15 +1,21 @@
 #pragma once
-#include <TINYSTL/unordered_map.h>
-#include <TINYSTL/string.h>
-#include <TINYSTL/string_view.h>
+
+#include <pocketpy.h>
+
+
+#include <unordered_map>
 #include <iostream>
 #include <any>
 #include "type_utils.h"
+#include "types.h"
+#include <functional>
+#include <deque>
+#include <fstream>
 
 using namespace catos;
 
 
-using namespace tinystl;
+
 
 namespace catos {
 
@@ -29,6 +35,7 @@ namespace catos {
         virtual size_t& get_type_hash() = 0;
 
         virtual void set_name(const char* name) = 0;
+
     };
 
     /// PropertyImpl implements Property and holds an member function pointer. Used to get an value of an field of an Type's instance.
@@ -36,18 +43,15 @@ namespace catos {
     class PropertyImpl : public Property {
 
 
-    private:
+    public:
         U T::* memberPtr;
         const char* name;
 
 
-        string type_name;
+        std::string type_name;
         size_t type_hash;
 
-
-    public:
         ///PropertyImpl exist in order to avoid having to deal with templates at the user-side.
-
         PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {
                 type_name = type_utils::get_type_name<U>();
                 type_hash = type_utils::get_type_hash<U>();
@@ -82,6 +86,7 @@ namespace catos {
         size_t& get_type_hash() override {
             return type_hash;
         };
+
     };
 
     //Method ;-; | I DID IT RAHHHHHHH
@@ -113,6 +118,7 @@ namespace catos {
         Method(ReturnType(ClassType::* method)(Args...)) {
             _mFunc = MethodInvoker<ReturnType, ClassType, Args...>(method);
 
+
             ptr = &MethodInvoker<ReturnType, ClassType, Args...>::callFunction;
         };
 
@@ -127,6 +133,7 @@ namespace catos {
             std::any_cast<void(*)(void*, void*, Args...)>(ptr)(&_mFunc, instance, args...);
         };
 
+
     private:
         std::any ptr;
         std::any _mFunc;
@@ -139,18 +146,17 @@ namespace catos {
 
     //Type
     /// Typeinfo is an object that holds all information about a specific type.
-    class Type {
+    class TypeInfo {
 
     public:
 
-
         size_t type_hash;
-        string name;
+        std::string name;
 
 
         template<typename T, typename U>
         /// Registers a property with a name and a member pointer (Returns itself).
-        Type& property(const char*  property_name, U T::* member) {
+        TypeInfo& property(const char*  property_name, U T::* member) {
 
 
 
@@ -164,8 +170,10 @@ namespace catos {
 
         /// Registers a method with a name and a member function pointer (returns the Type object again).
         template<typename ClassT, typename ReturnV, typename... Args>
-        constexpr Type& method(const char* method_name, ReturnV(ClassT::* ptr)(Args...)) {
+        constexpr TypeInfo& method(const char* method_name, ReturnV(ClassT::* ptr)(Args...)) {
             methods[method_name] = new Method{ptr};
+
+
 
             return *this;
         }
@@ -201,8 +209,8 @@ namespace catos {
         static bool is_valid(Property* ptr) { return ptr != nullptr; };
         static bool is_valid(Method*   ptr) { return ptr != nullptr; };
 
-        unordered_map<string , Property* > properties;
-        unordered_map<string , Method* > methods;
+        std::unordered_map<std::string , Property* > properties;
+        std::unordered_map<std::string , Method* > methods;
     };
 
     //Core system :)_
@@ -211,22 +219,57 @@ namespace catos {
 
     public:
 
+
+
         template<typename A>
         /// With this function you register a class to the Registry
-        Type& register_class() {
+        TypeInfo& register_class() {
 
             size_t hash = type_utils::get_type_hash<A>();
 
             // This means the user is trying to register a new type!
             if (_register.find(hash) == _register.end()) {
-                _register.insert(pair<size_t, Type>(hash, Type{.type_hash = hash, .name=  type_utils::get_type_name<A>()  }));
+                _register.insert(std::pair<size_t, TypeInfo>(hash, TypeInfo{.type_hash = hash, .name=  type_utils::get_type_name<A>()  }));
             }
 
 
             return _register[hash];
         };
 
-        //TODO add more util funcs
+        void gen_python_bindings_file() {
+            std::ofstream out("../../catos.py");
+
+            for (auto type : _register) {
+
+                auto namespacePos = type.second.name.find("::");
+                auto structPos = type.second.name.find("struct");
+
+                if (namespacePos != std::string::npos) {
+                    out << "class " << type.second.name.substr(namespacePos + 2) << ":\n";
+                } else {
+                    out << "class " << type.second.name.substr(structPos + 7) <<  ":\n";
+                }
+
+                for (auto prop : type.second.properties) {
+                    out << "  " << prop.first << " = None\n";
+                }
+
+                for (auto meth : type.second.methods) {
+
+
+
+                    if (meth.first == "init" || meth.first == "Init") {
+
+                        out << "  def __init__(self):\n   pass\n";
+                    } else {
+                        out << "  def " << meth.first << "(self):\n";
+                        out << "       pass\n";
+                    }
+                }
+            }
+
+            out.close();
+        }
 
         /// Used to bind an instance to an type
         template<typename A>
@@ -243,7 +286,7 @@ namespace catos {
 
         /// Returns the registered Type
         template<typename A>
-        Type& get_type() {
+        TypeInfo& get_type() {
             return (_register[type_utils::get_type_hash<A>()]);
         }
 
@@ -251,7 +294,7 @@ namespace catos {
         /// Prints out the items in the Registry
         void print_current_register() {
             for (auto val : _register) {
-                Type& info = val.second;
+                TypeInfo& info = val.second;
                 std::cout <<  info.name.c_str() << " { \n";
 
                 for (auto& prop : info.properties) {
@@ -266,8 +309,8 @@ namespace catos {
 
 
     private:
-        unordered_map<size_t, Type> _register;
-        unordered_map<size_t, const void* > _instance_register;
+        std::unordered_map<size_t, TypeInfo> _register;
+        std::unordered_map<size_t, const void* > _instance_register;
     };
 }
 
