@@ -121,6 +121,8 @@ namespace catos {
 
 
             ptr = &MethodInvoker<ReturnType, ClassType, Args...>::callFunction;
+
+            returnName = type_utils::get_type_name<ReturnType>();
         };
 
 
@@ -136,6 +138,7 @@ namespace catos {
 
 
         cstr desc = "NONE";
+        std::string returnName = "void";
     private:
 
         std::any ptr;
@@ -269,7 +272,8 @@ namespace catos {
                         out << R"(      """ )" << meth.second->desc <<   R"(    """ )" << std::endl;
                         out << "      def __init__(self):\n            pass\n";
                     } else {
-                        out << "      def " << meth.first << "(self):\n";
+                        out << "      def " << meth.first << "(self)";
+                        if (meth.second->returnName != "void") { out << " -> " << meth.second->returnName << ":\n"; } else { out << ":\n"; }
                         out << R"(          """ )" << meth.second->desc <<   R"( """ )" << std::endl;
                         out << "          pass\n";
                     }
