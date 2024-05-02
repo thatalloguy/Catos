@@ -125,8 +125,8 @@ namespace catos::tests {
     }
 
 
-    TEST_CASE("SCRIPTINP") {
-
+    TEST_CASE("SCRIPTING::COMPONENT") {
+/*
         pkpy::VM* vm = new VM();
         PyObject* mod = vm->new_module("catos");
         //////std::ifstream inputFile("../../test.py");
@@ -160,6 +160,34 @@ namespace catos::tests {
         comp.init();
         comp.update();
         comp.destroy();
+
+        delete vm;*/
+    }
+
+    TEST_CASE("SCRIPTING::TEST") {
+
+        pkpy::VM* vm = new VM();
+        PyObject* mod = vm->new_module("catos");
+        std::ifstream inputFile("../../test.py");
+        std::string str((std::istreambuf_iterator<char>(inputFile)),
+                        std::istreambuf_iterator<char>());
+
+        Game::register_class(vm, mod);
+        vm->register_user_class<ScriptComponent>(mod, "ScriptComponent", true);
+        vm->register_user_class<Entity>(mod, "Entity", true);
+
+        vm->exec(str);
+
+        Entity test;
+
+        Script testScript;
+
+        testScript.attachScript(str, vm);
+
+        testScript.init(test);
+        //testScript.update(test);
+
+        std::cout << "CPP: " << test.test << "\n";
 
         delete vm;
     }

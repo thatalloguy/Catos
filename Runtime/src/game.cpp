@@ -63,7 +63,7 @@ namespace catos {
     std::shared_ptr<Entity> Scene::newEntity(cstr  name) {
 
         str nam = std::string_view(name);
-        auto newEntity = std::make_shared<Entity>(nam);
+        auto newEntity = std::make_shared<Entity>();
 
         entityTable.emplace(name, newEntity);
 

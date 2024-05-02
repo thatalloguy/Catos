@@ -22,7 +22,7 @@ namespace catos {
         Scene(cstr Name);
         ~Scene() = default;
 
-        /// Returns the Game of the scene
+        /// Returns the Name of the scene
         cstr getName();
 
 

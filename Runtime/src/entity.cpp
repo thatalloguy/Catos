@@ -32,18 +32,18 @@ void Entity::addComponent(Component* component) {
 
 void Entity::init() {
     for (auto comp : componentTable) {
-        comp.second->init();
+        comp.second->init(*this);
     }
 }
 
 void Entity::update() {
     for (auto comp : componentTable) {
-        comp.second->update();
+        comp.second->update(*this);
     }
 }
 
 void Entity::destroy() {
     for (auto comp : componentTable) {
-        comp.second->destroy();
+        comp.second->destroy(*this);
     }
 }
