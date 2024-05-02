@@ -50,8 +50,7 @@ namespace catos {
         }
     };
 
-    /// Script (Component) handles a python scripts, acts like a component.
-    /// WARNING The component Must inherit from (catos.ScriptComponent) in order for the script class to recognize it.
+    /// Script (Component) handles a python scripts, acts like a component. WARNING The component Must inherit from (catos.ScriptComponent) in order for the script class to recognize it.
     class Script : public Component {
 
     public:
@@ -86,6 +85,8 @@ namespace catos {
                 _vm->call_method(inst, "destroy");
             }
         };
+
+        /// FOR POCKETPY
         void _gc_mark() const{
 
             PK_OBJ_MARK(obj);

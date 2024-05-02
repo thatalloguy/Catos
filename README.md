@@ -19,7 +19,7 @@ https://github.com/thatalloguy/Catos/wiki
 - - [x] Base component
 
 - [ ] Python scripting (via pocketPy)
-- - [ ] Custom Component creation (in python)
+- - [x] Custom Component creation (in python)
 - - [ ] get Info from cpp
 - - [ ] change info that affects cpp (in python)
 - [ ] Resource manager
