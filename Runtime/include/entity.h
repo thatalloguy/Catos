@@ -62,8 +62,8 @@ namespace catos {
             auto start = srcCode.find("class ");
 
             if (end != srcCode.npos && start != srcCode.npos) {
-                componentName = srcCode.substr(start + 6, end - (start + 6));
-                obj = vm->getattr(vm->_main, componentName.c_str());
+                componentName = srcCode.substr(start + 6, end - (start + 6)).c_str();
+                obj = vm->getattr(vm->_main, componentName);
                 _vm = vm;
             }
         }
@@ -93,7 +93,7 @@ namespace catos {
         }
 
     private:
-        std::string componentName;
+        const char* componentName;
         PyObject* obj = nullptr;
         PyObject* inst = nullptr;
         VM* _vm = nullptr;
