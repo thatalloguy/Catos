@@ -20,8 +20,9 @@ https://github.com/thatalloguy/Catos/wiki
 
 - [ ] Python scripting (via pocketPy)
 - - [x] Custom Component creation (in python)
-- - [ ] get Info from cpp
-- - [ ] change info that affects cpp (in python)
+- - [x] get Info from cpp
+- - [x] change info that affects cpp (in python)
+- - [ ] Get Component from Entity
 - [ ] Resource manager
 - [ ] Dynamic Editor (via the reflection)
 - [ ] Atomus implementation.
