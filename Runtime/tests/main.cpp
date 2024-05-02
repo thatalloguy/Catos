@@ -124,33 +124,28 @@ namespace catos::tests {
         CHECK(bob == scene->getEntity("henk"));
     }
 
-    TEST_CASE("POCKETPY") {
+
+    TEST_CASE("SCRIPTINP") {
 
         pkpy::VM* vm = new VM();
         PyObject* mod = vm->new_module("catos");
-        std::ifstream inputFile("../../test.py");
-        std::string str((std::istreambuf_iterator<char>(inputFile)),
-                        std::istreambuf_iterator<char>());
-
-        Game::register_class(vm, mod);
-        //ScriptComponent::register_class(vm, mod);
-        vm->register_user_class<ScriptComponent>(mod, "ScriptComponent", true);
-        vm->exec(str);
-/*        PyObject* obj = vm->getattr(vm->_main, "TestComponent");
-        PyObject* inst = vm->call(obj);
-        vm->call_method(inst, "update");*/
-
-
-        delete vm;
-    }
-
-    TEST_CASE("SCRIPT") {
-
-        pkpy::VM* vm = new VM();
-        PyObject* mod = vm->new_module("catos");
-        std::ifstream inputFile("../../test.py");
-        std::string str((std::istreambuf_iterator<char>(inputFile)),
-                        std::istreambuf_iterator<char>());
+        //////std::ifstream inputFile("../../test.py");
+        std::string str("import catos\n"
+                        "\n"
+                        "test = catos.Game()\n"
+                        "\n"
+                        "class TestComponent(catos.ScriptComponent):\n"
+                        "    def __init__(self):\n"
+                        "        print(\"init from PYTHON\")\n"
+                        "\n"
+                        "    def update(self):\n"
+                        "        print(\"update!\")\n"
+                        "\n"
+                        "    def destroy(self):\n"
+                        "        print(\"Destroy!\")\n"
+                        "\n"
+                        "\n"
+                        "");
 
         Game::register_class(vm, mod);
         vm->register_user_class<ScriptComponent>(mod, "ScriptComponent", true);

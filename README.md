@@ -18,7 +18,10 @@ https://github.com/thatalloguy/Catos/wiki
 - - [x] Central system for handling entities.
 - - [x] Base component
 
-- [ ] C# scripting
+- [ ] Python scripting (via pocketPy)
+- - [ ] Custom Component creation (in python)
+- - [ ] get Info from cpp
+- - [ ] change info that affects cpp (in python)
 - [ ] Resource manager
 - [ ] Dynamic Editor (via the reflection)
 - [ ] Atomus implementation.

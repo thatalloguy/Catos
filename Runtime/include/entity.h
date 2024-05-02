@@ -44,12 +44,9 @@ namespace catos {
         }
 
         static void _register(VM* vm, PyObject* mod, PyObject* type){
-            //PY_STRUCT_LIKE(Game)
-
             _bind(vm, type, "__init__(self)", &ScriptComponent::init);
             _bind(vm, type, "update(self)", &ScriptComponent::update);
             _bind(vm, type, "destroy(self)", &ScriptComponent::destroy);
-
         }
     };
 
@@ -64,10 +61,7 @@ namespace catos {
 
             if (end != srcCode.npos && start != srcCode.npos) {
                 componentName = srcCode.substr(start + 6, end - (start + 6));
-                std::cout << "NAME: " << componentName << "\n";
-
                 obj = vm->getattr(vm->_main, componentName.c_str());
-
                 _vm = vm;
             }
         }
