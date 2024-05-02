@@ -78,6 +78,11 @@ namespace catos::tests {
         registry.register_class<Game>()
                 .method("init", &Game::init);
 
+        registry.register_class<ScriptComponent>()
+                .method("init", &ScriptComponent::init)
+                .method("update", &ScriptComponent::update)
+                .method("destroy", &ScriptComponent::destroy);
+
 
 
 
@@ -128,10 +133,42 @@ namespace catos::tests {
                         std::istreambuf_iterator<char>());
 
         Game::register_class(vm, mod);
+        //ScriptComponent::register_class(vm, mod);
+        vm->register_user_class<ScriptComponent>(mod, "ScriptComponent", true);
         vm->exec(str);
+/*        PyObject* obj = vm->getattr(vm->_main, "TestComponent");
+        PyObject* inst = vm->call(obj);
+        vm->call_method(inst, "update");*/
+
 
         delete vm;
     }
+
+    TEST_CASE("SCRIPT") {
+
+        pkpy::VM* vm = new VM();
+        PyObject* mod = vm->new_module("catos");
+        std::ifstream inputFile("../../test.py");
+        std::string str((std::istreambuf_iterator<char>(inputFile)),
+                        std::istreambuf_iterator<char>());
+
+        Game::register_class(vm, mod);
+        vm->register_user_class<ScriptComponent>(mod, "ScriptComponent", true);
+        vm->exec(str);
+
+
+        Script testScript;
+        testScript.attachScript(str, vm);
+
+        Component& comp = testScript;
+
+        comp.init();
+        comp.update();
+        comp.destroy();
+
+        delete vm;
+    }
+
 }
 
 

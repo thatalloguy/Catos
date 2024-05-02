@@ -4,19 +4,91 @@
 #pragma once
 
 
+#include "pocketpy/pocketpy.h"
+
 #include <unordered_map>
 #include <vector>
 #include <memory>
 #include "types.h"
 #include "type_utils.h"
 
+using namespace pkpy;
+
 namespace catos {
 
     /// Component is an abstract class that is the base for any component.
-    struct Component {
-        virtual void init() = 0;
-        virtual void update() = 0;
-        virtual void destroy() = 0;
+    class Component {
+    public:
+        virtual void init() {};
+        virtual void update() {};
+        virtual void destroy() {};
+    };
+
+
+    class ScriptComponent {
+    public:
+        PY_CLASS(ScriptComponent, catos, ScriptComponent)
+        void init()  {}
+
+        void update()  {}
+
+        void destroy()  {}
+
+        // POCKETPY IMPL
+        bool operator==(ScriptComponent other) {
+            return false; // bob is unique ;)
+        }
+
+        ScriptComponent* _() {
+            return this;
+        }
+
+        static void _register(VM* vm, PyObject* mod, PyObject* type){
+            //PY_STRUCT_LIKE(Game)
+
+            _bind(vm, type, "__init__(self)", &ScriptComponent::init);
+            _bind(vm, type, "update(self)", &ScriptComponent::update);
+            _bind(vm, type, "destroy(self)", &ScriptComponent::destroy);
+
+        }
+    };
+
+    class Script : public Component {
+
+    public:
+
+        /// The component Must have catos.ScriptComponent before it in order for the script class to recognize it.
+        void attachScript(std::string& srcCode, VM* vm) {
+            auto end = srcCode.find("(catos.ScriptComponent");
+            auto start = srcCode.find("class ");
+
+            if (end != srcCode.npos && start != srcCode.npos) {
+                componentName = srcCode.substr(start + 6, end - (start + 6));
+                std::cout << "NAME: " << componentName << "\n";
+
+                obj = vm->getattr(vm->_main, componentName.c_str());
+
+                _vm = vm;
+            }
+        }
+
+        void init() override {
+            inst = _vm->call(obj);
+        };
+
+        void update() override {
+            _vm->call_method(inst, "update");
+        };
+
+        void destroy() override {
+            _vm->call_method(inst, "destroy");
+        };
+
+    private:
+        std::string componentName;
+        PyObject* obj = nullptr;
+        PyObject* inst = nullptr;
+        VM* _vm = nullptr;
     };
 
     /// Entities hold components which do the logic.
