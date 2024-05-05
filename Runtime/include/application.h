@@ -12,6 +12,8 @@
 
 namespace catos {
 
+
+    /// A struct that holds all info the application needs at launch
     struct AppCreationInfo {
         ///            MAJOR | MINOR | PATCH?
         uint version = 001;
@@ -19,14 +21,16 @@ namespace catos {
     };
 
 
+    /// Main class that holds all information.
     class App {
 
     public:
 
+        /// Initializes the Application (Also registers all "known" class to the registry)
         App(AppCreationInfo* creationInfo);
         ~App();
 
-
+        /// Returns if the app is still running.
         bool is_alive();
 
 
@@ -46,6 +50,7 @@ namespace catos {
         }
 
 
+        /// Returns a pointer to the info with what the application is made.
         AppCreationInfo* getAppInfo();
 
 
