@@ -29,37 +29,21 @@ namespace catos {
     class Entity {
 
     public:
-        //Entity() { };
         void setup(str name) { _name = name; };
         ~Entity() = default;
 
-        template<class Comp>
-        /// Get a component via its type. returns a pointer of that type.
-        Comp* getComponent(){
-
-            auto it = componentTable.find(type_utils::get_type_name<Comp>().c_str());
-
-            if (it != componentTable.end()) {
-                return it->second;
-            } else {
-                return nullptr;
-            }
-
-        };
 
         /// Get a component via name, returns a Component pointer.
-        Component* getComponent(str& name);
-
-        float test = 3.f;
+        Component* get_component(str& name);
 
         /// Add a component. Needs a type for the registry name.
-         void addComponent(Component* component, cstr name){
+         void add_component(Component* component, cstr name){
             std::string t = name;
             componentTable.emplace(t, component);
         };
 
         /// Returns the name of the entity
-        str& getName() { return _name; };
+        str& get_name() { return _name; };
 
 
 

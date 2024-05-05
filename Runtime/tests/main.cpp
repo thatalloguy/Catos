@@ -45,7 +45,7 @@ namespace catos::tests {
         CHECK(foo.data == *testFloat);
     }
 
-    TEST_CASE("REGISTRY::INSTANCES") {
+/*    TEST_CASE("REGISTRY::INSTANCES") {
 
         Registry registry;
 
@@ -60,7 +60,7 @@ namespace catos::tests {
         auto* test = registry.get<Foo>();
 
         CHECK(test->data == foo.data);
-    }
+    }*/
 
     TEST_CASE("REGISTRY::METHODS") {
 
@@ -75,8 +75,6 @@ namespace catos::tests {
                 .property("data", &Foo::data, "dummy variable")
                 .method("get_data", &Foo::get_data, "Returns the data of Foo");
 
-        registry.register_class<Game>()
-                .method("init", &Game::init, "Initializes the game");
 
         registry.register_class<Entity>()
                 .property("test", &Entity::test, "Dummy var")
@@ -105,27 +103,27 @@ namespace catos::tests {
     TEST_CASE("GAME::SCENES") {
         Game game;
 
-        auto s1 = game.createScene("test");
+        auto s1 = game.create_scene("test");
 
-        CHECK(s1 == game.getScene("test"));
+        CHECK(s1 == game.get_scene("test"));
 
-        game.changeSceneName("test", "test2");
+        game.change_scene_name("test", "test2");
 
-        CHECK(s1 == game.getScene("test2"));
+        CHECK(s1 == game.get_scene("test2"));
     }
 
     TEST_CASE("SCENES::ENTITIES") {
         Game game;
 
-        auto scene = game.createScene("test");
+        auto scene = game.create_scene("test");
 
-        auto bob = scene->newEntity("bob");
+        auto bob = scene->new_entity("bob");
 
-        CHECK(bob == scene->getEntity("bob"));
+        CHECK(bob == scene->get_entity("bob"));
 
-        scene->changeEntityName("bob", "henk");
+        scene->change_entity_name("bob", "henk");
 
-        CHECK(bob == scene->getEntity("henk"));
+        CHECK(bob == scene->get_entity("henk"));
     }
 
 }

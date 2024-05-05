@@ -1,4 +1,5 @@
-add_library(catos-runtime INTERFACE)
+add_library(catos-runtime INTERFACE
+        include/application.h)
 target_include_directories(catos-runtime INTERFACE include)
 
 

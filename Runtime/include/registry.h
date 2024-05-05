@@ -293,18 +293,6 @@ namespace catos {
         }
 
 
-        /// Used to bind an instance to an type
-        template<typename A>
-        void bind(const void* instance) {
-            _instance_register[type_utils::get_type_hash<A>()] = instance;
-        };
-
-        /// Returns the registered instance
-        template<typename A>
-        A* get() {
-            A* obj = (A*) (_instance_register[type_utils::get_type_hash<A>()]);
-            return obj;
-        }
 
         /// Returns the registered Type
         template<typename A>

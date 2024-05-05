@@ -21,19 +21,19 @@ namespace catos {
         ~Scene() = default;
 
         /// Returns the Name of the scene
-        cstr getName();
+        cstr get_name();
 
 
         ///entity stuff
 
         /// Returns an entity via Game;
-        std::shared_ptr<Entity> getEntity(cstr Name);
+        std::shared_ptr<Entity> get_entity(cstr Name);
 
         /// Creates a new entity with a Game, returns the newly created entity
-        std::shared_ptr<Entity>  newEntity(cstr Name);
+        std::shared_ptr<Entity>  new_entity(cstr Name);
         
         /// Changes the Game of the entity, returns the changed entity.
-        std::shared_ptr<Entity> changeEntityName(cstr oldGame, cstr newGame);
+        std::shared_ptr<Entity> change_entity_name(cstr oldGame, cstr newGame);
 
 
 
@@ -55,19 +55,15 @@ namespace catos {
         Game() = default;
         ~Game() = default;
 
-        void init() {
-            std::cout << "INIT OF GAME OBJECT FROM CPP \n";
-        };
-
-        GameConfig& getConfig() { return config; };
+        GameConfig& get_config() { return config; };
 
         ///Scene handling
         /// Creates a scene via a Game, returns the newly created scene.
-        std::shared_ptr<Scene> createScene(cstr Game);
+        std::shared_ptr<Scene> create_scene(cstr Game);
         /// Changes the Game of a scene, returns the changed scene.
-        std::shared_ptr<Scene> changeSceneName(cstr oldGame, cstr newGame);
+        std::shared_ptr<Scene> change_scene_name(cstr oldGame, cstr newGame);
         /// Returns the scene via the Game
-        std::shared_ptr<Scene> getScene(cstr Game);
+        std::shared_ptr<Scene> get_scene(cstr Game);
 
     private:
         GameConfig config;
