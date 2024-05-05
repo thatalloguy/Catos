@@ -7,8 +7,7 @@
 
 #include "registry.h"
 #include "game.h"
-
-
+#include "application.h"
 
 
 struct Foo {
@@ -45,22 +44,7 @@ namespace catos::tests {
         CHECK(foo.data == *testFloat);
     }
 
-/*    TEST_CASE("REGISTRY::INSTANCES") {
 
-        Registry registry;
-
-        Foo foo;
-
-
-        foo.data = 4;
-
-        registry.bind<Foo>(&foo);
-
-
-        auto* test = registry.get<Foo>();
-
-        CHECK(test->data == foo.data);
-    }*/
 
     TEST_CASE("REGISTRY::METHODS") {
 
@@ -77,7 +61,6 @@ namespace catos::tests {
 
 
         registry.register_class<Entity>()
-                .property("test", &Entity::test, "Dummy var")
                 .method("init", &Entity::init, "init")
                 .method("update", &Entity::update, "update the entity")
                 .method("destroy", &Entity::destroy, "destroy");
@@ -124,6 +107,30 @@ namespace catos::tests {
         scene->change_entity_name("bob", "henk");
 
         CHECK(bob == scene->get_entity("henk"));
+    }
+
+
+    TEST_CASE("Application::INSTANCES") {
+
+        AppCreationInfo appinfo{};
+
+
+        App app{&appinfo};
+
+
+        CHECK(app.is_alive());
+
+        Foo foo;
+
+        foo.data = 3.4f;
+
+        app.bind<Foo>(&foo);
+
+
+        auto test = app.get<Foo>();
+
+        CHECK(foo.data == test->data);
+
     }
 
 }
