@@ -9,6 +9,8 @@
 #include "game.h"
 #include "application.h"
 
+#include <mono/jit/jit.h>
+#include <mono/metadata/assembly.h>
 
 struct Foo {
     float data = 2;
@@ -133,6 +135,17 @@ namespace catos::tests {
 
     }
 
+    TEST_CASE("MONO::TEST") {
+
+        mono_set_assemblies_path("../../Thirdparty/Mono/lib/");
+
+        MonoDomain* rootDomain = mono_jit_init("MyScriptRuntime");
+
+
+        CHECK(rootDomain != nullptr);
+
+        mono_jit_cleanup(rootDomain);
+    }
 }
 
 

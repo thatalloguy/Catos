@@ -13,8 +13,14 @@ if(EMSCRIPTEN)
 endif()
 
 include_directories(Thirdparty/tinystl/include/)
+include_directories(Thirdparty/Mono/include/mono-2.0/)
+link_directories(Thirdparty/Mono/lib/)
 
 add_library(catos-headers INTERFACE)
 
+
+
 add_subdirectory(Player)
 add_subdirectory(Runtime)
+
+

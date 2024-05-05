@@ -1,5 +1,4 @@
-add_library(catos-runtime INTERFACE
-        include/application.h)
+add_library(catos-runtime INTERFACE)
 target_include_directories(catos-runtime INTERFACE include)
 
 
@@ -14,5 +13,6 @@ file(GLOB_RECURSE CATOS_RUNTIME_TEST tests/*.h tests/*.hpp tests/*.c tests/*.cpp
 add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST})
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
+target_link_libraries(catos-runtime-static PUBLIC mono-2.0-sgen.lib)
 
 add_test(NAME catos-runtime-tests COMMAND catos-runtime-tests)
