@@ -1,6 +1,6 @@
 // engine includes
 #pragma once
-#include <registry.h>
+#include "core/registry.h"
 #include <fstream>
 
 using namespace catos;

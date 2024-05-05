@@ -2,9 +2,9 @@
 // Created by allos on 5/5/2024.
 //
 
-#include "application.h"
-#include "game.h"
-#include "registry.h"
+#include "core/application.h"
+#include "core/game.h"
+#include "core/registry.h"
 
 catos::App::App(AppCreationInfo* creationInfo) {
 

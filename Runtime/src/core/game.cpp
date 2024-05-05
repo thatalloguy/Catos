@@ -2,7 +2,7 @@
 // Created by allos on 4/30/2024.
 //
 
-#include "game.h"
+#include "core/game.h"
 
 
 namespace catos {

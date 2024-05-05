@@ -2,7 +2,7 @@
 // Created by allos on 4/30/2024.
 //
 
-#include "entity.h"
+#include "core/entity.h"
 
 using namespace catos;
 

@@ -2,12 +2,13 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
 
-#include <type_utils.h>
+#include "core/type_utils.h"
 #include <TINYSTL/string.h>
 
-#include "registry.h"
-#include "game.h"
-#include "application.h"
+#include "core/registry.h"
+#include "core/game.h"
+#include "core/application.h"
+#include "scripting/scriptingEngine.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -135,16 +136,15 @@ namespace catos::tests {
 
     }
 
-    TEST_CASE("MONO::TEST") {
 
-        mono_set_assemblies_path("../../Thirdparty/Mono/lib/");
+    TEST_CASE("ScriptingEngine::Init") {
 
-        MonoDomain* rootDomain = mono_jit_init("MyScriptRuntime");
+        ScriptingEngine scriptingEngine;
+
+        scriptingEngine.init();
 
 
-        CHECK(rootDomain != nullptr);
-
-        mono_jit_cleanup(rootDomain);
+        scriptingEngine.clean_up();
     }
 }
 
