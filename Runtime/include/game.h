@@ -3,7 +3,6 @@
 ///
 #pragma once
 
-#include <pocketpy.h>
 
 #include <string>
 #include <unordered_map>
@@ -11,7 +10,6 @@
 #include "types.h"
 #include "entity.h"
 
-using namespace pkpy;
 
 namespace catos {
 
@@ -54,7 +52,6 @@ namespace catos {
     class Game {
 
     public:
-        PY_CLASS(Game, catos, Game)
         Game() = default;
         ~Game() = default;
 
@@ -71,24 +68,6 @@ namespace catos {
         std::shared_ptr<Scene> changeSceneName(cstr oldGame, cstr newGame);
         /// Returns the scene via the Game
         std::shared_ptr<Scene> getScene(cstr Game);
-        
-        // POCKETPY IMPL
-        bool operator==(Game other) {
-            return false; // bob is unique ;)
-        }
-
-        Game* _() {
-            return this;
-        }
-
-        static void _register(VM* vm, PyObject* mod, PyObject* type){
-            //PY_STRUCT_LIKE(Game)
-
-
-            _bind(vm, type, "__init__(self)", &Game::init);
-
-
-        }
 
     private:
         GameConfig config;

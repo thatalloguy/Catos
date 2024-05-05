@@ -6,7 +6,7 @@ namespace catos::type_utils {
     // -----Returns the name of the given type-----
     template<typename T>
     std::string get_type_name() {
-        return (std::string)  typeid(T).name();
+        return std::string(typeid(T).name());
     };
 
     // -----Returns the hash of the given Type-----
