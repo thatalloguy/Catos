@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cassert>
 #include "scripting/scriptingEngine.h"
 #include "mono/metadata/assembly.h"
 
@@ -93,9 +94,6 @@ void catos::ScriptingEngine::init() {
 void catos::ScriptingEngine::clean_up() {
 
     mono_jit_cleanup(_context->_rootDomain);
-
-
-
     delete _context;
 }
 
@@ -116,7 +114,37 @@ void catos::ScriptingEngine::init_mono() {
 
     uint32_t size;
 
-    MonoAssembly* assembly = load_assembly(R"(C:\Users\allos\source\Catos\Resources\Catos\CatosRuntime\bin\Debug\net8.0\CatosRuntime.dll)");
+    _context->_mainAssembly = load_assembly(R"(C:\Users\allos\source\Catos\Resources\Catos\CatosRuntime\bin\Debug\net8.0\CatosRuntime.dll)");
 
-    print_assembly_types(assembly);
+    print_assembly_types(_context->_mainAssembly);
+
+    MonoClass* testingClass = get_class_in_assembly(_context->_mainAssembly, "", "CSharpTesting");
+
+    if (testingClass != nullptr) {
+        std::cout << "Successfully got class from assembly\n";
+    } else  {
+        return;
+    }
+
+    //New instance of the test class
+    MonoObject* classInstance = mono_object_new(_context->_appDomain, testingClass);
+
+    assert(testingClass != nullptr);
+
+    mono_runtime_object_init(classInstance);
+
+}
+
+MonoClass *catos::ScriptingEngine::get_class_in_assembly(MonoAssembly *assembly, const char *namespaceName,
+                                                         const char *className) {
+
+    MonoImage* image = mono_assembly_get_image(assembly);
+    MonoClass* klass = mono_class_from_name(image, namespaceName, className);
+
+    if (klass == nullptr) {
+        std::cerr << "Error: Could not find class: " << className << " In namespace:  " << namespaceName << "\n";
+        return nullptr;
+    }
+
+    return klass;
 }

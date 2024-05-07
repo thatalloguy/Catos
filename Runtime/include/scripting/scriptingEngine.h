@@ -1,6 +1,9 @@
 //
 // Created by allos on 5/5/2024.
 //
+
+/// Note when calling a onUpdate function please use Unmanaged Method Thunks.!!!
+
 #pragma once
 
 #include "mono/jit/jit.h"
@@ -10,6 +13,8 @@ namespace catos {
     struct ScriptContext {
         MonoDomain* _rootDomain = nullptr;
         MonoDomain*  _appDomain = nullptr;
+
+        MonoAssembly* _mainAssembly = nullptr;
     };
 
 
@@ -34,6 +39,9 @@ namespace catos {
 
         //Util
         void print_assembly_types(MonoAssembly* assembly);
+
+        //Class
+        MonoClass* get_class_in_assembly(MonoAssembly* assembly, const char* namespaceName, const char* className);
     };
 
 
