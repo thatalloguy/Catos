@@ -28,6 +28,12 @@ namespace catos {
 
         void init_mono();
 
+        //loading assemblies
+        char* read_bytes(const std::string& filepath, uint32_t* outSize);
+        MonoAssembly* load_assembly(const std::string& assemblyPath);
+
+        //Util
+        void print_assembly_types(MonoAssembly* assembly);
     };
 
 

@@ -8,13 +8,13 @@
 #include "mono/metadata/assembly.h"
 
 
-char* ReadBytes(const std::string& filepath, uint32_t* outSize)
-{
+
+char *catos::ScriptingEngine::read_bytes(const std::string &filepath, uint32_t *outSize) {
     std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
 
     if (!stream)
     {
-        // Failed to open the file
+        std::cerr << "Could not load file: " << filepath << "\n";
         return nullptr;
     }
 
@@ -24,7 +24,7 @@ char* ReadBytes(const std::string& filepath, uint32_t* outSize)
 
     if (size == 0)
     {
-        // File is empty
+        std::cerr << "File size is 0 >:( \n";
         return nullptr;
     }
 
@@ -36,10 +36,10 @@ char* ReadBytes(const std::string& filepath, uint32_t* outSize)
     return buffer;
 }
 
-MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath)
-{
+
+MonoAssembly *catos::ScriptingEngine::load_assembly(const std::string &assemblyPath) {
     uint32_t fileSize = 0;
-    char* fileData = ReadBytes(assemblyPath, &fileSize);
+    char* fileData = read_bytes(assemblyPath, &fileSize);
 
     // NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
     MonoImageOpenStatus status;
@@ -62,8 +62,7 @@ MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath)
     return assembly;
 }
 
-void PrintAssemblyTypes(MonoAssembly* assembly)
-{
+void catos::ScriptingEngine::print_assembly_types(MonoAssembly *assembly) {
     MonoImage* image = mono_assembly_get_image(assembly);
     const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
     int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
@@ -81,6 +80,8 @@ void PrintAssemblyTypes(MonoAssembly* assembly)
 }
 
 
+
+
 void catos::ScriptingEngine::init() {
 
     _context = new ScriptContext;
@@ -91,6 +92,7 @@ void catos::ScriptingEngine::init() {
 
 void catos::ScriptingEngine::clean_up() {
 
+    mono_jit_cleanup(_context->_rootDomain);
 
 
 
@@ -114,7 +116,7 @@ void catos::ScriptingEngine::init_mono() {
 
     uint32_t size;
 
-    MonoAssembly* assembly = LoadCSharpAssembly(R"(C:\Users\allos\source\Catos\Resources\Catos\CatosRuntime\bin\Debug\net8.0\CatosRuntime.dll)");
+    MonoAssembly* assembly = load_assembly(R"(C:\Users\allos\source\Catos\Resources\Catos\CatosRuntime\bin\Debug\net8.0\CatosRuntime.dll)");
 
-    PrintAssemblyTypes(assembly);
+    print_assembly_types(assembly);
 }
