@@ -39,9 +39,12 @@ namespace catos {
 
         //Util
         void print_assembly_types(MonoAssembly* assembly);
+        void call_print_method(MonoObject* objectInstance);
+
 
         //Class
         MonoClass* get_class_in_assembly(MonoAssembly* assembly, const char* namespaceName, const char* className);
+        MonoObject* instantiate_class(const char* namespaceName, const char* className);
     };
 
 

@@ -127,11 +127,8 @@ void catos::ScriptingEngine::init_mono() {
     }
 
     //New instance of the test class
-    MonoObject* classInstance = mono_object_new(_context->_appDomain, testingClass);
-
-    assert(testingClass != nullptr);
-
-    mono_runtime_object_init(classInstance);
+    MonoObject* testInstance = instantiate_class("", "CSharpTesting");
+    call_print_method(testInstance);
 
 }
 
@@ -147,4 +144,43 @@ MonoClass *catos::ScriptingEngine::get_class_in_assembly(MonoAssembly *assembly,
     }
 
     return klass;
+}
+
+void catos::ScriptingEngine::call_print_method(MonoObject *objectInstance) {
+    MonoClass* instanceClass = mono_object_get_class(objectInstance);
+
+
+    //get a ref to the method.
+    MonoMethod* method = mono_class_get_method_from_name(instanceClass, "PrintFloatVar", 0);
+
+    if (method == nullptr) {
+        std::cerr << "INVALID METHOD\n";
+        return;
+    }
+
+    MonoObject* exception = nullptr;
+
+    mono_runtime_invoke(method, objectInstance, nullptr, &exception);
+
+    if (exception != nullptr) {
+        std::cerr << "Exception when running method!\n";
+    }
+
+}
+
+MonoObject *catos::ScriptingEngine::instantiate_class(const char *namespaceName, const char *className) {
+    MonoClass* testingClass = get_class_in_assembly(_context->_mainAssembly, namespaceName, className);
+
+    MonoObject* classInstance = mono_object_new(_context->_appDomain, testingClass);
+
+    if (classInstance == nullptr) {
+
+        std::cerr << "Could not create instance of " << className << "\n";
+
+        return nullptr;
+    }
+
+    mono_runtime_object_init(classInstance);
+
+    return classInstance;
 }
