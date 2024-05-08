@@ -139,6 +139,15 @@ void catos::ScriptingEngine::init_mono() {
         std::cout << "We good its public :) \n";
     }
 
+    MonoProperty* nameProperty = mono_class_get_property_from_name(testingClass, "Name");
+
+    uint8_t namePropertyAccessibility = get_property_accessbility(nameProperty);
+
+    if (namePropertyAccessibility & (uint8_t)FieldAccessibility::Public)
+    {
+        std::cout << "We good its public :) \n";
+    }
+
 }
 
 MonoClass *catos::ScriptingEngine::get_class_in_assembly(MonoAssembly *assembly, const char *namespaceName,
@@ -295,4 +304,35 @@ uint8_t catos::ScriptingEngine::get_property_accessbility(MonoProperty *property
     }
 
     return accessibility;
+}
+
+bool catos::ScriptingEngine::check_mono_error(MonoError &error) {
+    bool hasError = !mono_error_ok(&error);
+    if (hasError) {
+        unsigned short errorCode = mono_error_get_error_code(&error);
+        const char* errorMessage = mono_error_get_message(&error);
+
+        std::cerr << "Mono Error: " << errorCode << "\n";
+        std::cerr << "Message: " << errorMessage << "\n";
+        mono_error_cleanup(&error);
+
+    }// ruh roh
+
+    return hasError;
+}
+
+std::string catos::ScriptingEngine::mono_string_to_string(MonoString *monoString) {
+    if (monoString == nullptr || mono_string_length(monoString) == 0 ) {
+        return "";
+    }
+
+    MonoError error;
+    char* utf8 = mono_string_to_utf8_checked(monoString, &error);
+    if (check_mono_error(error)) {
+        return "";
+    }
+    std::string result(utf8);
+    mono_free(utf8);
+
+    return result;
 }

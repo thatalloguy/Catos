@@ -49,7 +49,8 @@ namespace catos {
         //Util
         void print_assembly_types(MonoAssembly* assembly);
         void call_print_method(MonoObject* objectInstance);
-
+        bool check_mono_error(MonoError& error);
+        std::string mono_string_to_string(MonoString* monoString);
 
         //Class
         MonoClass* get_class_in_assembly(MonoAssembly* assembly, const char* namespaceName, const char* className);
