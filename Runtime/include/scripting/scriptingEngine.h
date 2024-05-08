@@ -10,6 +10,15 @@
 
 namespace catos {
 
+    enum class FieldAccessibility : uint8_t  {
+        None = 0,
+        Private = (1 << 0),
+        Internal = (1 << 1),
+        Protected = (1 << 2),
+        Public = (1 << 3)
+    };
+
+
     struct ScriptContext {
         MonoDomain* _rootDomain = nullptr;
         MonoDomain*  _appDomain = nullptr;
@@ -45,6 +54,9 @@ namespace catos {
         //Class
         MonoClass* get_class_in_assembly(MonoAssembly* assembly, const char* namespaceName, const char* className);
         MonoObject* instantiate_class(const char* namespaceName, const char* className);
+
+        //Fields
+        uint8_t get_field_accessibility(MonoClassField* field);
     };
 
 

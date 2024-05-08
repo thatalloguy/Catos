@@ -7,6 +7,7 @@
 #include <cassert>
 #include "scripting/scriptingEngine.h"
 #include "mono/metadata/assembly.h"
+#include "mono/metadata/attrdefs.h"
 
 
 
@@ -130,6 +131,10 @@ void catos::ScriptingEngine::init_mono() {
     MonoObject* testInstance = instantiate_class("", "CSharpTesting");
     call_print_method(testInstance);
 
+    MonoClassField* floatField = mono_class_get_field_from_name(testingClass, "MyPublicFloatVar");
+
+
+
 }
 
 MonoClass *catos::ScriptingEngine::get_class_in_assembly(MonoAssembly *assembly, const char *namespaceName,
@@ -183,4 +188,46 @@ MonoObject *catos::ScriptingEngine::instantiate_class(const char *namespaceName,
     mono_runtime_object_init(classInstance);
 
     return classInstance;
+}
+
+uint8_t catos::ScriptingEngine::get_field_accessibility(MonoClassField *field) {
+    uint8_t accessibility = (uint8_t)FieldAccessibility::None;
+    uint32_t accessFlag = mono_field_get_flags(field) & MONO_FIELD_ATTR_FIELD_ACCESS_MASK;
+
+    switch (accessFlag) {
+        case MONO_FIELD_ATTR_PRIVATE:
+        {
+            accessibility = (uint8_t) FieldAccessibility::Private;
+            break;
+        }
+        case MONO_FIELD_ATTR_FAM_AND_ASSEM:
+        {
+            accessibility |= (uint8_t)FieldAccessibility::Protected;
+            accessibility |= (uint8_t)FieldAccessibility::Internal;
+            break;
+        }
+        case MONO_FIELD_ATTR_ASSEMBLY:
+        {
+            accessibility = (uint8_t)FieldAccessibility::Internal;
+            break;
+        }
+        case MONO_FIELD_ATTR_FAMILY:
+        {
+            accessibility = (uint8_t)FieldAccessibility::Protected;
+            break;
+        }
+        case MONO_FIELD_ATTR_FAM_OR_ASSEM:
+        {
+            accessibility |= (uint8_t)FieldAccessibility::Private;
+            accessibility |= (uint8_t)FieldAccessibility::Protected;
+            break;
+        }
+        case MONO_FIELD_ATTR_PUBLIC:
+        {
+            accessibility = (uint8_t)FieldAccessibility::Public;
+            break;
+        }
+    }
+
+    return accessibility;
 }
