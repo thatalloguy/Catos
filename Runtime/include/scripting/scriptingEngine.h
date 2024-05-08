@@ -57,6 +57,7 @@ namespace catos {
 
         //Fields
         uint8_t get_field_accessibility(MonoClassField* field);
+        uint8_t get_property_accessbility(MonoProperty* property);
     };
 
 

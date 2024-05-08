@@ -132,8 +132,12 @@ void catos::ScriptingEngine::init_mono() {
     call_print_method(testInstance);
 
     MonoClassField* floatField = mono_class_get_field_from_name(testingClass, "MyPublicFloatVar");
+    uint8_t floatFieldAccessibility = get_field_accessibility(floatField);
 
-
+    if (floatFieldAccessibility & (uint8_t)FieldAccessibility::Public)
+    {
+        std::cout << "We good its public :) \n";
+    }
 
 }
 
@@ -227,6 +231,67 @@ uint8_t catos::ScriptingEngine::get_field_accessibility(MonoClassField *field) {
             accessibility = (uint8_t)FieldAccessibility::Public;
             break;
         }
+    }
+
+    return accessibility;
+}
+
+uint8_t catos::ScriptingEngine::get_property_accessbility(MonoProperty *property) {
+    uint8_t  accessibility = (uint8_t)FieldAccessibility::None;
+
+    MonoMethod * propertyGetter = mono_property_get_get_method(property);
+    if (propertyGetter != nullptr) {
+        uint32_t  accessFlag = mono_method_get_flags(propertyGetter, nullptr) & MONO_METHOD_ATTR_ACCESS_MASK;
+
+        switch (accessFlag)
+        {
+            case MONO_FIELD_ATTR_PRIVATE:
+            {
+                accessibility = (uint8_t)FieldAccessibility::Private;
+                break;
+            }
+            case MONO_FIELD_ATTR_FAM_AND_ASSEM:
+            {
+                accessibility |= (uint8_t)FieldAccessibility::Protected;
+                accessibility |= (uint8_t)FieldAccessibility::Internal;
+                break;
+            }
+            case MONO_FIELD_ATTR_ASSEMBLY:
+            {
+                accessibility = (uint8_t)FieldAccessibility::Internal;
+                break;
+            }
+            case MONO_FIELD_ATTR_FAMILY:
+            {
+                accessibility = (uint8_t)FieldAccessibility::Protected;
+                break;
+            }
+            case MONO_FIELD_ATTR_FAM_OR_ASSEM:
+            {
+                accessibility |= (uint8_t)FieldAccessibility::Private;
+                accessibility |= (uint8_t)FieldAccessibility::Protected;
+                break;
+            }
+            case MONO_FIELD_ATTR_PUBLIC:
+            {
+                accessibility = (uint8_t)FieldAccessibility::Public;
+                break;
+            }
+        }
+    }
+
+    //Get a ref to the prop setter method
+    MonoMethod* propertySetter = mono_property_get_set_method(property);
+    if (propertySetter != nullptr)
+    {
+        // Extract the access flags from the setters flags
+        uint32_t accessFlag = mono_method_get_flags(propertySetter, nullptr) & MONO_METHOD_ATTR_ACCESS_MASK;
+        if (accessFlag != MONO_FIELD_ATTR_PUBLIC)
+            accessibility = (uint8_t)FieldAccessibility::Private;
+    }
+    else
+    {
+        accessibility = (uint8_t)FieldAccessibility::Private;
     }
 
     return accessibility;
