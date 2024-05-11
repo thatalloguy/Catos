@@ -22,9 +22,14 @@ namespace catos {
 
 
 
-    template<typename T, void(T::*Func)()>
-    void test(T& instance) {
-        (instance.*Func)();
+    template<typename T, auto Func, typename... Args>
+    void static_function(T& instance, Args... args) {
+        (instance.*Func)(args...);
+    }
+
+    template<typename T, auto Func, typename... Args>
+    void embed_function(const char* name) {
+        mono_add_internal_call("Lib::test_native", reinterpret_cast<void(*)>(static_function<T, Func, Args...>));
     }
 
     struct ScriptContext {
@@ -36,8 +41,9 @@ namespace catos {
 
     struct Cpp {
         int name;
-        void printCpp() {
+        void printCpp(int age) {
             std::cout << "My name is: " << name << "\n";
+            std::cout << "My Age is: " << age << "\n";
         };
     };
 
