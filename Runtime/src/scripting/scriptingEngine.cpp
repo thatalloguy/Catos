@@ -142,8 +142,6 @@ void catos::ScriptingEngine::init_mono() {
 
     if (floatFieldAccessibility & (uint8_t)FieldAccessibility::Public)
     {
-        std::cout << "We good its public :) \n";
-
         float value;
         mono_field_get_value(testInstance, floatField, &value);
 
