@@ -22,7 +22,8 @@ https://github.com/thatalloguy/Catos/wiki
 - - [x] Creating instances of classes.
 - - [x] Calling functions of instances.
 - - [x] Getting and Setting fields.
-- - [ ] Calling Cpp from C#
+- - [x] Calling Cpp from C#
+- - [ ] Wrap all classes
 - - [ ] Refactor.
 - - [ ] Script Object. 
 
