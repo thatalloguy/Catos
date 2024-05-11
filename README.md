@@ -23,7 +23,7 @@ https://github.com/thatalloguy/Catos/wiki
 - - [x] Calling functions of instances.
 - - [x] Getting and Setting fields.
 - - [x] Calling Cpp from C#
-- - [ ] Wrap all classes
+- - [ ] Embedding intergration with the reflection system
 - - [ ] Refactor.
 - - [ ] Script Object. 
 
