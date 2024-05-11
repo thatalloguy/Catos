@@ -6,6 +6,7 @@
 #include <any>
 #include "type_utils.h"
 #include "types.h"
+#include "mono/metadata/loader.h"
 #include <functional>
 #include <deque>
 #include <fstream>
@@ -114,11 +115,12 @@ namespace catos {
 
     public:
         template<typename ReturnType, class ClassType, typename... Args>
-        Method(ReturnType(ClassType::* method)(Args...)) {
+        Method(ReturnType(ClassType::* method)(Args...), bool doCoolShit = false) {
             _mFunc = MethodInvoker<ReturnType, ClassType, Args...>(method);
 
 
             ptr = &MethodInvoker<ReturnType, ClassType, Args...>::callFunction;
+
 
             returnName = type_utils::get_type_name<ReturnType>();
         };

@@ -98,8 +98,8 @@ void catos::ScriptingEngine::clean_up() {
     delete _context;
 }
 
-void printCpp(catos::Cpp& instance) {
-    std::cout << "My name is: " << instance.name << "\n";
+void printCpp_static(catos::Cpp& instance) {
+    instance.printCpp();
 }
 
 void catos::ScriptingEngine::init_mono() {
@@ -123,14 +123,22 @@ void catos::ScriptingEngine::init_mono() {
 
     print_assembly_types(_context->_mainAssembly);
 
-    mono_add_internal_call("Lib::printCpp", printCpp);
+
+
+
+    /// Generate Bindings here!
+
+
+
+
+    mono_add_internal_call("Lib::test_native", reinterpret_cast<void(*)>(test<Cpp, &Cpp::printCpp>));
+
+    mono_add_internal_call("Lib::printCpp_native", printCpp_static);
 
 
     MonoClass* testingClass = get_class_in_assembly(_context->_mainAssembly, "", "CSharpTesting");
 
-    if (testingClass != nullptr) {
-        std::cout << "Successfully got class from assembly\n";
-    } else  {
+    if (testingClass == nullptr) {
         return;
     }
 
@@ -157,7 +165,7 @@ void catos::ScriptingEngine::init_mono() {
 
     if (namePropertyAccessibility & (uint8_t)FieldAccessibility::Public)
     {
-        std::cout << "We good its public :) \n";
+        ////std::cout << "We good its public :) \n";
         MonoString* nameValue = (MonoString*)mono_property_get_value(nameProperty, testInstance, nullptr, nullptr);
         std::string nameStr = mono_string_to_string(nameValue);
 

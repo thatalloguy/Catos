@@ -6,7 +6,9 @@
 
 #pragma once
 
+#include <core/registry.h>
 #include "mono/jit/jit.h"
+
 
 namespace catos {
 
@@ -19,6 +21,12 @@ namespace catos {
     };
 
 
+
+    template<typename T, void(T::*Func)()>
+    void test(T& instance) {
+        (instance.*Func)();
+    }
+
     struct ScriptContext {
         MonoDomain* _rootDomain = nullptr;
         MonoDomain*  _appDomain = nullptr;
@@ -28,7 +36,9 @@ namespace catos {
 
     struct Cpp {
         int name;
-        void InstanceTest() {};
+        void printCpp() {
+            std::cout << "My name is: " << name << "\n";
+        };
     };
 
     class ScriptingEngine {
@@ -40,7 +50,6 @@ namespace catos {
 
 
     private:
-
 
         ScriptContext* _context;
 
@@ -63,6 +72,10 @@ namespace catos {
         //Fields
         uint8_t get_field_accessibility(MonoClassField* field);
         uint8_t get_property_accessbility(MonoProperty* property);
+
+
+        ///Test
+
 
     };
 
