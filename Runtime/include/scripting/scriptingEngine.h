@@ -21,17 +21,6 @@ namespace catos {
     };
 
 
-
-    template<typename T, auto Func, typename... Args>
-    void static_function(T& instance, Args... args) {
-        (instance.*Func)(args...);
-    }
-
-    template<typename T, auto Func, typename... Args>
-    void embed_function(const char* name) {
-        mono_add_internal_call("Lib::test_native", reinterpret_cast<void(*)>(static_function<T, Func, Args...>));
-    }
-
     struct ScriptContext {
         MonoDomain* _rootDomain = nullptr;
         MonoDomain*  _appDomain = nullptr;
@@ -53,6 +42,23 @@ namespace catos {
         void init();
 
         void clean_up();
+
+
+        ///Test
+
+
+        template<typename T, auto Func, typename... Args>
+        static void static_function(T& instance, Args... args) {
+            (instance.*Func)(args...);
+        }
+
+
+        ///TODO intergrate this with the reflection system
+        template<typename T, auto Func, typename... Args>
+        static void embed_function(const char* name) {
+            mono_add_internal_call(std::string(std::string("Lib::") + name).c_str(), reinterpret_cast<void(*)>(static_function<T, Func, Args...>));
+        }
+
 
 
     private:

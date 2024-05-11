@@ -98,10 +98,6 @@ void catos::ScriptingEngine::clean_up() {
     delete _context;
 }
 
-void printCpp_static(catos::Cpp& instance) {
-    instance.printCpp(0);
-}
-
 void catos::ScriptingEngine::init_mono() {
     mono_set_assemblies_path("../../Thirdparty/Mono/lib/");
 
@@ -128,15 +124,8 @@ void catos::ScriptingEngine::init_mono() {
 
     /// Generate Bindings here!
 
-
-
-
-    //mono_add_internal_call("Lib::test_native", reinterpret_cast<void(*)>(static_function<Cpp, &Cpp::printCpp, int>));
-
-
-    embed_function<Cpp, &Cpp::printCpp, int>();
-
-    mono_add_internal_call("Lib::printCpp_native", printCpp_static);
+    ///TODO intergrate this with the reflection system
+    embed_function<Cpp, &Cpp::printCpp, int>("printCpp_native");
 
 
     MonoClass* testingClass = get_class_in_assembly(_context->_mainAssembly, "", "CSharpTesting");
