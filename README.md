@@ -19,7 +19,12 @@ https://github.com/thatalloguy/Catos/wiki
 - - [x] Base component
 
 - [ ] C# scripting engine
-- - [ ] Create a better to do of C# scripting engine.  
+- - [x] Creating instances of classes.
+- - [x] Calling functions of instances.
+- - [x] Getting and Setting fields.
+- - [ ] Calling Cpp from C#
+- - [ ] Refactor.
+- - [ ] Script Object. 
 
 - [ ] Resource manager
 - [ ] Dynamic Editor (via the reflection)

@@ -98,6 +98,10 @@ void catos::ScriptingEngine::clean_up() {
     delete _context;
 }
 
+void printCpp(catos::Cpp& instance) {
+    std::cout << "My name is: " << instance.name << "\n";
+}
+
 void catos::ScriptingEngine::init_mono() {
     mono_set_assemblies_path("../../Thirdparty/Mono/lib/");
 
@@ -118,6 +122,9 @@ void catos::ScriptingEngine::init_mono() {
     _context->_mainAssembly = load_assembly(R"(C:\Users\allos\source\Catos\Resources\Catos\CatosRuntime\bin\Debug\net8.0\CatosRuntime.dll)");
 
     print_assembly_types(_context->_mainAssembly);
+
+    mono_add_internal_call("Lib::printCpp", printCpp);
+
 
     MonoClass* testingClass = get_class_in_assembly(_context->_mainAssembly, "", "CSharpTesting");
 

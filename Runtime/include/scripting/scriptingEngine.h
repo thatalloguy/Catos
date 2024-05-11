@@ -26,6 +26,10 @@ namespace catos {
         MonoAssembly* _mainAssembly = nullptr;
     };
 
+    struct Cpp {
+        int name;
+        void InstanceTest() {};
+    };
 
     class ScriptingEngine {
     public:
@@ -59,6 +63,7 @@ namespace catos {
         //Fields
         uint8_t get_field_accessibility(MonoClassField* field);
         uint8_t get_property_accessbility(MonoProperty* property);
+
     };
 
 
