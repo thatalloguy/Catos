@@ -307,9 +307,9 @@ namespace catos {
 
 
                 if (namespacePos != std::string::npos) {
-                    out << "class " << type.second.name.substr(namespacePos + 2) << " {\n";
+                    out << "struct " << type.second.name.substr(namespacePos + 2) << " {\n";
                 } else {
-                    out << "class " << type.second.name.substr(structPos + 7) <<  " {\n";
+                    out << "struct " << type.second.name.substr(structPos + 7) <<  " {\n";
                 }
 
                 for (auto& prop : type.second.properties) {
@@ -318,9 +318,21 @@ namespace catos {
                 }
 
                 for (auto meth : type.second.methods) {
+
+                    auto nPos = meth.second->returnName.find("::");
+                    auto sPos = meth.second->returnName.find("struct");
+
+                    if (nPos != std::string::npos || sPos != std::string::npos) {
+                        out << "      public void " << meth.first << "() {\n";
+                        out << "            LibNative." << meth.first << "_native(ref this);\n";
+                        out << "      }\n";
+                    } else {
                         out << "      public " << meth.second->returnName << " " << meth.first << "() {\n";
                         out << "            LibNative." << meth.first << "_native(ref this);\n";
                         out << "      }\n";
+                    }
+
+
                 }
 
                 out << "}\n \n";
@@ -345,9 +357,21 @@ namespace catos {
                 out << "      //BEGIN DEF For " << finalName.c_str() << "\n";
 
                 for (auto meth : type.second.methods) {
-                    out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";
-                    out << "      public static extern " << meth.second->returnName << " " << meth.first << "_native(ref " << finalName << ");\n \n";
-                }
+
+                    auto nPos = meth.second->returnName.find("::");
+                    auto sPos = meth.second->returnName.find("struct");
+
+                    if (nPos != std::string::npos || sPos != std::string::npos) {
+                        out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";
+                        out << "      public static extern void " << meth.first << "_native(ref " << finalName << " instance);\n \n";
+
+                    } else {
+                        out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";
+                        out << "      public static extern " << meth.second->returnName << " " << meth.first << "_native(ref " << finalName << " instance);\n \n";
+
+                    }
+
+                    }
 
                 out << "      //END DEF For " << finalName.c_str() << "\n \n \n";
             }
