@@ -294,6 +294,32 @@ namespace catos {
             out.close();
         }
 
+        void gen_cs_bindings_file() {
+            std::ofstream out("../../catos.cs");
+
+            out << "///Catos Lib (auto generated)\n";
+            out << "namespace catos {\n \n";
+            for (auto& type : _register) {
+
+                out << type.second.name.c_str() << " {\n";
+
+                for (auto& prop : type.second.properties) {
+                    out << "      /*" << prop.second->desc <<  "*/\n";
+                    out << "      " << prop.second->get_type_name() << " " <<  prop.second->get_name() << ";\n" ;
+                }
+
+                for (auto meth : type.second.methods) {
+                        out << "      " << meth.second->returnName << " " << meth.first << "() {\n";
+
+                        out << "       }\n";
+                }
+
+                out << "}\n \n";
+            }
+            out << "}///NAMESPACE CATOS \n";
+            out.close();
+        }
+
 
 
         /// Returns the registered Type

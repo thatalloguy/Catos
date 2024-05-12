@@ -1,6 +1,7 @@
 // engine includes
 #pragma once
 #include "core/registry.h"
+#include "core/application.h"
 #include <fstream>
 
 using namespace catos;
@@ -41,17 +42,11 @@ auto invoke(Fn f, Args... args) {
 
 int main() {
 
-    Registry registry;
 
-    Foo foo{3};
+    AppCreationInfo info{};
 
-
-    foo.data = 4;
-
-    auto foo_info = registry.register_class<Foo>()
-             .property("data", &Foo::data, "dummy")
-             .method("tester", &Foo::tester, "dummy");
-
+    App app{&info};
+    //app.get<Registry>()->gen_cs_bindings_file();
 
     return 0;
 }

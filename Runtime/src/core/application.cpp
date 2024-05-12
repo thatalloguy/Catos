@@ -16,17 +16,21 @@ catos::App::App(AppCreationInfo* creationInfo) {
 }
 
 catos::App::~App() {
+    auto registry = get<Registry>();
+
+    delete registry;
 
 }
 
 void catos::App::init_registry() {
 
-    Registry registry{};
 
-    bind<Registry>(&registry);
+
+    bind<Registry>(new Registry);
+
+    auto registry = *get<Registry>();
 
     // Register all classes for reflection
-    registry.register_class<GameConfig>();
 
     registry.register_class<Game>()
             .method("get_config", &Game::get_config, "Returns the game config")
@@ -53,6 +57,8 @@ void catos::App::init_registry() {
             .method("update", &Entity::update, "Runs Component.update() on every registered component.")
             .method("destroy", &Entity::destroy, "Runs Component.destroy() on every registered component.");
 
+
+    registry.gen_cs_bindings_file();
 }
 
 
