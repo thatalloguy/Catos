@@ -301,7 +301,16 @@ namespace catos {
             out << "namespace catos {\n \n";
             for (auto& type : _register) {
 
-                out << type.second.name.c_str() << " {\n";
+                auto namespacePos = type.second.name.find("::");
+                auto structPos = type.second.name.find("struct");
+
+
+
+                if (namespacePos != std::string::npos) {
+                    out << "class " << type.second.name.substr(namespacePos + 2) << " {\n";
+                } else {
+                    out << "class " << type.second.name.substr(structPos + 7) <<  " {\n";
+                }
 
                 for (auto& prop : type.second.properties) {
                     out << "      /*" << prop.second->desc <<  "*/\n";
@@ -310,7 +319,7 @@ namespace catos {
 
                 for (auto meth : type.second.methods) {
                         out << "      " << meth.second->returnName << " " << meth.first << "() {\n";
-
+                        out << "            " << meth.first << "_native(ref this);\n";
                         out << "       }\n";
                 }
 

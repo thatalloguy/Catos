@@ -45,8 +45,7 @@ namespace catos {
         /// Returns the registered instance
         template<typename A>
         A* get() {
-            A* obj = (A*) (_instance_register[type_utils::get_type_hash<A>()]);
-            return obj;
+            return  (A*) (_instance_register[type_utils::get_type_hash<A>()]);
         }
 
 

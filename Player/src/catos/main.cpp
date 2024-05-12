@@ -46,7 +46,9 @@ int main() {
     AppCreationInfo info{};
 
     App app{&info};
-    //app.get<Registry>()->gen_cs_bindings_file();
+
+
+
 
     return 0;
 }
