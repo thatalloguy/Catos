@@ -319,12 +319,42 @@ namespace catos {
 
                 for (auto meth : type.second.methods) {
                         out << "      " << meth.second->returnName << " " << meth.first << "() {\n";
-                        out << "            " << meth.first << "_native(ref this);\n";
-                        out << "       }\n";
+                        out << "            LibNative." << meth.first << "_native(ref this);\n";
+                        out << "      }\n";
                 }
 
                 out << "}\n \n";
             }
+
+            out << "class LibNative {\n\n";
+
+            for (auto& type : _register) {
+
+                auto namespacePos = type.second.name.find("::");
+                auto structPos = type.second.name.find("struct");
+
+
+                std::string finalName;
+
+                if (namespacePos != std::string::npos) {
+                    finalName = type.second.name.substr(namespacePos + 2);
+                } else {
+                    finalName = type.second.name.substr(structPos + 7);
+                }
+
+                out << "      //BEGIN DEF For " << finalName.c_str() << "\n";
+
+                for (auto meth : type.second.methods) {
+                    out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";
+                    out << "      public static extern " << meth.second->returnName << " " << meth.first << "_native(ref " << finalName << ");\n \n";
+                }
+
+                out << "      //END DEF For " << finalName.c_str() << "\n \n \n";
+            }
+
+            out << "}\n";
+
+
             out << "}///NAMESPACE CATOS \n";
             out.close();
         }
