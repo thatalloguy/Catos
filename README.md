@@ -4,8 +4,7 @@
 
 (Wiki) https://thatalloguy.github.io/catos/html/index.html
 
-
-###### Different one comming sometime 🤷‍♂️
+️
 #
 #
 #### Planned Features / ToDo
