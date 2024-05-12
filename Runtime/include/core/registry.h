@@ -314,11 +314,11 @@ namespace catos {
 
                 for (auto& prop : type.second.properties) {
                     out << "      /*" << prop.second->desc <<  "*/\n";
-                    out << "      " << prop.second->get_type_name() << " " <<  prop.second->get_name() << ";\n" ;
+                    out << "      public " << prop.second->get_type_name() << " " <<  prop.second->get_name() << ";\n" ;
                 }
 
                 for (auto meth : type.second.methods) {
-                        out << "      " << meth.second->returnName << " " << meth.first << "() {\n";
+                        out << "      public " << meth.second->returnName << " " << meth.first << "() {\n";
                         out << "            LibNative." << meth.first << "_native(ref this);\n";
                         out << "      }\n";
                 }
