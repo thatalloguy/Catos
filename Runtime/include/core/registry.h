@@ -294,6 +294,9 @@ namespace catos {
             out.close();
         }
 
+
+        ///TODO Arguments
+        ///TODO 
         void gen_cs_bindings_file() {
             std::ofstream out("../../catos.cs");
 

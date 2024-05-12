@@ -2,8 +2,9 @@
 
 ###### modern lightweight ECS cpp game engine
 
-(Wiki)
-https://github.com/thatalloguy/Catos/wiki
+(Wiki) https://thatalloguy.github.io/catos/html/index.html
+
+
 ###### Different one comming sometime 🤷‍♂️
 #
 #
@@ -38,7 +39,7 @@ https://github.com/thatalloguy/Catos/wiki
 ### Rendering with
 https://github.com/thatalloguy/Atomus
 
-##### Ideas for the engine
+#### Ideas for the engine
 
 ###### - Vulkan renderer (+ opengl):
 After ive finished the asset manager i will continue dev on my personal vulkan renderer.
