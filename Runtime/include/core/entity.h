@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <iostream>
 #include "types.h"
 #include "type_utils.h"
 
@@ -34,7 +35,7 @@ namespace catos {
 
 
         /// Get a component via name, returns a Component pointer.
-        Component* get_component(str& name);
+        Component* get_component(cstr name);
 
         /// Add a component. Needs a type for the registry name.
          void add_component(Component* component, cstr name){
@@ -53,6 +54,8 @@ namespace catos {
         void update();
         ///Runs Component.destroy() on every registered component. ( Gets called at the end of the program).
         void destroy();
+
+        void test()  { std::cout << "hello world from entity!\n"; };
 
 
 

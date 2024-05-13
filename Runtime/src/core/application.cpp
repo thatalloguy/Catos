@@ -49,6 +49,7 @@ void catos::App::init_registry() {
             .method("destroy", &Component::destroy, "destroy");
 
     registry.register_class<Entity>()
+            .method("test", &Entity::test, "Testing :)")
             .method("setup", &Entity::setup, "Initializes the entity")
             .method("get_name", &Entity::get_name, "returns the name of the entity")
             .method("get_component", &Entity::get_component, "Returns a component")

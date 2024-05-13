@@ -10,6 +10,8 @@
 #include <functional>
 #include <deque>
 #include <fstream>
+#include <typeindex>
+#include <regex>
 
 using namespace catos;
 
@@ -110,6 +112,34 @@ namespace catos {
     };
 
 
+
+
+    template<typename... Args>
+    std::string getNames() {
+        std::string str;
+        int argC = 0;
+        (str.append(std::string(typeid(Args).name()) + std::string(" arg") + std::to_string(argC++) + ","), ...);
+
+        return str;
+    }
+
+    template<typename... Args>
+    std::string getArgNames() {
+        std::string str =",";
+        int argC = 0;
+
+        argC = sizeof...(Args);
+
+        for (int i=0; i < argC; i++) {
+            str += "arg" + std::to_string(i);
+            str += ",";
+        }
+
+        return str;
+    }
+
+
+
     /// Stores a function pointer for running it.
     class Method {
 
@@ -123,6 +153,38 @@ namespace catos {
 
 
             returnName = type_utils::get_type_name<ReturnType>();
+
+
+            if (getNames<Args...>() != "") {
+
+                parameters = getNames<Args...>();
+
+
+                std::string search = "char const * __ptr64";
+                std::string replace = "string";
+
+                size_t pos = 0;
+                // replace cstr to string
+                while((pos = parameters.find(search, pos)) != std::string::npos) {
+                    parameters.replace(pos, search.length(), replace);
+                    pos += replace.length();
+                }
+                search = "class catos:: ";
+                replace = "ref ";
+                pos = 0;
+
+                // Change class catos::  to ref for c#
+                while((pos = parameters.find(search, pos)) != std::string::npos) {
+                    parameters.replace(pos, search.length(), replace);
+                    pos += replace.length();
+                }
+
+                // remove ","
+                parameters.erase(parameters.size() - 1, 1);
+                parameterNames = getArgNames<Args...>();
+                parameterNames.erase(parameterNames.size() - 1, 1);
+            }
+
         };
 
 
@@ -139,13 +201,14 @@ namespace catos {
 
         cstr desc = "NONE";
         std::string returnName = "void";
+
+        std::string parameters;
+        std::string parameterNames;
     private:
 
         std::any ptr;
         std::any _mFunc;
     };
-
-
 
 
 
@@ -181,8 +244,6 @@ namespace catos {
         constexpr TypeInfo& method(const char* method_name, ReturnV(ClassT::* ptr)(Args...), cstr description) {
             methods[method_name] = new Method{ptr};
             methods[method_name]->desc = description;
-
-
 
             return *this;
         }
@@ -326,8 +387,8 @@ namespace catos {
                     auto sPos = meth.second->returnName.find("struct");
 
                     if (nPos != std::string::npos || sPos != std::string::npos) {
-                        out << "      public void " << meth.first << "() {\n";
-                        out << "            LibNative." << meth.first << "_native(ref this);\n";
+                        out << "      public void " << meth.first << "(" << meth.second->parameters << ") {\n";
+                        out << "            LibNative." << meth.first << "_native(ref this " << meth.second->parameterNames << ");\n";
                         out << "      }\n";
                     } else {
                         out << "      public " << meth.second->returnName << " " << meth.first << "() {\n";
@@ -366,7 +427,7 @@ namespace catos {
 
                     if (nPos != std::string::npos || sPos != std::string::npos) {
                         out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";
-                        out << "      public static extern void " << meth.first << "_native(ref " << finalName << " instance);\n \n";
+                        out << "      public static extern void " << meth.first << "_native(ref " << finalName   << " instance" << ", " << meth.second->parameters << ");\n \n";
 
                     } else {
                         out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";

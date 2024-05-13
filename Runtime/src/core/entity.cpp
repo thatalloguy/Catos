@@ -7,7 +7,7 @@
 using namespace catos;
 
 
-Component* Entity::get_component(str& name) {
+Component* Entity::get_component(cstr name) {
     return componentTable[name];
 }
 

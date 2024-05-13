@@ -47,6 +47,8 @@ namespace catos {
         ///Test
 
 
+
+
         template<typename T, auto Func, typename... Args>
         static void static_function(T& instance, Args... args) {
             (instance.*Func)(args...);
