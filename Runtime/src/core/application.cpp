@@ -7,15 +7,6 @@
 #include "core/registry.h"
 
 
-class Console {
-
-public:
-
-    void log(MonoString* msg) {
-        std::cout << "[Console log]: " << ScriptingEngine::mono_string_to_string(msg) << "\n";
-    }
-};
-
 catos::App::App(AppCreationInfo* creationInfo) {
 
     _info = creationInfo;
@@ -40,13 +31,6 @@ void catos::App::init_registry() {
 
     auto registry = *get<Registry>();
 
-    // Register all classes for reflection
-    registry.register_class<Console>()
-            .method("log", &Console::log, "Testing :)");
-
-
-
-    ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
 
 
     registry.gen_cs_bindings_file();

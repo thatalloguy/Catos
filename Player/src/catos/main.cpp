@@ -7,38 +7,17 @@
 using namespace catos;
 
 
-class Foo {
+class Console {
+
 public:
 
-    float data;
-
-
-    void init(float _data) {
-        data = _data;
-    }
-
-
-    void tester() {
-        std::cout << "HEYYY " <<  "\n";
-    }
+    void log(MonoString* msg) {
 
 
 
-};
-
-template<typename T>
-class ConstructorInvoker {
-public:
-    template<typename... Args>
-    T operator()(Args... args)const {
-        return T(std::forward<Args>(args)...);
+        std::cout << "[Console log]: " << ScriptingEngine::mono_string_to_string(msg) << "\n";
     }
 };
-
-template<typename Fn, typename... Args>
-auto invoke(Fn f, Args... args) {
-    return f(args...);
-}
 
 int main() {
 
@@ -51,6 +30,14 @@ int main() {
     scriptingEngine.init();
 
     App app{&info};
+
+
+
+    // Register all classes for reflection
+    app.get<Registry>()->register_class<Console>()
+            .method("log", &Console::log, "Testing :)");
+
+    ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
 
 
     scriptingEngine.run();
