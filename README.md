@@ -23,9 +23,11 @@
 - - [x] Calling functions of instances.
 - - [x] Getting and Setting fields.
 - - [x] Calling Cpp from C#
-- - [ ] Embedding intergration with the reflection system
 - - [ ] Refactor.
 - - [ ] Script Object. 
+
+- [ ] Editor 
+- - [ ] 
 
 - [ ] Resource manager
 - [ ] Dynamic Editor (via the reflection)

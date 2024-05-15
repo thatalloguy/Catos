@@ -2,6 +2,9 @@
 #pragma once
 #include "core/registry.h"
 #include "core/application.h"
+
+#include <imgui.h>
+
 #include <fstream>
 
 using namespace catos;
@@ -43,6 +46,9 @@ int main() {
     scriptingEngine.run();
 
     scriptingEngine.clean_up();
+
+
+
 
 
     return 0;
