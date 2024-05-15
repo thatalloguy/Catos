@@ -45,9 +45,17 @@ int main() {
 
     AppCreationInfo info{};
 
+
+    ScriptingEngine scriptingEngine;
+
+    scriptingEngine.init();
+
     App app{&info};
 
 
+    scriptingEngine.run();
+
+    scriptingEngine.clean_up();
 
 
     return 0;

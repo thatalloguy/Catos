@@ -127,47 +127,6 @@ void catos::ScriptingEngine::init_mono() {
     ///TODO intergrate this with the reflection system
     embed_function<Cpp, &Cpp::printCpp, int>("printCpp_native");
 
-
-    MonoClass* testingClass = get_class_in_assembly(_context->_mainAssembly, "", "CSharpTesting");
-
-    if (testingClass == nullptr) {
-        return;
-    }
-
-    //New instance of the test class
-    MonoObject* testInstance = instantiate_class("", "CSharpTesting");
-
-    MonoClassField* floatField = mono_class_get_field_from_name(testingClass, "MyPublicFloatVar");
-    uint8_t floatFieldAccessibility = get_field_accessibility(floatField);
-
-    if (floatFieldAccessibility & (uint8_t)FieldAccessibility::Public)
-    {
-        float value;
-        mono_field_get_value(testInstance, floatField, &value);
-
-        value += 10.0f;
-        mono_field_set_value(testInstance, floatField, &value);
-    }
-
-    MonoProperty* nameProperty = mono_class_get_property_from_name(testingClass, "Name");
-
-    uint8_t namePropertyAccessibility = get_property_accessbility(nameProperty);
-
-    if (namePropertyAccessibility & (uint8_t)FieldAccessibility::Public)
-    {
-        ////std::cout << "We good its public :) \n";
-        MonoString* nameValue = (MonoString*)mono_property_get_value(nameProperty, testInstance, nullptr, nullptr);
-        std::string nameStr = mono_string_to_string(nameValue);
-
-    // Modify and assign the value back to the property by invoking the setter method
-        nameStr += ", World!";
-        nameValue = mono_string_new(_context->_appDomain, nameStr.c_str());
-        mono_property_set_value(nameProperty, testInstance, (void**)&nameValue, nullptr);
-
-    }
-
-
-    call_print_method(testInstance);
 }
 
 MonoClass *catos::ScriptingEngine::get_class_in_assembly(MonoAssembly *assembly, const char *namespaceName,
@@ -355,4 +314,49 @@ std::string catos::ScriptingEngine::mono_string_to_string(MonoString *monoString
     mono_free(utf8);
 
     return result;
+}
+
+void catos::ScriptingEngine::run() {
+
+
+    MonoClass* testingClass = get_class_in_assembly(_context->_mainAssembly, "", "CSharpTesting");
+
+    if (testingClass == nullptr) {
+        return;
+    }
+
+    //New instance of the test class
+    MonoObject* testInstance = instantiate_class("", "CSharpTesting");
+
+    MonoClassField* floatField = mono_class_get_field_from_name(testingClass, "MyPublicFloatVar");
+    uint8_t floatFieldAccessibility = get_field_accessibility(floatField);
+
+    if (floatFieldAccessibility & (uint8_t)FieldAccessibility::Public)
+    {
+        float value;
+        mono_field_get_value(testInstance, floatField, &value);
+
+        value += 10.0f;
+        mono_field_set_value(testInstance, floatField, &value);
+    }
+
+    MonoProperty* nameProperty = mono_class_get_property_from_name(testingClass, "Name");
+
+    uint8_t namePropertyAccessibility = get_property_accessbility(nameProperty);
+
+    if (namePropertyAccessibility & (uint8_t)FieldAccessibility::Public)
+    {
+        ////std::cout << "We good its public :) \n";
+        MonoString* nameValue = (MonoString*)mono_property_get_value(nameProperty, testInstance, nullptr, nullptr);
+        std::string nameStr = mono_string_to_string(nameValue);
+
+        // Modify and assign the value back to the property by invoking the setter method
+        nameStr += ", World!";
+        nameValue = mono_string_new(_context->_appDomain, nameStr.c_str());
+        mono_property_set_value(nameProperty, testInstance, (void**)&nameValue, nullptr);
+
+    }
+
+
+    call_print_method(testInstance);
 }

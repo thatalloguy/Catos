@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <core/registry.h>
 #include "mono/jit/jit.h"
 
 
@@ -40,7 +39,7 @@ namespace catos {
     public:
 
         void init();
-
+        void run();
         void clean_up();
 
 
@@ -58,9 +57,11 @@ namespace catos {
         ///TODO intergrate this with the reflection system
         template<typename T, auto Func, typename... Args>
         static void embed_function(const char* name) {
-            mono_add_internal_call(std::string(std::string("Lib::") + name).c_str(), reinterpret_cast<void(*)>(static_function<T, Func, Args...>));
+            mono_add_internal_call(std::string(std::string("catos.LibNative::") + name + std::string("_native")).c_str(), reinterpret_cast<void(*)(Args...)>(static_function<T, Func, Args...>));
         }
 
+        static bool check_mono_error(MonoError& error);
+        static  std::string mono_string_to_string(MonoString* monoString);
 
 
     private:
@@ -76,8 +77,6 @@ namespace catos {
         //Util
         void print_assembly_types(MonoAssembly* assembly);
         void call_print_method(MonoObject* objectInstance);
-        bool check_mono_error(MonoError& error);
-        std::string mono_string_to_string(MonoString* monoString);
 
         //Class
         MonoClass* get_class_in_assembly(MonoAssembly* assembly, const char* namespaceName, const char* className);

@@ -13,6 +13,9 @@
 #include <typeindex>
 #include <regex>
 
+
+#include <scripting/scriptingEngine.h>
+
 using namespace catos;
 
 
@@ -245,6 +248,7 @@ namespace catos {
             methods[method_name] = new Method{ptr};
             methods[method_name]->desc = description;
 
+
             return *this;
         }
 
@@ -356,8 +360,7 @@ namespace catos {
         }
 
 
-        ///TODO Arguments
-        ///TODO 
+        ///TODO this shit is so ugly ;-;
         void gen_cs_bindings_file() {
             std::ofstream out("../../catos.cs");
 
@@ -446,8 +449,6 @@ namespace catos {
             out << "}///NAMESPACE CATOS \n";
             out.close();
         }
-
-
 
         /// Returns the registered Type
         template<typename A>

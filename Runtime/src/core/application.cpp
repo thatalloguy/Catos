@@ -6,6 +6,16 @@
 #include "core/game.h"
 #include "core/registry.h"
 
+
+class Console {
+
+public:
+
+    void log(MonoString* msg) {
+        std::cout << "[Console log]: " << ScriptingEngine::mono_string_to_string(msg) << "\n";
+    }
+};
+
 catos::App::App(AppCreationInfo* creationInfo) {
 
     _info = creationInfo;
@@ -31,32 +41,12 @@ void catos::App::init_registry() {
     auto registry = *get<Registry>();
 
     // Register all classes for reflection
+    registry.register_class<Console>()
+            .method("log", &Console::log, "Testing :)");
 
-    registry.register_class<Game>()
-            .method("get_config", &Game::get_config, "Returns the game config")
-            .method("create_scene", &Game::create_scene, "creates a new scene")
-            .method("get_scene", &Game::get_scene, "creates a new scene");
 
-    registry.register_class<Scene>()
-            .method("get_name", &Scene::get_entity, "Gets the name of the scene")
-            .method("get_entity", &Scene::get_entity, "Gets an entity")
-            .method("new_entity", &Scene::new_entity, "new entity")
-            .method("change_entity_name", &Scene::change_entity_name, "changes the name of an entity");
 
-    registry.register_class<Component>()
-            .method("init", &Component::init, "init")
-            .method("update", &Component::update, "update")
-            .method("destroy", &Component::destroy, "destroy");
-
-    registry.register_class<Entity>()
-            .method("test", &Entity::test, "Testing :)")
-            .method("setup", &Entity::setup, "Initializes the entity")
-            .method("get_name", &Entity::get_name, "returns the name of the entity")
-            .method("get_component", &Entity::get_component, "Returns a component")
-            .method("add_component", &Entity::add_component, "Adds a component to the entity")
-            .method("init", &Entity::init, "Runs Component.init() on every registered component.")
-            .method("update", &Entity::update, "Runs Component.update() on every registered component.")
-            .method("destroy", &Entity::destroy, "Runs Component.destroy() on every registered component.");
+    ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
 
 
     registry.gen_cs_bindings_file();
