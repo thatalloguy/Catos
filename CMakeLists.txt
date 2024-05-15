@@ -50,5 +50,6 @@ add_library(catos-headers INTERFACE)
 
 add_subdirectory(Player)
 add_subdirectory(Runtime)
+add_subdirectory(Editor)
 
 
