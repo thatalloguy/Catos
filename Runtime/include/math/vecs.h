@@ -3,6 +3,7 @@
 //
 
 #ifndef CATOS_MATH_H
+#define CATOS_MATH_H
 
 #include <glm/glm.hpp>
 
@@ -24,8 +25,6 @@ namespace catos::math {
 
 }
 
-
-#define CATOS_MATH_H
 
 
 #endif //CATOS_MATH_H
