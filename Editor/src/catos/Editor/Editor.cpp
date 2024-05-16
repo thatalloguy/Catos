@@ -4,10 +4,10 @@
 
 #include "Editor.h"
 
-using namespace     catos::Editor;
+using namespace catos::Editor;
 
 void catos::Editor::init() {
-    render_engine.Init
+//    render_engine.Init
 }
 
 void catos::Editor::render() {

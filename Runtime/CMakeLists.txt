@@ -17,9 +17,13 @@ target_include_directories(catos-runtime-static PUBLIC src)
 
 
 
+
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/imgui")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/stb")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glm")
+target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glfw/include")
+target_include_directories(catos-runtime-static PUBLIC "Thirdparty/vk-bootstrap")
+target_include_directories(catos-runtime-static PUBLIC "Thirdparty/VulkanMemoryAllocator")
 
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST tests/*.h tests/*.hpp tests/*.c tests/*.cpp)
@@ -30,11 +34,11 @@ target_link_libraries(catos-runtime-static PUBLIC mono-2.0-sgen.lib)
 
 
 
-target_link_libraries(catos-runtime-static PRIVATE vk-bootstrap::vk-bootstrap)
-target_link_libraries(catos-runtime-static PRIVATE GPUOpen::VulkanMemoryAllocator)
-target_link_libraries(catos-runtime-static PRIVATE spdlog)
-target_link_libraries(catos-runtime-static PRIVATE fastgltf)
-target_link_libraries(catos-runtime-static PRIVATE glfw Vulkan::Vulkan)
+target_link_libraries(catos-runtime-static PUBLIC vk-bootstrap::vk-bootstrap)
+target_link_libraries(catos-runtime-static PUBLIC GPUOpen::VulkanMemoryAllocator)
+target_link_libraries(catos-runtime-static PUBLIC spdlog)
+target_link_libraries(catos-runtime-static PUBLIC fastgltf)
+target_link_libraries(catos-runtime-static PUBLIC glfw Vulkan::Vulkan)
 
 
 

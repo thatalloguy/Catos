@@ -5,13 +5,15 @@
 
 
 
+#include <math/vecs.h>
 
 namespace catos {
 
     class App;
 
     struct WindowCreationInfo {
-
+        math::Vector2 size;
+        math::Vector2 position;
     };
 
 

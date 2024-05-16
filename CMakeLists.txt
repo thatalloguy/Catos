@@ -3,6 +3,8 @@ project(catos)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(Vulkan REQUIRED)
+
 
 
 #dependencies
@@ -41,6 +43,7 @@ include_directories(Thirdparty/Mono/include/mono-2.0/)
 include_directories("Thirdparty/imgui")
 include_directories("Thirdparty/stb")
 include_directories("Thirdparty/glm")
+include_directories("Thirdparty/glfw/include")
 
 link_directories(Thirdparty/Mono/lib/)
 

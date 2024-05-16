@@ -10,5 +10,5 @@ add_executable(catos-editor
 
 )
 
-target_link_libraries(catos-editor PRIVATE catos-runtime-static)
-target_link_libraries(catos-editor PRIVATE catos-headers)
+target_link_libraries(catos-player PRIVATE catos-runtime-static)
+target_link_libraries(catos-player PRIVATE catos-headers)
