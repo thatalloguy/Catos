@@ -10,8 +10,14 @@ file(GLOB_RECURSE FASTGLTF_DEPS
         Thirdparty/fastgltf/deps/simdjson/simdjson.h
         Thirdparty/fastgltf/deps/simdjson/simdjson.cpp
 )
-file(GLOB_RECURSE CATOS_RUNTIME_SRC  src/*.cpp src/*.h src/*.c src/*.hpp Renderer/*.cpp Renderer/*.h)
-add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS})
+file(GLOB_RECURSE CATOS_RUNTIME_SRC  src/*.cpp src/*.h src/*.c src/*.hpp Renderer/*.cpp Renderer/*.h
+
+        include/math/vecs.h
+        src/math/vecs.cpp
+
+)
+add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS}
+        include/core/window.h)
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
 

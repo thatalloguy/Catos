@@ -14,9 +14,6 @@ class Console {
 public:
 
     void log(MonoString* msg) {
-
-
-
         std::cout << "[Console log]: " << ScriptingEngine::mono_string_to_string(msg) << "\n";
     }
 };

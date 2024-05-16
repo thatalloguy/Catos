@@ -21,6 +21,16 @@ namespace catos::math {
         bool operator==(glm::vec2& b) {
             return (this->x == b.x && this->y == b.y);
         }
+
+        void operator+(Vector2& b) {
+            this->x += b.x;
+            this->y += b.y;
+        }
+
+        void operator+(glm::vec2& b) {
+            this->x += b.x;
+            this->y += b.y;
+        }
     };
 
 }
