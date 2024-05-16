@@ -3,20 +3,18 @@
 //
 #pragma once
 
-//
-//#include "../Renderer/VkEngine.h"
-
+#include "../../Runtime/include/core/window.h"
+#include "../../Runtime/Renderer/VkEngine.h"
 
 namespace catos::Editor {
-//
-//    VulkanEngine render_engine;
 
-    void init();
+        void init();
 
-
-    void render();
+        void run();
 
 
-    void cleanUp();
+        void cleanUp();
+
+
 
 };

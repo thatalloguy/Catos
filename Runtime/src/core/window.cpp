@@ -88,3 +88,7 @@ bool Window::should_window_close() {
 void Window::update() {
     glfwPollEvents();
 }
+
+GLFWwindow *Window::get_glfw_window() {
+    return _raw_window;
+}

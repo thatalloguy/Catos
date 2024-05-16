@@ -40,6 +40,8 @@ namespace catos {
 
         void update();
 
+        GLFWwindow* get_glfw_window();
+
 
     private:
         GLFWwindow* _raw_window;

@@ -1,14 +1,17 @@
 //
 // Created by allos on 5/15/2024.
 //
-
-
-#include <cstdio>
+#pragma once
+#include "Editor/Editor.h"
 
 int main() {
 
+    catos::Editor::init();
 
-    printf("[Editor]: Hello World!\n");
+    catos::Editor::run();
+
+    catos::Editor::cleanUp();
+
 
     return 0;
 }

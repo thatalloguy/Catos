@@ -179,8 +179,9 @@ void VulkanEngine::CleanUp()
         vkb::destroy_debug_utils_messenger(_instance, _debugMessenger);
 
         vkDestroyInstance(_instance, nullptr);
-        glfwDestroyWindow(_window);
-        glfwTerminate();
+        /// OUR OWN WINDOW IMPL DOES THIS ALREADY
+        /*        glfwDestroyWindow(_window);
+        glfwTerminate();*/
         spdlog::info("Successfully destroyed current loaded engine");
     }
 
