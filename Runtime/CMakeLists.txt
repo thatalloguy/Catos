@@ -37,6 +37,7 @@ add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST})
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 target_link_libraries(catos-runtime-static PUBLIC mono-2.0-sgen.lib)
+target_link_libraries(catos-runtime-static PUBLIC dwmapi)
 
 
 

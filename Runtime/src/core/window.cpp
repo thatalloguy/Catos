@@ -2,7 +2,15 @@
 // Created by allos on 5/16/2024.
 //
 #include <core/window.h>
+
+#ifdef _WIN32
 #include "GLFW/glfw3native.h"
+
+#include <windows.h>
+#include <dwmapi.h>
+
+
+#endif
 
 using namespace catos;
 
@@ -34,7 +42,7 @@ Window::Window(catos::WindowCreationInfo &creationInfo) : _createInfo(creationIn
         spdlog::error("Could not create Window");
     }
 
-    if (creationInfo.enable_darktheme || ON_WINDOWS) {
+    if (creationInfo.enable_darktheme) {
         enable_dark_theme();
     }
 
@@ -49,11 +57,23 @@ Window::~Window() {
 
 void Window::enable_dark_theme() {
 
+#ifdef _WIN32
+
+    BOOL USE_DARK_MODE = true;
+
+    BOOL status = SUCCEEDED(DwmSetWindowAttribute(
+            glfwGetWin32Window(_raw_window), DWMWINDOWATTRIBUTE::DWMWA_USE_IMMERSIVE_DARK_MODE,
+                &USE_DARK_MODE, sizeof(USE_DARK_MODE)
+            ));
+
+#endif
+
 }
 
 
 math::Vector2 Window::getMonitorSize() {
 
+    glfwInit();
     auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     return math::Vector2{.x = (float) mode->width, .y = (float) mode->height};

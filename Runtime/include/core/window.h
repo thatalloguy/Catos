@@ -3,10 +3,8 @@
 //
 #pragma once
 
-#ifdef _WIN32 || _WINDOWS || _WIN64
-#define ON_WINDOWS 1
-#ifndef _WIN32 || _WINDOWS || _WIN64
-#define ON_WINDOWS 0
+#ifdef _WIN32
+#define ON_WINDOWS
 #endif
 
 

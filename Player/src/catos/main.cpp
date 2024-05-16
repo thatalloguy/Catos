@@ -3,6 +3,8 @@
 #include "core/registry.h"
 #include "core/application.h"
 #include <../Renderer/VkEngine.h>
+#include <core/window.h>
+
 
 #include <fstream>
 
@@ -44,9 +46,16 @@ int main() {
     scriptingEngine.clean_up();
 
 
+    WindowCreationInfo window_info = {
+            .size = { 500, 500 }
+    };
+
+    Window window(window_info);
 
 
-
+    while (!window.should_window_close()) {
+        window.update();
+    }
 
 
     return 0;
