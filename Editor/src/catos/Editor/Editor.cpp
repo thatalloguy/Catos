@@ -10,6 +10,8 @@
 #include "../../Runtime/Renderer/VkEngine.h"
 #include "imgui_internal.h"
 
+#include "World/WorldTreeView.h"
+
 namespace catos::Editor {
 
 
@@ -20,6 +22,12 @@ namespace catos::Editor {
     App* _app;
 
     VulkanEngine _renderer;
+
+    void init_tabs();
+
+    std::vector<EditorTab*> tabs;
+    std::vector<EditorTab*> current_tabs;
+    unsigned int cur_id = 0;
 
 }
 
@@ -46,6 +54,7 @@ void catos::Editor::init() {
     ImGui::GetIO().IniFilename = "../../Assets/Editor.layout"; /// todo add this in a config of some sort
 
 
+    init_tabs();
 
     _initialized = true;
 
@@ -65,6 +74,9 @@ void catos::Editor::run() {
 
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
+        for (auto& tab : tabs) {
+            tab->render();
+        }
 
         _renderer.end_imgui_frame();
 
@@ -76,8 +88,26 @@ void catos::Editor::run() {
 
 void catos::Editor::cleanUp() {
 
+    for (auto& tab : tabs) {
+        tab->destroy();
+        delete tab;
+    }
+
     _renderer.CleanUp();
 
     delete _app;
     delete _window;
+}
+
+
+void catos::Editor::init_tabs() {
+
+
+    WorldTreeView::init();
+
+}
+
+
+void catos::Editor::register_tab(EditorTab* tab) {
+    tabs.push_back(tab);
 }

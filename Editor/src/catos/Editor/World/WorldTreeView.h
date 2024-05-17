@@ -5,7 +5,7 @@
 
 namespace WorldTreeView {
 
-    void init
+    void init();
 
 };
 
