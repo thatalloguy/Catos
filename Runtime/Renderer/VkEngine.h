@@ -216,6 +216,11 @@ class VulkanEngine {
         void Draw();
         void Run();
 
+
+        void start_imgui_frame();
+
+        void end_imgui_frame();
+
         AllocatedImage _blackImage;
         AllocatedImage _greyImage;
 

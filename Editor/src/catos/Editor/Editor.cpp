@@ -3,7 +3,11 @@
 //
 #pragma once
 #include "Editor.h"
+#include "imgui.h"
 #include <../../Runtime/include/core/application.h>
+
+#include "../../Runtime/include/core/window.h"
+#include "../../Runtime/Renderer/VkEngine.h"
 
 namespace catos::Editor {
 
@@ -34,7 +38,14 @@ void catos::Editor::init() {
 
     _window = new Window(windowCreationInfo);
 
+
+    _renderer.Init(_window->get_glfw_window(), false);
+
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     _initialized = true;
+
+
 }
 
 void catos::Editor::run() {
@@ -44,13 +55,25 @@ void catos::Editor::run() {
 
         _window->update();
 
+        _renderer.Run();
+
+        _renderer.start_imgui_frame();
+
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
+        ImGui::ShowDemoWindow();
+
+        _renderer.end_imgui_frame();
+
+        _renderer.Draw();
+
     }
 
 }
 
 void catos::Editor::cleanUp() {
 
-    //_renderer.CleanUp();
+    _renderer.CleanUp();
 
     delete _app;
     delete _window;

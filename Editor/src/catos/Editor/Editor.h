@@ -3,8 +3,6 @@
 //
 #pragma once
 
-#include "../../Runtime/include/core/window.h"
-#include "../../Runtime/Renderer/VkEngine.h"
 
 namespace catos::Editor {
 
