@@ -8,6 +8,7 @@
 
 #include "../../Runtime/include/core/window.h"
 #include "../../Runtime/Renderer/VkEngine.h"
+#include "imgui_internal.h"
 
 namespace catos::Editor {
 
@@ -42,6 +43,9 @@ void catos::Editor::init() {
     _renderer.Init(_window->get_glfw_window(), false);
 
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    ImGui::GetIO().IniFilename = "../../Assets/Editor.layout"; /// todo add this in a config of some sort
+
+
 
     _initialized = true;
 
@@ -61,7 +65,6 @@ void catos::Editor::run() {
 
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-        ImGui::ShowDemoWindow();
 
         _renderer.end_imgui_frame();
 
