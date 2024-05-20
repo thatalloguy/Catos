@@ -3,7 +3,6 @@
 //
 
 #include "core/application.h"
-#include "core/game.h"
 #include "core/registry.h"
 
 

@@ -99,7 +99,7 @@ void catos::ScriptingEngine::clean_up() {
 }
 
 void catos::ScriptingEngine::init_mono() {
-    mono_set_assemblies_path("../../Thirdparty/Mono/lib/");
+    mono_set_assemblies_path("../../../Thirdparty/Mono/lib/");
 
     MonoDomain* rootDomain = mono_jit_init("CatosSharpRuntime");
     if (rootDomain == nullptr) {

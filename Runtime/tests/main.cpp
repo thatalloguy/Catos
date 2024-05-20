@@ -6,12 +6,9 @@
 #include <TINYSTL/string.h>
 
 #include "core/registry.h"
-#include "core/game.h"
 #include "core/application.h"
 #include "scripting/scriptingEngine.h"
 
-#include <mono/jit/jit.h>
-#include <mono/metadata/assembly.h>
 
 struct Foo {
     float data = 2;
@@ -63,17 +60,6 @@ namespace catos::tests {
                 .method("get_data", &Foo::get_data, "Returns the data of Foo");
 
 
-        registry.register_class<Entity>()
-                .method("init", &Entity::init, "init")
-                .method("update", &Entity::update, "update the entity")
-                .method("destroy", &Entity::destroy, "destroy");
-
-        registry.register_class<Component>()
-                .method("init", &Component::init, "Initializes")
-                .method("update", &Component::init, "update")
-                .method("destroy", &Component::init, "destroy");
-
-
 
         Property* test = field.get_property("data");
         Method* meth = field.get_method("get_data");
@@ -84,32 +70,6 @@ namespace catos::tests {
 
         CHECK(*testFloat == meth->invoke_function<float>(&foo));
 
-    }
-
-    TEST_CASE("GAME::SCENES") {
-        Game game;
-
-        auto s1 = game.create_scene("test");
-
-        CHECK(s1 == game.get_scene("test"));
-
-        game.change_scene_name("test", "test2");
-
-        CHECK(s1 == game.get_scene("test2"));
-    }
-
-    TEST_CASE("SCENES::ENTITIES") {
-        Game game;
-
-        auto scene = game.create_scene("test");
-
-        auto bob = scene->new_entity("bob");
-
-        CHECK(bob == scene->get_entity("bob"));
-
-        scene->change_entity_name("bob", "henk");
-
-        CHECK(bob == scene->get_entity("henk"));
     }
 
 
