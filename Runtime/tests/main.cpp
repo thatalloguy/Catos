@@ -10,6 +10,7 @@
 #include "scripting/scriptingEngine.h"
 #include "world/world.h"
 #include "spdlog/spdlog.h"
+#include "world/query.h"
 
 
 struct Foo {
@@ -157,6 +158,37 @@ namespace catos::tests {
         world.get<TransformComponent>(e1)->x = 2;
 
         CHECK(world.get<TransformComponent>(e1)->x == 2);
+    }
+
+    TEST_CASE("ECS::Query") {
+
+
+        World world;
+
+        EntityId e1 = world.new_entity();
+        EntityId e2 = world.new_entity();
+
+        world.assign<TransformComponent>(e1);
+        world.assign<TransformComponent>(e2);
+
+        TransformComponent* tr1 = world.get<TransformComponent>(e1);
+        TransformComponent* tr2 = world.get_unchecked<TransformComponent>(e2);
+
+        tr1->x = 1;
+        tr1->y = 4;
+        tr1->z = 3;
+
+        tr2->x = 5;
+        tr2->y = 7;
+        tr2->z = 2;
+
+        for (EntityId ent : catos::Query<TransformComponent>(world)) {
+            TransformComponent* t = world.get_unchecked<TransformComponent>(ent);
+
+            spdlog::info("TRANSFORM: {}, {}, {}", t->x, t->y, t->z);
+        }
+
+
     }
 
 

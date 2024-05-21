@@ -1,6 +1,8 @@
 add_library(catos-runtime INTERFACE
         src/world/world.cpp
-        include/world/world.h)
+        include/world/world.h
+        src/world/query.cpp
+        include/world/query.h)
 target_include_directories(catos-runtime INTERFACE include)
 
 find_package(Vulkan REQUIRED)

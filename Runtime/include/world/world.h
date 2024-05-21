@@ -27,7 +27,6 @@ namespace catos {
     typedef unsigned int EntityVersion;
     typedef unsigned long long EntityId;
 
-
     typedef std::bitset<MAX_COMPONENTS> ComponentMask;
 
     struct EntityInfo {
@@ -96,6 +95,7 @@ namespace catos {
     class World {
 
     public:
+
         EntityId new_entity();
 
 
@@ -143,6 +143,11 @@ namespace catos {
         }
 
         template<typename T>
+        T* get_unchecked(EntityId id) {
+            return static_cast<T*>(component_pools[Component::get_id<T>()]->get(id));
+        }
+
+        template<typename T>
         void remove(EntityId id) {
 
             // check if the entity is not deleted
@@ -161,8 +166,11 @@ namespace catos {
             free_entities.push_back(EntityUtils::get_entity_index(id));
         }
 
-    private:
+
         std::vector<EntityInfo> entities;
+
+
+    private:
         std::vector<EntityIndex> free_entities;
         std::vector<ComponentPool*> component_pools;
 
