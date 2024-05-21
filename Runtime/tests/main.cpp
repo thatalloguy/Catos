@@ -143,6 +143,22 @@ namespace catos::tests {
         CHECK(!world.has_component<Foo>(e1));
     }
 
+    TEST_CASE("ECS::Get_component") {
+
+        World world;
+
+        EntityId e1 = world.new_entity();
+
+        world.assign<TransformComponent>(e1);
+
+        CHECK(world.has_component<TransformComponent>(e1));
+
+
+        world.get<TransformComponent>(e1)->x = 2;
+
+        CHECK(world.get<TransformComponent>(e1)->x == 2);
+    }
+
 
 
 }

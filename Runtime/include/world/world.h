@@ -95,6 +95,16 @@ namespace catos {
             return entities[id].mask.test(component_id);
         }
 
+        template<typename T>
+        T* get(EntityId id) {
+            int component_id = Component::get_id<T>();
+            if (!entities[id].mask.test(component_id))
+                return nullptr;
+
+            T* p_component = static_cast<T*>(component_pools[component_id]->get(id));
+            return p_component;
+        }
+
     private:
         std::vector<EntityInfo> entities;
         std::vector<ComponentPool*> component_pools;
