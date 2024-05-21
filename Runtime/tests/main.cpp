@@ -140,6 +140,7 @@ namespace catos::tests {
         world.assign<TransformComponent>(e1);
 
         CHECK(world.has_component<TransformComponent>(e1));
+        CHECK(!world.has_component<Foo>(e1));
     }
 
 

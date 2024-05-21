@@ -40,17 +40,30 @@ namespace catos {
         }
     }
 
-    class ComponentPool {
-    public:
-        ComponentPool(size_t element_size);
-        ~ComponentPool();
+    struct ComponentPool
+    {
+        ComponentPool(size_t elementsize)
+        {
+            // We'll allocate enough memory to hold MAX_ENTITIES, each with element size
+            elementSize = elementsize;
+            pData = new char[elementSize * MAX_ENTITIES];
+        }
 
-        inline void* get(size_t index);
+        ~ComponentPool()
+        {
+            delete[] pData;
+        }
 
-        char* p_data {nullptr};
-        size_t element_size{ 0 };
+        inline void* get(size_t index)
+        {
+            // looking up the component at the desired index
+            return pData + index * elementSize;
+        }
 
+        char* pData{ nullptr };
+        size_t elementSize{ 0 };
     };
+
 
     class World {
 
@@ -59,10 +72,21 @@ namespace catos {
 
 
         template<class T>
-        void assign(EntityId id) {
+        T* assign(EntityId id) {
             int component_id = Component::get_id<T>();
-            entities[id].mask.set(component_id);
 
+            if (component_pools.size() <= component_id) { // not enough component pool
+                component_pools.resize(component_pools.size() + 1, nullptr);
+            }
+            if (component_pools[component_id] == nullptr) {
+                component_pools[component_id] = new ComponentPool(sizeof(T));
+            }
+
+            T* pComponent = new (component_pools[component_id]->get(id)) T();
+
+
+            entities[id].mask.set(component_id);
+            return pComponent;
         }
 
         template<class T>
@@ -73,7 +97,7 @@ namespace catos {
 
     private:
         std::vector<EntityInfo> entities;
-
+        std::vector<ComponentPool*> component_pools;
 
     };
 
