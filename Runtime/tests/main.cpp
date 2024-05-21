@@ -8,6 +8,8 @@
 #include "core/registry.h"
 #include "core/application.h"
 #include "scripting/scriptingEngine.h"
+#include "world/world.h"
+#include "spdlog/spdlog.h"
 
 
 struct Foo {
@@ -16,6 +18,10 @@ struct Foo {
     float get_data() {
         return data;
     }
+};
+
+struct TransformComponent {
+    float x, y, z;
 };
 
 namespace catos::tests {
@@ -105,6 +111,14 @@ namespace catos::tests {
 
 
         scriptingEngine.clean_up();
+    }
+
+    TEST_CASE("ECS::componentId") {
+
+        spdlog::info("Unique id: {}", catos::World::get_id<TransformComponent>());
+
+       CHECK(catos::World::get_id<TransformComponent>() != catos::World::get_id<Foo>());
+
     }
 }
 
