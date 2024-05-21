@@ -4,9 +4,11 @@
 
 // use marco's here so that the user can change the limit if desired.
 #ifndef MAX_COMPONENTS
-
 #define MAX_COMPONENTS 32
+#endif
 
+#ifndef MAX_ENTITIES
+#define MAX_ENTITIES 100
 #endif
 
 #ifndef CATOS_WORLD_H
@@ -38,6 +40,17 @@ namespace catos {
         }
     }
 
+    class ComponentPool {
+    public:
+        ComponentPool(size_t element_size);
+        ~ComponentPool();
+
+        inline void* get(size_t index);
+
+        char* p_data {nullptr};
+        size_t element_size{ 0 };
+
+    };
 
     class World {
 
