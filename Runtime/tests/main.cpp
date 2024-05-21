@@ -131,6 +131,18 @@ namespace catos::tests {
         CHECK(e1 != e2);
     }
 
+    TEST_CASE("ECS::Entity_Components") {
+
+        World world;
+
+        EntityId e1 = world.new_entity();
+
+        world.assign<TransformComponent>(e1);
+
+        CHECK(world.has_component<TransformComponent>(e1));
+    }
+
+
 
 }
 

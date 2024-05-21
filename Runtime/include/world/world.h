@@ -44,6 +44,20 @@ namespace catos {
     public:
         EntityId new_entity();
 
+
+        template<class T>
+        void assign(EntityId id) {
+            int component_id = Component::get_id<T>();
+            entities[id].mask.set(component_id);
+
+        }
+
+        template<class T>
+        bool has_component(EntityId id) {
+            int component_id = Component::get_id<T>();
+            return entities[id].mask.test(component_id);
+        }
+
     private:
         std::vector<EntityInfo> entities;
 
