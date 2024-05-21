@@ -15,20 +15,48 @@
 #define CATOS_WORLD_H
 
 
+
+
 #include <vector>
 #include <unordered_map>
 #include <bitset>
 
 namespace catos {
 
-
+    typedef unsigned int EntityIndex;
+    typedef unsigned int EntityVersion;
     typedef unsigned long long EntityId;
+
+
     typedef std::bitset<MAX_COMPONENTS> ComponentMask;
 
     struct EntityInfo {
         EntityId id{};
         ComponentMask mask;
     };
+
+    namespace EntityUtils {
+
+        //NOTE: you *could* exceed the 32bit number.
+        inline EntityId create_entity_id(EntityIndex index, EntityVersion version) {
+            return ((EntityIndex)index << 32 | ((EntityId) version));
+        }
+
+        inline EntityIndex get_entity_index(EntityId id) {
+            return id >> 32;
+        }
+
+        inline EntityVersion get_entity_version(EntityId id) {
+            return (EntityVersion)id;
+        }
+
+        inline bool is_entity_valid(EntityId id) {
+            return (id >> 32) != EntityIndex(-1);
+        }
+
+        #define INVALID_ENTITY create_entity_id(EntityIndex(-1), 0)
+
+    }
 
     namespace Component {
         static int c_componentCounter = 0;
@@ -75,6 +103,10 @@ namespace catos {
         T* assign(EntityId id) {
             int component_id = Component::get_id<T>();
 
+            // check if the entity is not deleted
+            if (entities[EntityUtils::get_entity_index(id)].id != id)
+                return nullptr;
+
             if (component_pools.size() <= component_id) { // not enough component pool
                 component_pools.resize(component_pools.size() + 1, nullptr);
             }
@@ -98,6 +130,11 @@ namespace catos {
         template<typename T>
         T* get(EntityId id) {
             int component_id = Component::get_id<T>();
+
+            // check if the entity is not deleted
+            if (entities[EntityUtils::get_entity_index(id)].id != id)
+                return nullptr;
+
             if (!entities[id].mask.test(component_id))
                 return nullptr;
 
@@ -105,8 +142,28 @@ namespace catos {
             return p_component;
         }
 
+        template<typename T>
+        void remove(EntityId id) {
+
+            // check if the entity is not deleted
+            if (entities[EntityUtils::get_entity_index(id)].id != id)
+                return;
+
+            int componentId =  Component::get_id<T>();
+            entities[EntityUtils::get_entity_index(id)].mask.reset(componentId);
+        }
+
+
+        void destroy_entity(EntityId id) {
+            EntityId new_id = EntityUtils::create_entity_id(EntityIndex(-1), EntityUtils::get_entity_version(id) + 1);
+            entities[EntityUtils::get_entity_index(id)].id = new_id;
+            entities[EntityUtils::get_entity_index(id)].mask.reset();
+            free_entities.push_back(EntityUtils::get_entity_index(id));
+        }
+
     private:
         std::vector<EntityInfo> entities;
+        std::vector<EntityIndex> free_entities;
         std::vector<ComponentPool*> component_pools;
 
     };
