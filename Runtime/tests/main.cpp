@@ -115,11 +115,23 @@ namespace catos::tests {
 
     TEST_CASE("ECS::componentId") {
 
-        spdlog::info("Unique id: {}", catos::World::get_id<TransformComponent>());
+        spdlog::info("Unique id: {}", catos::Component::get_id<TransformComponent>());
 
-       CHECK(catos::World::get_id<TransformComponent>() != catos::World::get_id<Foo>());
+       CHECK(catos::Component::get_id<TransformComponent>() != catos::Component::get_id<Foo>());
 
     }
+
+    TEST_CASE("ECS::Entity_creation") {
+
+        World world;
+
+        EntityId e1 = world.new_entity();
+        EntityId e2 = world.new_entity();
+
+        CHECK(e1 != e2);
+    }
+
+
 }
 
 
