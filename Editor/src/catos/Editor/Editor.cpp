@@ -3,11 +3,9 @@
 //
 #pragma once
 #include "Editor.h"
-#include "imgui.h"
 #include <../../Runtime/include/core/application.h>
 
 #include "../../Runtime/include/core/window.h"
-#include "../../Runtime/Renderer/VkEngine.h"
 #include "imgui_internal.h"
 
 #include "World/WorldTreeView.h"
@@ -24,6 +22,7 @@ namespace catos::Editor {
 
     VulkanEngine _renderer;
     ImGuiID dockspaceID;
+    DockInfo _dock_info;
 
     void init_tabs();
     void init_style();
@@ -31,7 +30,9 @@ namespace catos::Editor {
 
     std::vector<EditorTab*> tabs;
 
+
 }
+
 
 void catos::Editor::init() {
 
@@ -81,15 +82,23 @@ void catos::Editor::run() {
         static bool first = true;
         static ImGuiID dockspace_id;
         if (first) {
-            dockspace_id = ImGui::GetID("MyDockSpace");
-            ImGui::DockBuilderRemoveNode(dockspace_id); // Clear any previous layout
-            ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace); // Add empty node
+            dockspace_id = ImGui::GetID("DockSpace");
+
+            ImGui::DockBuilderRemoveNode(dockspace_id);
+            ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
             ImGui::DockBuilderSetNodeSize(dockspace_id, ImGui::GetMainViewport()->Size);
+
+
+
             ImGuiID dock_main_id = dockspace_id;
-            ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.25f, nullptr, &dock_main_id);
-            ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.25f, nullptr, &dock_main_id);
+            _dock_info.left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.25f, nullptr, &dock_main_id);
+            _dock_info.right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.25f, nullptr, &dock_main_id);
             // Dock windows into the nodes
-            ImGui::DockBuilderDockWindow("World Tree", dock_id_right);
+
+            for (auto tab : tabs) {
+                tab->setup_docking(dock_main_id, _dock_info);
+            }
+
             ImGui::DockBuilderFinish(dock_main_id);
             first = false;
         }

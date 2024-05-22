@@ -5,6 +5,7 @@
 #include "WorldTreeView.h"
 #include "../Editor.h"
 #include "world/world.h"
+#include "imgui_internal.h"
 #include <imgui.h>
 
 using namespace catos::Editor;
@@ -83,13 +84,18 @@ namespace WorldTreeView {
 
     }
 
+    void setup_docking(ImGuiID dockspace, DockInfo& info) {
+        ImGui::DockBuilderDockWindow("World Tree", info.right);
+    }
+
 
     void init() {
         EditorTab* tab = new EditorTab{
             .title = "World Tree",
             .init = &init_tab,
             .render = &render_tab,
-            .destroy = &destroy
+            .destroy = &destroy,
+            .setup_docking = &setup_docking
         };
         catos::Editor::register_tab( tab);
     }
