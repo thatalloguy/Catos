@@ -68,7 +68,7 @@ namespace WorldTreeView {
 
         ImGui::BeginChild("Tree View");
         ItemRowsBackground();
-         if (ImGui::Button("New")) {
+        if (ImGui::Button("New")) {
             p_world.new_entity();
         }
         for (catos::EntityInfo en : p_world.entities) {

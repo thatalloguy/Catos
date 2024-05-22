@@ -11,6 +11,7 @@
 #include "imgui_internal.h"
 
 #include "World/WorldTreeView.h"
+#include "extensions/imgui_dock.h"
 
 namespace catos::Editor {
 
@@ -22,6 +23,7 @@ namespace catos::Editor {
     App* _app;
 
     VulkanEngine _renderer;
+    ImGuiID dockspaceID;
 
     void init_tabs();
     void init_style();
@@ -52,17 +54,15 @@ void catos::Editor::init() {
 
     init_tabs();
 
-    ImGui::ClearIniSettings();
 
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    ImGui::GetIO().IniFilename = "../../Assets/Editor.layout"; /// todo add this in a config of some sort
-
-    ImGui::LoadIniSettingsFromDisk("../../Assets/Editor.layout");
+    ImGui::GetIO().IniFilename = nullptr; /// todo add this
 
     init_style();
 
     _initialized = true;
 
+    ImGui::InitDock();
 
 
 }
@@ -78,11 +78,34 @@ void catos::Editor::run() {
 
         _renderer.start_imgui_frame();
 
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+        static bool first = true;
+        static ImGuiID dockspace_id;
+        if (first) {
+            dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGui::DockBuilderRemoveNode(dockspace_id); // Clear any previous layout
+            ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace); // Add empty node
+            ImGui::DockBuilderSetNodeSize(dockspace_id, ImGui::GetMainViewport()->Size);
+            ImGuiID dock_main_id = dockspace_id;
+            ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.25f, nullptr, &dock_main_id);
+            ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.25f, nullptr, &dock_main_id);
+            // Dock windows into the nodes
+            ImGui::DockBuilderDockWindow("World Tree", dock_id_right);
+            ImGui::DockBuilderFinish(dock_main_id);
+            first = false;
+        }
+
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImGui::GetMainViewport()->Size);
+        ImGui::Begin("MAIN", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar| ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+
+        ImGui::DockSpace(dockspace_id, ImGui::GetMainViewport()->Size);
 
         for (auto& tab : tabs) {
             tab->render();
         }
+
+        ImGui::End();
 
         _renderer.end_imgui_frame();
 

@@ -31,6 +31,9 @@ file(GLOB_RECURSE IMGUI_SOURCE
         Thirdparty/imgui/backends/imgui_impl_vulkan.cpp
         Thirdparty/imgui/backends/imgui_impl_glfw.h
         Thirdparty/imgui/backends/imgui_impl_glfw.cpp
+
+        Thirdparty/imgui/extensions/imgui_dock.h
+        Thirdparty/imgui/extensions/imgui_dock.cpp
 )
 
 if(EMSCRIPTEN)
