@@ -4,11 +4,16 @@
 
 #include "WorldTreeView.h"
 #include "../Editor.h"
+#include "world/world.h"
 #include <imgui.h>
 
 using namespace catos::Editor;
 
 namespace WorldTreeView {
+
+
+
+    catos::World p_world{};
 
 
 
@@ -63,6 +68,12 @@ namespace WorldTreeView {
 
         ImGui::BeginChild("Tree View");
         ItemRowsBackground();
+         if (ImGui::Button("New")) {
+            p_world.new_entity();
+        }
+        for (catos::EntityInfo en : p_world.entities) {
+            ImGui::Selectable(std::format("Entity {}",  en.id).c_str());
+        }
         ImGui::EndChild();
 
         ImGui::End();
@@ -82,7 +93,5 @@ namespace WorldTreeView {
         };
         catos::Editor::register_tab( tab);
     }
-
-
 
 }

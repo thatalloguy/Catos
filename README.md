@@ -9,15 +9,12 @@
 #
 #### Planned Features / ToDo
 
+---
 - [x] Reflection system
 - - [ ] ~~constructors~~
 - - [x] Methods
 - - [x] Properties
-- [x] EC.
-- - [x] Entity Creation.
-- - [x] Central system for handling entities.
-- - [x] Base component
-
+---
 - [ ] C# scripting engine
 - - [x] Creating instances of classes.
 - - [x] Calling functions of instances.
@@ -25,17 +22,20 @@
 - - [x] Calling Cpp from C#
 - - [ ] Refactor.
 - - [ ] Script Object. 
-
+---
 - [ ] Editor 
-- - [ ] .
-
+- - [ ] ECS manipulation.
+- - [ ] Project management.
+- - [ ] World View tab
+- - [ ] Asset browser.
+---
 
 - [ ] ECS
 - - [x] Entities.
 - - [x] Components
 - - [x] Queries.
 - - [ ] Parent & children.
-
+---
 - [ ] Resource manager
 - [ ] Dynamic Editor (via the reflection)
 - [ ] Atomus implementation.

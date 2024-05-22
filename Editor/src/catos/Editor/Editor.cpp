@@ -50,13 +50,19 @@ void catos::Editor::init() {
 
     _renderer.Init(_window->get_glfw_window(), false);
 
+    init_tabs();
+
+    ImGui::ClearIniSettings();
+
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     ImGui::GetIO().IniFilename = "../../Assets/Editor.layout"; /// todo add this in a config of some sort
 
+    ImGui::LoadIniSettingsFromDisk("../../Assets/Editor.layout");
+
     init_style();
-    init_tabs();
 
     _initialized = true;
+
 
 
 }
