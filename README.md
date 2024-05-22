@@ -31,7 +31,10 @@
 
 
 - [ ] ECS
-- - [ ] Entities.
+- - [x] Entities.
+- - [x] Components
+- - [x] Queries.
+- - [ ] Parent & children.
 
 - [ ] Resource manager
 - [ ] Dynamic Editor (via the reflection)
