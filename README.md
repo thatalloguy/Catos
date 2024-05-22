@@ -37,8 +37,8 @@
 - - [ ] Parent & children.
 ---
 - [ ] Resource manager
-- [ ] Dynamic Editor (via the reflection)
-- [ ] Atomus implementation.
+---
+- [x] Atomus implementation.
 #
 
 
