@@ -34,6 +34,7 @@
 - - [x] Entities.
 - - [x] Components
 - - [x] Queries.
+- - [ ] Scripting (C#) compatibility.
 - - [ ] Parent & children.
 ---
 - [ ] Resource manager

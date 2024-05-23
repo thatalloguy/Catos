@@ -25,6 +25,10 @@ struct TransformComponent {
     float x, y, z;
 };
 
+struct ComponentTest {
+    float d;
+};
+
 namespace catos::tests {
 
     TEST_CASE("REGISTRY::GET_TYPE_NAME") {
@@ -142,6 +146,9 @@ namespace catos::tests {
 
         CHECK(world.has_component<TransformComponent>(e1));
         CHECK(!world.has_component<Foo>(e1));
+        CHECK(!world.has_component<ComponentTest>(e1));
+
+        spdlog::info("ID COMP: {}", Component::c_componentCounter);
     }
 
     TEST_CASE("ECS::Get_component") {

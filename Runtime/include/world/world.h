@@ -133,8 +133,6 @@ namespace catos {
             int component_id = Component::get_id<T>();
 
             // check if the entity is not deleted
-            if (entities[EntityUtils::get_entity_index(id)].id != id)
-                return nullptr;
 
             if (!entities[id].mask.test(component_id))
                 return nullptr;
@@ -151,9 +149,6 @@ namespace catos {
         template<typename T>
         void remove(EntityId id) {
 
-            // check if the entity is not deleted
-            if (entities[EntityUtils::get_entity_index(id)].id != id)
-                return;
 
             int componentId =  Component::get_id<T>();
             entities[EntityUtils::get_entity_index(id)].mask.reset(componentId);
