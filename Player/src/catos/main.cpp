@@ -23,6 +23,9 @@ struct Wrapped_world {
         return static_cast<World*>(instance)->new_entity();
     }
 
+    static void destroy_instance(void* instance) {
+        delete static_cast<World*>(instance);
+    }
 };
 
 class Console {
@@ -60,9 +63,14 @@ int main() {
 
     ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
     ScriptingEngine::embed_static_function<int, Component::get_component_id_counter>("get_component_id_Counter");
-    //ScriptingEngine::embed_function_r<World, &World::new_entity, EntityId>("world_new_entity");
+
+
     mono_add_internal_call("catos.LibNative::world_new_entity_native", &Wrapped_world::new_entity);
     mono_add_internal_call("catos.LibNative::world_new_instance_native", &Wrapped_world::new_instance);
+    mono_add_internal_call("catos.LibNative::world_destroy_instance_native", &Wrapped_world::destroy_instance);
+
+
+
     scriptingEngine.run();
 
     scriptingEngine.clean_up();
