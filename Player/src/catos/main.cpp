@@ -3,6 +3,7 @@
 #include "core/registry.h"
 #include "core/application.h"
 #include "world/world.h"
+#include "world/query.h"
 #include <../Renderer/VkEngine.h>
 #include <core/window.h>
 
@@ -13,8 +14,6 @@ using namespace catos;
 
 struct Wrapped_world {
 
-
-    /// Do I need to hanlde this?
     static void* new_instance() {
         return (void*) new World();
     }
@@ -25,6 +24,14 @@ struct Wrapped_world {
 
     static void destroy_instance(void* instance) {
         delete static_cast<World*>(instance);
+    }
+
+    static void assign(void* instance, EntityId id, int componentid, int size) {
+        static_cast<World*>(instance)->assign_(id, componentid, size);
+    }
+
+    static bool has_component(void* instance, EntityId id, int componentid) {
+        return static_cast<World*>(instance)->has_component_(id, componentid);
     }
 };
 
@@ -59,7 +66,7 @@ int main() {
     app.get<Registry>()->register_class<Console>()
             .method("log", &Console::log, "Testing :)");
 
-    Component::get_id<TransformComponent>();
+    //Component::get_id<TransformComponent>();
 
     ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
     ScriptingEngine::embed_static_function<int, Component::get_component_id_counter>("get_component_id_Counter");
@@ -68,6 +75,8 @@ int main() {
     mono_add_internal_call("catos.LibNative::world_new_entity_native", &Wrapped_world::new_entity);
     mono_add_internal_call("catos.LibNative::world_new_instance_native", &Wrapped_world::new_instance);
     mono_add_internal_call("catos.LibNative::world_destroy_instance_native", &Wrapped_world::destroy_instance);
+    mono_add_internal_call("catos.LibNative::world_assign_native", &Wrapped_world::assign);
+    mono_add_internal_call("catos.LibNative::world_has_component_native", &Wrapped_world::has_component);
 
 
 

@@ -187,6 +187,10 @@ namespace catos {
             entities[entityId].mask.set(component_id);
         }
 
+        bool has_component_(EntityId id, int component_id) {
+            return entities[id].mask.test(component_id);
+        }
+
 
         std::vector<EntityInfo> entities;
 
