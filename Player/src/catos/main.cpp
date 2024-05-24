@@ -39,6 +39,7 @@ int main() {
             .method("log", &Console::log, "Testing :)");
 
     ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
+    ScriptingEngine::embed_function<>()
 
 
     scriptingEngine.run();

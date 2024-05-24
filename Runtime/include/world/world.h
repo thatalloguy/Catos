@@ -67,6 +67,10 @@ namespace catos {
             static int componentId = c_componentCounter++;
             return componentId;
         }
+
+        static int get_component_id_counter() {
+            return c_componentCounter;
+        }
     }
 
     struct ComponentPool

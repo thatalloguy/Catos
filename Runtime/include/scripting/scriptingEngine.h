@@ -53,6 +53,11 @@ namespace catos {
             (instance.*Func)(args...);
         }
 
+        template<typename Return, auto Func>
+        static void embed_static_function(const char* name) {
+            mono_add_internal_call(std::string(std::string("catos.LibNative::") + name + std::string("_native")).c_str(), reinterpret_cast<Return(*)()>(Func));
+        };
+
 
         ///TODO intergrate this with the reflection system
         template<typename T, auto Func, typename... Args>

@@ -115,7 +115,7 @@ void catos::ScriptingEngine::init_mono() {
 
     uint32_t size;
 
-    _context->_mainAssembly = load_assembly(R"(C:\Users\allos\source\Catos\Resources\Catos\CatosRuntime\bin\Debug\net8.0\CatosRuntime.dll)");
+    _context->_mainAssembly = load_assembly(R"(C:\Users\allos\source\Catos\Resources\Catos\CatosCSHARP\bin\Debug\net8.0\CatosCSHARP.dll)");
 
     print_assembly_types(_context->_mainAssembly);
 
