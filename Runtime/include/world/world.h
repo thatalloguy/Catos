@@ -167,6 +167,27 @@ namespace catos {
         }
 
 
+        /// WRAPPED METHODS USAGE IN CPP IS UNTESTED!
+
+        void assign_(EntityId entityId, int component_id, int component_type_size) {
+
+            // check if the entity is not deleted
+
+
+            if (component_pools.size() <= component_id) { // not enough component pool
+                component_pools.resize(component_pools.size() + 1, nullptr);
+            }
+            if (component_pools[component_id] == nullptr) {
+                component_pools[component_id] = new ComponentPool(component_type_size);
+            }
+
+            //void* pComponent = new (component_pools[component_id]->get(id)) T();
+
+
+            entities[entityId].mask.set(component_id);
+        }
+
+
         std::vector<EntityInfo> entities;
 
 

@@ -2,6 +2,7 @@
 #pragma once
 #include "core/registry.h"
 #include "core/application.h"
+#include "world/world.h"
 #include <../Renderer/VkEngine.h>
 #include <core/window.h>
 
@@ -10,6 +11,19 @@
 
 using namespace catos;
 
+struct Wrapped_world {
+
+
+    /// Do I need to hanlde this?
+    static void* new_instance() {
+        return (void*) new World();
+    }
+
+    static EntityId new_entity(void* instance) {
+        return static_cast<World*>(instance)->new_entity();
+    }
+
+};
 
 class Console {
 
@@ -18,6 +32,10 @@ public:
     void log(MonoString* msg) {
         std::cout << "[Console log]: " << ScriptingEngine::mono_string_to_string(msg) << "\n";
     }
+};
+
+struct TransformComponent {
+    float x,y,z;
 };
 
 int main() {
@@ -38,10 +56,13 @@ int main() {
     app.get<Registry>()->register_class<Console>()
             .method("log", &Console::log, "Testing :)");
 
+    Component::get_id<TransformComponent>();
+
     ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
-    ScriptingEngine::embed_function<>()
-
-
+    ScriptingEngine::embed_static_function<int, Component::get_component_id_counter>("get_component_id_Counter");
+    //ScriptingEngine::embed_function_r<World, &World::new_entity, EntityId>("world_new_entity");
+    mono_add_internal_call("catos.LibNative::world_new_entity_native", &Wrapped_world::new_entity);
+    mono_add_internal_call("catos.LibNative::world_new_instance_native", &Wrapped_world::new_instance);
     scriptingEngine.run();
 
     scriptingEngine.clean_up();
