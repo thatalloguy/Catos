@@ -58,10 +58,7 @@ struct Wrapped_Entity {
     }
 
     static bool has_component(void* instance, MonoString* name) {
-        bool result = static_cast<Entity*>(instance)->hasComponent(std::hash<std::string>{}(ScriptingEngine::mono_string_to_string(name)));;
-
-
-        return result;
+        return static_cast<Entity*>(instance)->hasComponent(std::hash<std::string>{}(ScriptingEngine::mono_string_to_string(name)));
     }
 };
 
