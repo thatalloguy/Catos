@@ -19,15 +19,15 @@ struct Component {
    };
 };
 
-struct TransformComponent : Component{
-    float x,y,z;
+struct TransformComponent{
+    float x = 1,y = 2,z = 5;
 };
 
 struct Entity {
-    tinystl::unordered_map<size_t, Component*> components;
+    tinystl::unordered_map<size_t, void*> components;
 
     void* getComponent(size_t hash) {
-        return static_cast<void*>(components[hash]);
+        return static_cast<void*>(components.find(hash)->second);
     };
 
     bool hasComponent(size_t hash) {
@@ -36,12 +36,12 @@ struct Entity {
 
 
     template<typename T>
-    void addComponent(Component* new_) {
-        addComponent_(*new_, std::hash<std::string>{}(typeid(T).name()));
+    void addComponent(void* new_) {
+        addComponent_(new_, std::hash<std::string>{}(typeid(T).name()));
     }
 
-    void addComponent_(Component& component, size_t hash) {
-        components.insert(tinystl::pair(hash, &component));
+    void addComponent_(void* component, size_t hash) {
+        components.insert(tinystl::pair(hash, component));
     }
 };
 
@@ -59,6 +59,12 @@ struct Wrapped_Entity {
 
     static bool has_component(void* instance, MonoString* name) {
         return static_cast<Entity*>(instance)->hasComponent(std::hash<std::string>{}(ScriptingEngine::mono_string_to_string(name)));
+    }
+
+    static void* get_component(void* instance, MonoString* name) {
+        Entity* ent = static_cast<Entity*>(instance);
+
+        return ent->getComponent(std::hash<std::string>{}(ScriptingEngine::mono_string_to_string(name)));
     }
 };
 
@@ -118,6 +124,7 @@ int main() {
     mono_add_internal_call("catos.LibNative::entity_get_new_instance", &Wrapped_Entity::new_instance);
     mono_add_internal_call("catos.LibNative::entity_destroy_instance", &Wrapped_Entity::destroy_instance);
     mono_add_internal_call("catos.LibNative::entity_has_component_native", &Wrapped_Entity::has_component);
+    mono_add_internal_call("catos.LibNative::entity_get_component", &Wrapped_Entity::get_component);
 
     scriptingEngine.run();
 
