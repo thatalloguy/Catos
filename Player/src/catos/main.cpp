@@ -2,38 +2,85 @@
 #pragma once
 #include "core/registry.h"
 #include "core/application.h"
-#include "world/world.h"
-#include "world/query.h"
 #include <../Renderer/VkEngine.h>
 #include <core/window.h>
+
+#include "../tinystl/include/TINYSTL/unordered_map.h"
+#include "TINYSTL/vector.h"
 
 
 #include <fstream>
 
 using namespace catos;
 
-struct Wrapped_world {
+struct Component {
+   virtual void init()  {
 
-    static void* new_instance() {
-        return (void*) new World();
+   };
+};
+
+struct TransformComponent : Component{
+    float x,y,z;
+};
+
+struct Entity {
+    tinystl::unordered_map<size_t, Component*> components;
+
+    void* getComponent(size_t hash) {
+        return static_cast<void*>(components[hash]);
+    };
+
+    bool hasComponent(size_t hash) {
+        return components.find(hash) != components.end();
     }
 
-    static EntityId new_entity(void* instance) {
-        return static_cast<World*>(instance)->new_entity();
+
+    template<typename T>
+    void addComponent(Component* new_) {
+        addComponent_(*new_, std::hash<std::string>{}(typeid(T).name()));
     }
 
-    static void destroy_instance(void* instance) {
-        delete static_cast<World*>(instance);
-    }
-
-    static void assign(void* instance, EntityId id, int componentid, int size) {
-        static_cast<World*>(instance)->assign_(id, componentid, size);
-    }
-
-    static bool has_component(void* instance, EntityId id, int componentid) {
-        return static_cast<World*>(instance)->has_component_(id, componentid);
+    void addComponent_(Component& component, size_t hash) {
+        components.insert(tinystl::pair(hash, &component));
     }
 };
+
+struct Wrapped_Entity {
+
+    static void* new_instance() {
+        auto in = new Entity();
+        in->addComponent<TransformComponent>(new TransformComponent());
+        return static_cast<void*>(in);
+    };
+
+    static void destroy_instance(void* instance) {
+        delete static_cast<Entity*>(instance);
+    }
+
+    static bool has_component(void* instance, MonoString* name) {
+        bool result = static_cast<Entity*>(instance)->hasComponent(std::hash<std::string>{}(ScriptingEngine::mono_string_to_string(name)));;
+
+
+        return result;
+    }
+};
+
+struct Level {
+    tinystl::vector<Entity> entities;
+};
+
+
+
+
+struct Wrapped_level {
+
+    static void run_func(Component comp) {
+        comp.init();
+    };
+
+
+};
+
 
 class Console {
 
@@ -44,9 +91,6 @@ public:
     }
 };
 
-struct TransformComponent {
-    float x,y,z;
-};
 
 int main() {
 
@@ -69,18 +113,15 @@ int main() {
     //Component::get_id<TransformComponent>();
 
     ScriptingEngine::embed_function<Console, &Console::log, MonoString *>("log");
-    ScriptingEngine::embed_static_function<int, Component::get_component_id_counter>("get_component_id_Counter");
 
+    mono_add_internal_call("catos.LibNative::run_component", &Wrapped_level::run_func);
 
-    mono_add_internal_call("catos.LibNative::world_new_entity_native", &Wrapped_world::new_entity);
-    mono_add_internal_call("catos.LibNative::world_new_instance_native", &Wrapped_world::new_instance);
-    mono_add_internal_call("catos.LibNative::world_destroy_instance_native", &Wrapped_world::destroy_instance);
-    mono_add_internal_call("catos.LibNative::world_assign_native", &Wrapped_world::assign);
-    mono_add_internal_call("catos.LibNative::world_has_component_native", &Wrapped_world::has_component);
-
-
+    mono_add_internal_call("catos.LibNative::entity_get_new_instance", &Wrapped_Entity::new_instance);
+    mono_add_internal_call("catos.LibNative::entity_destroy_instance", &Wrapped_Entity::destroy_instance);
+    mono_add_internal_call("catos.LibNative::entity_has_component_native", &Wrapped_Entity::has_component);
 
     scriptingEngine.run();
+
 
     scriptingEngine.clean_up();
 
