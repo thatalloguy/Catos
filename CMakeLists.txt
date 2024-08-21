@@ -48,8 +48,6 @@ include_directories("Thirdparty/stb")
 include_directories("Thirdparty/glm")
 include_directories("Thirdparty/glfw/include")
 
-link_directories(Thirdparty/Mono/lib/)
-
 add_library(catos-headers INTERFACE)
 
 

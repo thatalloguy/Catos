@@ -7,7 +7,6 @@
 
 #include "core/registry.h"
 #include "core/application.h"
-#include "scripting/scriptingEngine.h"
 #include "world/world.h"
 #include "spdlog/spdlog.h"
 #include "world/query.h"
@@ -107,16 +106,6 @@ namespace catos::tests {
 
     }
 
-
-    TEST_CASE("ScriptingEngine::Init") {
-
-        ScriptingEngine scriptingEngine;
-
-        scriptingEngine.init();
-
-
-        scriptingEngine.clean_up();
-    }
 
     TEST_CASE("ECS::componentId") {
 

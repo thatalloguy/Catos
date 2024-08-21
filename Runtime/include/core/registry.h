@@ -14,7 +14,6 @@
 #include <regex>
 
 
-#include <scripting/scriptingEngine.h>
 
 using namespace catos;
 
