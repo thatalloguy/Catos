@@ -23,7 +23,7 @@
 ---
 - [ ] Custom STL (standard Library)
 - - [x] String
-- - [ ] Vector
+- - [x] Vector
 - - [ ] HashMap
 ---
 - [ ] Render Abstraction Layer (for vulkan).
