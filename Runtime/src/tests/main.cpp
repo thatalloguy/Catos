@@ -8,7 +8,6 @@
 #include "core/application.h"
 #include "world/world.h"
 #include "spdlog/spdlog.h"
-#include "world/query.h"
 #include "stl/vector.h"
 #include "stl/string.h"
 
@@ -23,6 +22,10 @@ struct Foo {
 
 struct TransformComponent {
     float x, y, z;
+
+    bool operator!=(TransformComponent& b) {
+        return true;
+    }
 };
 
 struct ComponentTest {
@@ -107,92 +110,6 @@ namespace catos::tests {
 
     }
 
-
-    TEST_CASE("ECS::componentId") {
-
-        spdlog::info("Unique id: {}", catos::Component::get_id<TransformComponent>());
-
-       CHECK(catos::Component::get_id<TransformComponent>() != catos::Component::get_id<Foo>());
-
-    }
-
-    TEST_CASE("ECS::Entity_creation") {
-
-        World world;
-
-        EntityId e1 = world.new_entity();
-        EntityId e2 = world.new_entity();
-
-        CHECK(e1 != e2);
-    }
-
-    TEST_CASE("ECS::Entity_Components") {
-
-        World world;
-
-        EntityId e1 = world.new_entity();
-
-        world.assign<TransformComponent>(e1);
-
-        CHECK(world.has_component<TransformComponent>(e1));
-        CHECK(!world.has_component<Foo>(e1));
-        CHECK(!world.has_component<ComponentTest>(e1));
-
-        spdlog::info("ID COMP: {}", Component::c_componentCounter);
-    }
-
-    TEST_CASE("ECS::Get_component") {
-
-        World world;
-
-        EntityId e1 = world.new_entity();
-
-        world.assign<TransformComponent>(e1);
-
-        CHECK(world.has_component<TransformComponent>(e1));
-
-
-        world.get<TransformComponent>(e1)->x = 2;
-
-        CHECK(world.get<TransformComponent>(e1)->x == 2);
-    }
-
-    TEST_CASE("ECS::Query") {
-
-
-        World world;
-
-        EntityId e1 = world.new_entity();
-        EntityId e2 = world.new_entity();
-
-        world.assign<TransformComponent>(e1);
-        world.assign<TransformComponent>(e2);
-
-        TransformComponent* tr1 = world.get<TransformComponent>(e1);
-
-        TransformComponent* tr2 = world.get<TransformComponent>(e2);
-
-
-
-        tr1->x = 1;
-        tr1->y = 4;
-        tr1->z = 3;
-
-        tr2->x = 5;
-        tr2->y = 7;
-        tr2->z = 2;
-
-        CHECK(world.has_component<TransformComponent>(e1));
-        CHECK(world.has_component<TransformComponent>(e2));
-
-        for (EntityId ent : catos::Query<TransformComponent>(world)) {
-            TransformComponent* t = world.get<TransformComponent>(ent);
-
-            spdlog::info("TRANSFORM: {}, {}, {}", t->x, t->y, t->z);
-        }
-
-
-    }
 
     TEST_CASE("STL::VECTORS") {
 

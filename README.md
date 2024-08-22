@@ -24,7 +24,7 @@
 - [ ] Custom STL (standard Library)
 - - [x] String
 - - [x] Vector
-- - [ ] HashMap
+- - [ ] ~~HashMap~~
 ---
 - [ ] Render Abstraction Layer (for vulkan).
 - - [ ] Ability to create new pipelines.

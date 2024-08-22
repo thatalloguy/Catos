@@ -14,9 +14,6 @@ namespace WorldTreeView {
 
 
 
-    catos::World p_world{};
-
-
 
     void ItemRowsBackground(float lineHeight = -1.0f, const ImColor& color = ImColor(20, 20, 20, 64)) {
         auto* drawList = ImGui::GetWindowDrawList();
@@ -70,11 +67,9 @@ namespace WorldTreeView {
         ImGui::BeginChild("Tree View");
         ItemRowsBackground();
         if (ImGui::Button("New")) {
-            p_world.new_entity();
         }
-        for (catos::EntityInfo en : p_world.entities) {
-            ImGui::Selectable(std::format("Entity {}",  en.id).c_str());
-        }
+
+
         ImGui::EndChild();
 
         ImGui::End();
