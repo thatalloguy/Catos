@@ -22,7 +22,38 @@ namespace Catos {
         /// Initializes the vector to empty.
         vector(): buf(nullptr), size(0) {};
 
+        /// Copy Constructor
+        vector(const vector& obj) {
+            //Allocate enough mem then copy the item values
+            if (maxSize >= obj.size)
+                reserve(obj.size);
 
+
+            for (int i=0; i<obj.size; i++)
+                buf[i] = obj.buf[i];
+        }
+
+        /// Move Constructor
+        vector(vector&& obj) {
+            buf = obj.buf;
+            size = obj.size;
+            maxSize = obj.size;
+
+        }
+
+        /// Copies the obj.
+        vector<T>& operator=(const vector<T>& obj) {
+            if (this == obj) return *this; // no self asignment.
+
+            if (maxSize >= obj.size)
+                reserve(obj.size);
+
+
+            for (int i=0; i<obj.size; i++)
+                buf[i] = obj.buf[i];
+
+            return *this;
+        }
 
 
         /// allocates enough memory for the amount given.
