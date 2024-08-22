@@ -22,7 +22,7 @@
 - - [ ] Scenes.
 ---
 - [ ] Custom STL (standard Library)
-- - [ ] String
+- - [x] String
 - - [ ] Vector
 - - [ ] HashMap
 ---
