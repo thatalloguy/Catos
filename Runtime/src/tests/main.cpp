@@ -3,7 +3,6 @@
 #include "../doctest/doctest/doctest.h"
 
 #include "core/type_utils.h"
-#include <TINYSTL/string.h>
 
 #include "core/registry.h"
 #include "core/application.h"

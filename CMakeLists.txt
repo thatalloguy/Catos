@@ -40,7 +40,6 @@ if(EMSCRIPTEN)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fexceptions")
 endif()
 
-include_directories(Thirdparty/tinystl/include/)
 include_directories(Thirdparty/Mono/include/mono-2.0/)
 
 include_directories("Thirdparty/imgui")
