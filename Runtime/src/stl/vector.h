@@ -162,6 +162,7 @@ namespace Catos {
             return maxSize;
         }
 
+        ///  Returns the obj for the given index.
         T& operator[](int i) {
            return buf[i];
         }
