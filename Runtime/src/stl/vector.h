@@ -178,6 +178,24 @@ namespace Catos {
         };
 
 
+        /* --- Iterator stuff */
+
+        class iterator;
+
+        iterator begin();
+
+        iterator begin() const;
+
+        iterator end();
+
+        iterator end() const;
+
+        iterator cbegin() const;
+
+        iterator cend() const;
+
+
+
 
     private:
 
@@ -188,6 +206,86 @@ namespace Catos {
         // The max amount of items in the buffer.
         unsigned int maxSize = 0;
     };
+
+
+
+    template<class T> class vector<T>::iterator
+    {
+    public:
+        iterator(T* p)
+                :_curr(p)
+        {}
+
+        iterator& operator++()
+        {
+            _curr++;
+            return *this;
+        }
+
+        iterator& operator--()
+        {
+            _curr--;
+            return *this;
+        }
+
+        T& operator*()
+        {
+            return *_curr;
+        }
+
+        bool operator==(const iterator& b) const
+        {
+            return *_curr == *b._curr;
+        }
+
+        bool operator!=(const iterator& b) const
+        {
+            return *_curr != *b._curr;
+        }
+
+    private:
+        T* _curr;
+
+
+
+
+
+    };
+
+
+    template<class T>
+    inline typename vector<T>::iterator vector<T>::begin()
+    {
+        return vector<T>::iterator(&buf[0]);
+    };
+
+    template<class T>
+    inline typename vector<T>::iterator vector<T>::begin() const {
+        return vector<T>::iterator(&buf[0]);
+    }
+
+    template<class T>
+    inline typename vector<T>::iterator vector<T>::end()
+    {
+        return vector<T>::iterator(&buf[size]);
+    }
+
+    template<class T>
+    inline typename vector<T>::iterator vector<T>::end() const {
+        return vector<T>::iterator(&buf[size]);
+    }
+
+    template<class T>
+    inline typename  vector<T>::iterator vector<T>::cbegin() const {
+        return vector<T>::iterator(&buf[0]);
+    }
+
+    template<class T>
+    inline typename vector<T>::iterator vector<T>::cend() const {
+        return vector<T>::iterator(&buf[size]);
+    }
+
+
 
 }
 

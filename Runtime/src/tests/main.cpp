@@ -197,15 +197,16 @@ namespace catos::tests {
     TEST_CASE("STL::VECTORS") {
 
 
-        Catos::vector<Catos::string> test;
+        Catos::vector<int> test;
 
         test.reserve(7);
 
         for (int i=0; i < 7; i++)
-            test.push_back("boo");
+            test.push_back(i);
 
-
-        test.clear();
+        for (int obj : test) {
+            spdlog::info("Element = {}", obj);
+        }
 
     }
 
