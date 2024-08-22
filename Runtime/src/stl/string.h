@@ -5,7 +5,7 @@
 #ifndef CATOS_STRING_H
 #define CATOS_STRING_H
 
-namespace STL {
+namespace Catos {
 
     /// Custom string class that functions as dynamic C_str.
     class string {
