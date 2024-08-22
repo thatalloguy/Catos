@@ -10,6 +10,7 @@
 #include "spdlog/spdlog.h"
 #include "world/query.h"
 #include "stl/vector.h"
+#include "stl/string.h"
 
 
 struct Foo {
@@ -196,23 +197,15 @@ namespace catos::tests {
     TEST_CASE("STL::VECTORS") {
 
 
-        Catos::vector<int> test;
+        Catos::vector<Catos::string> test;
 
         test.reserve(7);
 
         for (int i=0; i < 7; i++)
-            test.push_back(i);
+            test.push_back("boo");
 
 
-        for (int i=0; i < test.length(); i++) {
-            spdlog::info("ELEMENT = {}", test[i]);
-        }
-
-        test.remove(2);
-
-        for (int i=0; i < test.length(); i++) {
-            spdlog::info("ELEMENT = {}", test[i]);
-        }
+        test.clear();
 
     }
 

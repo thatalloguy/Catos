@@ -104,8 +104,8 @@ namespace Catos {
         /// removes the item at the index
         void remove(int index) {
 
-            for (int i = index; i < size - 2; i++) {
-                buf[i] = i + 1;
+            for (int i = index; i < size - 1; i++) {
+                buf[i] = buf[i + 1];
             }
 
             size--;
