@@ -26,6 +26,9 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
         src/world/*.h
         src/world/*.cpp
 
+        src/stl/*.h
+        src/stl/*.cpp
+
 )
 add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS})
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
