@@ -2,7 +2,7 @@
 
 ###### modern lightweight ECS cpp game engine
 
-(Wiki) https://thatalloguy.github.io/catos/html/index.html
+Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.html)
 
 ️
 #
