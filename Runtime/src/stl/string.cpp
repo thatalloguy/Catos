@@ -5,33 +5,33 @@
 #include <cstring>
 #include "string.h"
 
-STL::String::~String() {
+STL::string::~string() {
 
     cleanUp();
 
 }
 
-STL::String::String(const char *buffer) {
+STL::string::string(const char *buffer) {
     size = strlen(buffer);
     buf = new char[size + 1];
     strncpy_s(buf, size + 1, buffer, size);
 
 }
 
-STL::String::String(const STL::String &obj) {
+STL::string::string(const STL::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
     strncpy_s(buf, size + 1, obj.buf, size);
 }
 
-STL::String &STL::String::operator=(const STL::String &obj) {
+STL::string &STL::string::operator=(const STL::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
     strncpy_s(buf, size + 1, obj.buf, size);
     return *this;
 }
 
-STL::String::String(STL::String &&obj) {
+STL::string::string(STL::string &&obj) {
     //First clean up to get rid of previous allocated memory.
     cleanUp();
 
@@ -43,13 +43,13 @@ STL::String::String(STL::String &&obj) {
     obj.buf = nullptr;
 }
 
-void STL::String::cleanUp() {
+void STL::string::cleanUp() {
     if (buf != nullptr) {
         delete[] buf;
     }
 }
 
-STL::String &STL::String::operator=(STL::String &&obj) {
+STL::string &STL::string::operator=(STL::string &&obj) {
     //First clean up to get rid of previous allocated memory.
     cleanUp();
 
@@ -63,8 +63,8 @@ STL::String &STL::String::operator=(STL::String &&obj) {
     return *this;
 }
 
-STL::String STL::String::operator+(const STL::String &obj) {
-    String s; // new string.
+STL::string STL::string::operator+(const STL::string &obj) {
+    string s; // new string.
 
     s.size = this->size + obj.size;
     s.buf = new char[s.size + 1];

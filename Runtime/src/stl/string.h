@@ -8,30 +8,30 @@
 namespace STL {
 
     /// Custom string class that functions as dynamic C_str.
-    class String {
+    class string {
 
     public:
 
         /// Initializes the internal buff to nullptr and size to 0.
-        String() : buf(nullptr), size(0) {};
+        string() : buf(nullptr), size(0) {};
 
         /// Copies the char array to the internal buffer.
-        String(const char* buffer);
+        string(const char* buffer);
 
         /// Copies string object to its internal values.
-        String(const String& obj);
+        string(const string& obj);
 
         /// Transfers ownerShip of buffers to this.
-        String(String&& obj);
+        string(string&& obj);
 
-        /// Same as the String(const String& obj) constructor.
-        String& operator=(const String& obj);
+        /// Same as the string(const string& obj) constructor.
+        string& operator=(const string& obj);
 
         /// Transfers ownership from a buffer to this.
-        String& operator=(String&& obj);
+        string& operator=(string&& obj);
 
         /// Adds a string to itself.
-        String operator+(const String& obj);
+        string operator+(const string& obj);
 
         /// Returns the size of the internal buffer.
         unsigned int length() { return size; };
@@ -41,7 +41,7 @@ namespace STL {
 
 
         /// Deletes the allocated char array
-        ~String();
+        ~string();
 
     private:
         void cleanUp();
