@@ -3,9 +3,9 @@
 //
 #pragma once
 #include "Editor.h"
-#include <../../Runtime/include/core/application.h>
+#include <core/application.h>
 
-#include "../../Runtime/include/core/window.h"
+#include "core/window.h"
 #include "imgui_internal.h"
 
 #include "World/WorldTreeView.h"

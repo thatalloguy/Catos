@@ -1,8 +1,4 @@
-add_library(catos-runtime INTERFACE
-        src/world/world.cpp
-        include/world/world.h
-        src/world/query.cpp
-        include/world/query.h)
+add_library(catos-runtime INTERFACE)
 target_include_directories(catos-runtime INTERFACE include)
 
 find_package(Vulkan REQUIRED)
@@ -14,14 +10,24 @@ file(GLOB_RECURSE FASTGLTF_DEPS
         Thirdparty/fastgltf/deps/simdjson/simdjson.h
         Thirdparty/fastgltf/deps/simdjson/simdjson.cpp
 )
-file(GLOB_RECURSE CATOS_RUNTIME_SRC  src/*.cpp src/*.h src/*.c src/*.hpp Renderer/*.cpp Renderer/*.h
+file(GLOB_RECURSE CATOS_RUNTIME_SRC
 
-        include/math/vecs.h
-        src/math/vecs.cpp
+        src/core/*.cpp
+        src/core/*.h
+
+        src/math/*.h
+        src/math/*.cpp
+
+        src/Renderer/*.cpp
+        src/Renderer/*.h
+
+        src/tests/*.cpp
+
+        src/world/*.h
+        src/world/*.cpp
 
 )
-add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS}
-        include/core/window.h)
+add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS})
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
 
@@ -36,7 +42,7 @@ target_include_directories(catos-runtime-static PUBLIC "Thirdparty/vk-bootstrap"
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/VulkanMemoryAllocator")
 
 #tests
-file(GLOB_RECURSE CATOS_RUNTIME_TEST tests/*.h tests/*.hpp tests/*.c tests/*.cpp)
+file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c src/tests/*.cpp)
 add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST})
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)

@@ -1,15 +1,8 @@
 // engine includes
 #pragma once
-#include "core/registry.h"
-#include "core/application.h"
-#include <../Renderer/VkEngine.h>
+#include <core/application.h>
 #include <core/window.h>
 
-#include "../tinystl/include/TINYSTL/unordered_map.h"
-#include "TINYSTL/vector.h"
-
-
-#include <fstream>
 
 using namespace catos;
 

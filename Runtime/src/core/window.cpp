@@ -1,12 +1,12 @@
 //
 // Created by allos on 5/16/2024.
 //
-#include <core/window.h>
+#include "window.h"
 
 #ifdef _WIN32
 #include "GLFW/glfw3native.h"
 
-#include <windows.h>
+#include <Windows.h>
 #include <dwmapi.h>
 
 

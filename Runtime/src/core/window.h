@@ -8,8 +8,8 @@
 #endif
 
 
-#include "../math/vecs.h"
-#include "../../Renderer/VkEngine.h"
+#include "math/vecs.h"
+#include "Renderer/VkEngine.h"
 #include "types.h"
 
 namespace catos {

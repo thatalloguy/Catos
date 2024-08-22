@@ -1,6 +1,6 @@
 #pragma once
 #define DOCTEST_CONFIG_IMPLEMENT
-#include <doctest/doctest.h>
+#include "../doctest/doctest/doctest.h"
 
 #include "core/type_utils.h"
 #include <TINYSTL/string.h>
