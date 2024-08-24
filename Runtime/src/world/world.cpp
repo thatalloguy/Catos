@@ -1,34 +1,61 @@
 
 #include "world.h"
 
-Catos::World::World() {
+catos::World::World() {
 
 }
 
-Catos::World::World(World &&obj) {
+catos::World::World(World &&obj) noexcept {
 
 }
 
-Catos::World::World(const World &obj) {
+catos::World::World(const World &obj) {
 
 }
 
-Catos::World::~World() {
-
+catos::World::~World() {
+    cleanUp();
 }
 
-Entity *Catos::World::getEntity(EntityID id) {
+catos::Entity *catos::World::getEntity(EntityID id) {
     return nullptr;
 }
 
-void Catos::World::cleanUp() {
+void catos::World::cleanUp() {
+
+    for (auto e : instances) {
+        delete e;
+    }
+}
+
+void catos::World::getNewWorldID() {
 
 }
 
-void Catos::World::getNewWorldID() {
+void catos::World::getNewEntityID() {
 
 }
 
-void Catos::World::getNewEntityID() {
+void catos::World::spawnEntity() {
+
+    EntityCreationInfo info{
+
+    };
+
+    instances.push_back(new Entity(info));
 
 }
+
+catos::Entity::Entity(catos::EntityCreationInfo &info) : id(23) {
+
+}
+
+catos::Entity::Entity(catos::Entity &&entity) : id(23) {
+
+}
+
+
+
+
+
+

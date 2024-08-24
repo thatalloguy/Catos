@@ -114,7 +114,7 @@ namespace catos::tests {
     TEST_CASE("STL::VECTORS") {
 
 
-        Catos::vector<int> test;
+        catos::vector<int> test;
 
         test.reserve(7);
 

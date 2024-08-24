@@ -5,33 +5,33 @@
 #include <cstring>
 #include "string.h"
 
-Catos::string::~string() {
+catos::string::~string() {
 
     cleanUp();
 
 }
 
-Catos::string::string(const char *buffer) {
+catos::string::string(const char *buffer) {
     size = strlen(buffer);
     buf = new char[size + 1];
     strncpy_s(buf, size + 1, buffer, size);
 
 }
 
-Catos::string::string(const Catos::string &obj) {
+catos::string::string(const catos::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
     strncpy_s(buf, size + 1, obj.buf, size);
 }
 
-Catos::string &Catos::string::operator=(const Catos::string &obj) {
+catos::string &catos::string::operator=(const catos::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
     strncpy_s(buf, size + 1, obj.buf, size);
     return *this;
 }
 
-Catos::string::string(Catos::string &&obj) {
+catos::string::string(catos::string &&obj) {
     //First clean up to get rid of previous allocated memory.
     cleanUp();
 
@@ -43,13 +43,13 @@ Catos::string::string(Catos::string &&obj) {
     obj.buf = nullptr;
 }
 
-void Catos::string::cleanUp() {
+void catos::string::cleanUp() {
     if (buf != nullptr) {
         delete[] buf;
     }
 }
 
-Catos::string &Catos::string::operator=(Catos::string &&obj) {
+catos::string &catos::string::operator=(catos::string &&obj) {
     //First clean up to get rid of previous allocated memory.
     cleanUp();
 
@@ -63,7 +63,7 @@ Catos::string &Catos::string::operator=(Catos::string &&obj) {
     return *this;
 }
 
-Catos::string Catos::string::operator+(const Catos::string &obj) {
+catos::string catos::string::operator+(const catos::string &obj) {
     string s; // new string.
 
     s.size = this->size + obj.size;

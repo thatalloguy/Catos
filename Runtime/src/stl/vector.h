@@ -11,7 +11,7 @@ struct out_of_range {
 
 };
 
-namespace Catos {
+namespace catos {
 
 
     template<typename T>

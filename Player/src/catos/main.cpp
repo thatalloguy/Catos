@@ -2,6 +2,7 @@
 #pragma once
 #include <core/application.h>
 #include <core/window.h>
+#include "world/world.h"
 
 
 using namespace catos;
@@ -29,6 +30,14 @@ int main() {
     };
 
     Window window(window_info);
+
+    catos::World world{};
+
+    world.spawnEntity();
+    world.spawnEntity();
+
+
+
 
 
     while (!window.should_window_close()) {

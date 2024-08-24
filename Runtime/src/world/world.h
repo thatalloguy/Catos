@@ -1,9 +1,10 @@
 #pragma once
 
 
+#include <unordered_map>
 #include "stl/vector.h"
 
-namespace Catos {
+namespace catos {
 
         typedef unsigned int EntityID;
         typedef unsigned int WorldID;
@@ -21,6 +22,8 @@ namespace Catos {
             Entity(EntityCreationInfo& info);
             Entity(Entity&& entity);
 
+            const EntityID  id;
+
         };
 
         class World {
@@ -29,12 +32,17 @@ namespace Catos {
         public:
 
             World();
-            World(World&& obj);
+            World(World&& obj) noexcept ;
             World(const World& obj);
 
             ~World();
 
             Entity* getEntity(EntityID id);
+
+
+
+            void spawnEntity();
+
 
         private:
             void cleanUp();
@@ -42,10 +50,9 @@ namespace Catos {
             void getNewWorldID();
             void getNewEntityID();
 
-            Catos::vector<Entity*> instances;
+            catos::vector<Entity*> instances;
 
         };
-
 
 
         static World* getCurrentWorld();
