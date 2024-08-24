@@ -67,3 +67,17 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] World View tab
 - - [ ] Asset browser.
 #
+
+
+## Dependencies
+###  - doctest
+###  - fastgltf
+###  - glfw
+###  - glm
+###  - imgui
+###  - pocketpy / gsoc24 (Experimental)
+###  - spdlog
+###  - stb_image
+###  - tinystl ( REMOVED SOON )
+###  - vk-bootstrap
+###  - vkVulkanMemoryAllocator

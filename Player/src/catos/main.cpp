@@ -4,15 +4,18 @@
 #include <core/window.h>
 #include "world/world.h"
 
+#include <pybind11/pybind11.h>
+
 
 using namespace catos;
 
-
+namespace py = pybind11;
 
 
 
 int main() {
 
+/*
 
     AppCreationInfo info{};
 
@@ -31,20 +34,19 @@ int main() {
 
     Window window(window_info);
 
-    catos::World world{};
-
-    world.spawnEntity();
-    world.spawnEntity();
-
-    Entity& ent = *world.getLastEntity();
-
-    spdlog::info("Entity.info {}", ent.getTransform().position.x);
 
 
 
     while (!window.should_window_close()) {
         window.update();
     }
+
+*/
+
+
+    py::scoped_interpreter guard{};
+
+    py::exec("print('Hello World')");
 
 
     return 0;
