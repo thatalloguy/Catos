@@ -36,7 +36,9 @@ int main() {
     world.spawnEntity();
     world.spawnEntity();
 
+    Entity& ent = *world.getLastEntity();
 
+    spdlog::info("Entity.info {}", ent.getTransform().position.x);
 
 
 

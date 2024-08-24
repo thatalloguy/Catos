@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include "stl/vector.h"
+#include "math/vecs.h"
 
 namespace catos {
 
@@ -10,19 +11,33 @@ namespace catos {
         typedef unsigned int WorldID;
 
 
+        class Transform {
 
-        struct EntityCreationInfo {
+        public:
+
+            math::Vector3 position{0, 0, 0};
+            math::Vector3 size{0, 0, 0};
+            math::Quaternion rotation{0, 0, 0};
 
         };
+
 
         class Entity {
 
         public:
 
-            Entity(EntityCreationInfo& info);
+            Entity();
             Entity(Entity&& entity);
 
             const EntityID  id;
+
+            Transform getTransform() { return _transform; };
+            void setTransform(Transform& transform) { _transform.position = transform.position; _transform.size = transform.size; _transform.rotation = transform.rotation;};
+
+        private:
+
+            Transform _transform{};
+
 
         };
 
@@ -42,6 +57,7 @@ namespace catos {
 
 
             void spawnEntity();
+            Entity* getLastEntity();
 
 
         private:

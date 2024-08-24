@@ -2,7 +2,7 @@
 #include "world.h"
 
 catos::World::World() {
-
+    instances.reserve(8);
 }
 
 catos::World::World(World &&obj) noexcept {
@@ -37,16 +37,14 @@ void catos::World::getNewEntityID() {
 }
 
 void catos::World::spawnEntity() {
-
-    EntityCreationInfo info{
-
-    };
-
-    instances.push_back(new Entity(info));
-
+    instances.push_back(new Entity{});
 }
 
-catos::Entity::Entity(catos::EntityCreationInfo &info) : id(23) {
+catos::Entity *catos::World::getLastEntity() {
+    return instances[(int) instances.length() - 1];
+}
+
+catos::Entity::Entity() : id(23) {
 
 }
 

@@ -49,13 +49,6 @@ namespace catos::math {
             return *this;
         }
 
-        Vector3& operator+(Vector3 &b) {
-            this->x + b.x;
-            this->y + b.y;
-            this->z + b.z;
-
-            return *this;
-        }
 
         void operator+=(Vector3 &b) {
             this->x += b.x;
@@ -63,22 +56,37 @@ namespace catos::math {
             this->z += b.z;
         }
 
-        Vector3& operator*(float b) {
-            this->x * b;
-            this->y * b;
-            this->z * b;
-
-            return *this;
-        }
-
-        void operator*=(Vector3 &b) {
-            this->x *= b.x;
-            this->y *= b.y;
-            this->z *= b.z;
-        }
 
     };
 
+    struct Quaternion {
+
+        float x, y, z, w;
+
+        bool operator==(Quaternion &b) const {
+            return (this->x == b.x && this->y == b.y && this->z == b.z && this->w == b.w);
+        }
+
+        Quaternion& operator=(float val) {
+            this->x = val;
+            this->y = val;
+            this->z = val;
+            this->w = val;
+            return *this;
+        }
+
+        void operator+(Quaternion &b) {
+            this->x += b.x;
+            this->y += b.y;
+            this->z += b.z;
+            this->w += b.z;
+        }
+
+        void sIdentity() {
+            w = 1;
+        }
+
+    };
 
 }
 
