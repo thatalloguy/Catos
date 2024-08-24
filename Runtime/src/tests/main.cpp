@@ -10,6 +10,7 @@
 #include "spdlog/spdlog.h"
 #include "stl/vector.h"
 #include "stl/string.h"
+#include "math/vecs.h"
 
 
 struct Foo {
@@ -126,7 +127,6 @@ namespace catos::tests {
         }
 
     }
-
 }
 
 
