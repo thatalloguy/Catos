@@ -361,7 +361,7 @@ namespace catos {
 
         ///TODO this shit is so ugly ;-;
         void gen_cs_bindings_file() {
-            std::ofstream out("../../catos.cs");
+            std::ofstream out("../../catos.py");
 
             out << "///Catos Lib (auto generated)\n";
             out << "namespace catos {\n \n";

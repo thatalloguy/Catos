@@ -1,53 +1,62 @@
 // engine includes
 #pragma once
-#include <core/application.h>
-#include <core/window.h>
-#include "world/world.h"
 
 #include <pybind11/pybind11.h>
+#include "spdlog/spdlog.h"
 
-
-using namespace catos;
 
 namespace py = pybind11;
+struct Point {
+    float x;
+    float y;
 
+    Point(float x, float y) : x(x), y(y) {}
+};
+
+Point& return_point() {
+    static Point p{1.0, 2.0};
+    return p;
+}
+
+
+void registerPython(py::module_& mod) {
+    py::class_<Point>(mod, "Point")
+            .def(py::init<float, float>())
+            .def_readwrite("x", &Point::x)
+            .def_readwrite("y", &Point::y);
+
+    mod.def("return_point", &return_point, py::return_value_policy::reference);
+
+}
+
+
+PYBIND11_EMBEDDED_MODULE(catos, m) {
+    registerPython(m);
+}
 
 
 int main() {
-
-/*
-
-    AppCreationInfo info{};
-
-
-
-    App app{&info};
-
-
-
-    // Register all classes for reflection
-
-
-    WindowCreationInfo window_info = {
-            .size = { 500, 500 }
-    };
-
-    Window window(window_info);
-
-
-
-
-    while (!window.should_window_close()) {
-        window.update();
-    }
-
-*/
-
-
     py::scoped_interpreter guard{};
 
-    py::exec("print('Hello World')");
 
+
+    try {
+        py::exec(R"(
+
+import catos
+
+p = catos.return_point()
+p.x = 3.0
+p.y = 5.0
+print(p.x, p.y)
+    )");
+
+        py::print(return_point().x, return_point().y);
+    } catch (py::error_already_set& e) {
+        spdlog::error("{}", e.summary());
+    }
+
+    // => 3.0 4.0
 
     return 0;
 }
