@@ -1,31 +1,39 @@
 // engine includes
 #pragma once
 
+
 #include <pybind11/pybind11.h>
+#include <fstream>
 #include "spdlog/spdlog.h"
+#include "core/window.h"
 
 
 namespace py = pybind11;
-struct Point {
-    float x;
-    float y;
-
-    Point(float x, float y) : x(x), y(y) {}
-};
-
-Point& return_point() {
-    static Point p{1.0, 2.0};
-    return p;
-}
+using namespace catos;
 
 
-void registerPython(py::module_& mod) {
-    py::class_<Point>(mod, "Point")
+void registerPython(py::module_& m) {
+
+
+    py::class_<math::Vector2>(m, "Vector2")
             .def(py::init<float, float>())
-            .def_readwrite("x", &Point::x)
-            .def_readwrite("y", &Point::y);
+            .def_readwrite("x", &math::Vector2::x)
+            .def_readwrite("y", &math::Vector2::y);
 
-    mod.def("return_point", &return_point, py::return_value_policy::reference);
+    py::class_<WindowCreationInfo>(m, "WindowCreationInfo")
+            .def(py::init<>())
+            .def_readwrite("size", &WindowCreationInfo::size)
+            .def_readwrite("position", &WindowCreationInfo::size)
+            .def_readwrite("title", &WindowCreationInfo::title)
+            .def_readwrite("is_fullscreen", &WindowCreationInfo::is_fullscreen)
+            .def_readwrite("borderless", &WindowCreationInfo::borderless)
+            .def_readwrite("enable_darktheme", &WindowCreationInfo::enable_darktheme);
+
+    py::class_<Window>(m, "Window")
+            .def(py::init<WindowCreationInfo&>())
+            .def("update", &Window::update)
+            .def("shouldClose", &Window::should_window_close);
+
 
 }
 
@@ -41,17 +49,21 @@ int main() {
 
 
     try {
-        py::exec(R"(
+        std::ifstream file("../../../catos.py");
+        if(!file.is_open()){
+            std::cerr << "Could not open file" << std::endl;
+            return 1;
+        }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::string script = buffer.str();
 
-import catos
+        try{
+            py::exec(script);
+        }catch(py::error_already_set& e){
+            std::cerr << e.summary() << std::endl;
+        }
 
-p = catos.return_point()
-p.x = 3.0
-p.y = 5.0
-print(p.x, p.y)
-    )");
-
-        py::print(return_point().x, return_point().y);
     } catch (py::error_already_set& e) {
         spdlog::error("{}", e.summary());
     }
