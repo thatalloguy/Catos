@@ -312,7 +312,7 @@ namespace catos {
 
         /// Deprecated!!!
         void gen_python_bindings_file() {
-            std::ofstream out("../../catos.py");
+            std::ofstream out("../../script_test.py");
 
             out << R"(""")" << "\n";
 
@@ -361,7 +361,7 @@ namespace catos {
 
         ///TODO this shit is so ugly ;-;
         void gen_cs_bindings_file() {
-            std::ofstream out("../../catos.py");
+            std::ofstream out("../../script_test.py");
 
             out << "///Catos Lib (auto generated)\n";
             out << "namespace catos {\n \n";

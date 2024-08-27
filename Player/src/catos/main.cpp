@@ -57,7 +57,7 @@ int main() {
 
 
     try {
-        std::ifstream file("../../../catos.py");
+        std::ifstream file("../../../script_test.py");
         if(!file.is_open()){
             std::cerr << "Could not open file" << std::endl;
             return 1;
