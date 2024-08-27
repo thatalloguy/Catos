@@ -12,6 +12,17 @@ namespace py = pybind11;
 using namespace catos;
 
 
+class Script {
+
+public:
+
+    Script() {};
+    void update() {};
+    void end() {};
+
+};
+
+
 void registerPython(py::module_& m) {
 
 
@@ -34,6 +45,11 @@ void registerPython(py::module_& m) {
             .def("update", &Window::update)
             .def("shouldClose", &Window::should_window_close);
 
+    py::class_<Script>(m, "Script")
+            .def(py::init<>())
+            .def("update", &Script::update)
+            .def("end", &Script::end);
+
 
 }
 
@@ -47,7 +63,6 @@ int main() {
     py::scoped_interpreter guard{};
 
 
-
     try {
         std::ifstream file("../../../catos.py");
         if(!file.is_open()){
@@ -59,7 +74,16 @@ int main() {
         std::string script = buffer.str();
 
         try{
+
             py::exec(script);
+
+            auto script = new py::object(py::eval("ScriptTest()"));
+
+            script->attr("update")();
+            script->attr("end")();
+
+            delete script;
+
         }catch(py::error_already_set& e){
             std::cerr << e.summary() << std::endl;
         }
@@ -68,7 +92,6 @@ int main() {
         spdlog::error("{}", e.summary());
     }
 
-    // => 3.0 4.0
 
     return 0;
 }
