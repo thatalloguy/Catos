@@ -1,12 +1,12 @@
-import script_test
+import catos
 
 
 class ScriptTest(catos.Script):
     def __init__(self):
-        print("start")
+        print("Start")
 
     def update(self):
-        print("update")
+        print("Update")
 
     def end(self):
-        print("end")
+        print("End")

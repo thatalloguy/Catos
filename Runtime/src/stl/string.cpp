@@ -73,5 +73,3 @@ catos::string catos::string::operator+(const catos::string &obj) {
 
     return s;
 }
-
-

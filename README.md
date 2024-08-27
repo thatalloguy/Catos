@@ -17,12 +17,16 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] ~~constructors~~
 - - [x] Methods
 - - [x] Properties
-- - [ ] Automatic pkpy binding generation.
+- - [x] Automatic pkpy binding generation.
 ---
 - [ ] Entity Model
 - - [ ] Entities.
 - - [ ] Entity blueprints
 - - [ ] Scenes.
+---
+- [ ] Scripting.
+- - [x] Loading python scripting.
+- - [ ] exposing cpp api to python.
 ---
 - [ ] Custom STL (standard Library)
 - - [x] String
