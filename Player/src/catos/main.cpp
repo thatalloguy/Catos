@@ -6,30 +6,23 @@
 #include <fstream>
 #include "spdlog/spdlog.h"
 #include "core/window.h"
+#include "world/world.h"
 
 
 namespace py = pybind11;
 using namespace catos;
 
 
-class Script {
-
-public:
-
-    Script() {};
-    void update() {};
-    void end() {};
-
-};
 
 
 void registerPython(py::module_& m) {
 
 
-    py::class_<math::Vector2>(m, "Vector2")
+    auto& t = py::class_<math::Vector2>(m, "Vector2")
             .def(py::init<float, float>())
-            .def_readwrite("x", &math::Vector2::x)
-            .def_readwrite("y", &math::Vector2::y);
+            .def_readwrite("x", &math::Vector2::x);
+
+    t.def_readwrite("y", &math::Vector2::y);
 
     py::class_<WindowCreationInfo>(m, "WindowCreationInfo")
             .def(py::init<>())
