@@ -1,6 +1,5 @@
 # Catos Engine
 
-![afbeelding](https://github.com/user-attachments/assets/415f0f73-a996-43fa-b51f-c8103d2e6af6)
 
 
 ###### modern lightweight ECS cpp game engine
