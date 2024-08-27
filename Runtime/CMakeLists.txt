@@ -26,6 +26,9 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
         src/world/*.h
         src/world/*.cpp
 
+        src/scripting/*.h
+        src/scripting/*.cpp
+
         src/stl/*.h
         src/stl/*.cpp
 
