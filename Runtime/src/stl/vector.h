@@ -9,6 +9,10 @@
 
 struct out_of_range {
 
+    const char* what() {
+        return "Vector out of range";
+    }
+
 };
 
 namespace catos {
