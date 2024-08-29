@@ -48,6 +48,9 @@ namespace catos {
         /// Initializes and calls push_back for all elements given.
         template<typename ... Args>
         vector(Args&& ...args): buf(nullptr), size(0) {
+
+            reserve((unsigned int) sizeof...(Args));
+
             (push_back(args), ...);
         }
 
