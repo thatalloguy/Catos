@@ -59,13 +59,13 @@ namespace catos {
 
     template<typename K>
     struct HashFunc {
-        unsigned long operator()(const K& key, int Size) const {
-            return reinterpret_cast<unsigned long>(key) % Size;
+        size_t operator()(const K& key, int Size) const {
+            return static_cast<size_t>(key) % Size;
         }
     };
 
 
-    template<typename K, typename V, typename Func = HashFunc<K>>
+    template<typename K, typename V, typename F = HashFunc<K>>
     class hashmap {
 
     public:
@@ -102,7 +102,7 @@ namespace catos {
 
         V get(const K& key) {
 
-            unsigned int index = Func(key, maxSize);
+            unsigned int index = hashFunc(key, maxSize);
             auto entry = buf[index];
 
             // loop through all of the buckets with the same hash until we found the right key.
@@ -125,7 +125,7 @@ namespace catos {
                 // rehash
             }
 
-            auto index = Func(key, maxSize);
+            int index = hashFunc(key, maxSize);
             hashnode<K, V>* prev = nullptr;
             auto entry = buf[index];
 
@@ -153,7 +153,7 @@ namespace catos {
             //  should we?
             size--;
 
-            auto index = Func(key, maxSize);
+            int index = hashFunc(key, maxSize);
             hashnode<K, V>* prev = nullptr;
             auto entry = buf[index];
 
@@ -178,6 +178,8 @@ namespace catos {
         }
 
     private:
+
+        F hashFunc;
 
         hashnode<K, V>** buf; // just an array of pointers to hashnodes<K, V>
         int size = 0;

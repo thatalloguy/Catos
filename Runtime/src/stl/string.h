@@ -33,6 +33,9 @@ namespace catos {
         /// Adds a string to itself.
         string operator+(const string& obj);
 
+        bool operator!=(const string& obj) {
+
+        }
 
         /// Returns the size of the internal buffer.
         unsigned int length() { return size; };
