@@ -3,27 +3,22 @@
 
 
 #include "scripting/ScriptingEngine.h"
+#include "spdlog/spdlog.h"
 
 using namespace catos;
 
+struct Foo {
+    int data = 0;
+};
 
 int main() {
 
-    py::scoped_interpreter guard{};
+    catos::vector<int> foos = {1, 2, 3, 4, 5};
 
 
-    ScriptingEngine& engine = ScriptingEngine::getInstance();
-
-    catos::string str = "../../../Resources/Catos/script_test.py";
-    catos::string str2 = "../../../Resources/Catos/another_test.py";
-
-    engine.registerNewScript(str);
-    engine.registerNewScript(str2);
-
-    engine.startScripts();
-    engine.updateScripts();
-    engine.endScripts();
-
+    for (const auto& foo : foos) {
+        spdlog::info("test {}", foo);
+    }
 
     return 0;
 }

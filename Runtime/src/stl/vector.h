@@ -41,6 +41,12 @@ namespace catos {
 
         }
 
+        /// Initializes and calls push_back for all elements given.
+        template<typename ... Args>
+        vector(Args&& ...args): buf(nullptr), size(0) {
+            (push_back(args), ...);
+        }
+
         /// Copies the obj.
         vector<T>& operator=(const vector<T>& obj) {
             if (this == obj) return *this; // no self asignment.
@@ -241,7 +247,7 @@ namespace catos {
 
         bool operator!=(const iterator& b) const
         {
-            return *_curr != *b._curr;
+            return _curr != b._curr;
         }
 
     private:
