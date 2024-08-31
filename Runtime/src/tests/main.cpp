@@ -11,6 +11,7 @@
 #include "stl/vector.h"
 #include "stl/string.h"
 #include "math/vecs.h"
+#include "stl/hashmap.h"
 
 
 struct Foo {
@@ -122,10 +123,23 @@ namespace catos::tests {
         for (int i=0; i < 7; i++)
             test.push_back(i);
 
+        int i = 0;
         for (int obj : test) {
-            spdlog::info("Element = {}", obj);
+            CHECK(obj == test[i]);
+            i++;
         }
 
+    }
+
+    TEST_CASE("STL::HASHMAPS") {
+
+        catos::hashmap<int, int> map;
+
+        for (int i=0; i<100; i++) {
+            map.put(i, i + 60);
+        }
+
+        CHECK(map.get(40) == 100);
     }
 }
 
