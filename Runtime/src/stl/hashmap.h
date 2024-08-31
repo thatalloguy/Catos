@@ -65,11 +65,17 @@ namespace catos {
     };
 
 
+    /*
+     * Hashmap structure object.
+     * NOTE: alot of custom types such as catos::string dont work.
+     * Which has to do with my hashing func. You can provide your own if you really want it.
+     */
     template<typename K, typename V, typename F = HashFunc<K>>
     class hashmap {
 
     public:
 
+        /// Basic constructor with a startSize of 8
         hashmap(int startSize = 8) : maxSize(startSize) {
             buf = new hashnode<K, V> * [startSize]();
         }
@@ -78,7 +84,7 @@ namespace catos {
            cleanup();
         }
 
-
+        /// Gets the value based on the key given.
         V get(const K& key) {
 
             unsigned int index = hashFunc(key, maxSize);
@@ -96,6 +102,7 @@ namespace catos {
             throw no_item_found{};
         }
 
+        /// puts an item in the table.
         void put(const K& key, const V& value) {
 
             size++;
@@ -128,6 +135,7 @@ namespace catos {
             }
         }
 
+        /// Removes the item.
         void remove(const K& key) {
 
             //  should we?
@@ -157,35 +165,7 @@ namespace catos {
             }
         }
 
-
-    private:
-
-        void cleanup() {
-            for (int i=0; i<maxSize; i++) {
-
-                // get the first bucket for the key / index.
-                auto entry = buf[i];
-
-                // loop through all off the buckets with the same key
-                while (entry != nullptr) {
-
-                    auto prev = entry;
-
-                    // set the entry to the next bucket of the same bucket.
-                    entry = entry->getNext();
-
-                    // delete this bucket
-                    delete prev;
-                }
-
-                buf[i] = nullptr;
-            }
-
-            //destroy the allocated buffer;
-            delete[] buf;
-        }
-
-
+        /// Creates a new table of the given size and rehash all of the previous items.
         void rehash(int newSize) {
 
             //First create a new table with the desired size and everything to nullptr's
@@ -231,11 +211,37 @@ namespace catos {
             // switch!
             maxSize = newSize;
             buf = temp;
-
-
-
-
         }
+
+    private:
+
+        void cleanup() {
+            for (int i=0; i<maxSize; i++) {
+
+                // get the first bucket for the key / index.
+                auto entry = buf[i];
+
+                // loop through all off the buckets with the same key
+                while (entry != nullptr) {
+
+                    auto prev = entry;
+
+                    // set the entry to the next bucket of the same bucket.
+                    entry = entry->getNext();
+
+                    // delete this bucket
+                    delete prev;
+                }
+
+                buf[i] = nullptr;
+            }
+
+            //destroy the allocated buffer;
+            delete[] buf;
+        }
+
+
+
 
         F hashFunc;
 
