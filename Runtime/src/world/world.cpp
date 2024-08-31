@@ -52,7 +52,6 @@ catos::Entity& catos::World::spawnEntity() {
 
         instances[freeSlots.back()] = new Entity(getNewEntityID());
         freeSlots.pop_back();
-
     } else { // if we dont have any just use push_back.
 
         instances.push_back(new Entity(getNewEntityID()));
