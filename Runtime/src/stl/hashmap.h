@@ -75,28 +75,7 @@ namespace catos {
         }
 
         ~hashmap() {
-            for (int i=0; i<maxSize; i++) {
-
-                // get the first bucket for the key / index.
-                auto entry = buf[i];
-
-                // loop through all off the buckets with the same key
-                while (entry != nullptr) {
-
-                    auto prev = entry;
-
-                    // set the entry to the next bucket of the same bucket.
-                    entry = entry->getNext();
-
-                    // delete this bucket
-                    delete prev;
-                }
-
-                buf[i] = nullptr;
-            }
-
-            //destroy the allocated buffer;
-            delete[] buf;
+           cleanup();
         }
 
 
@@ -123,6 +102,7 @@ namespace catos {
 
             if (size >= maxSize) {
                 // rehash
+                rehash(maxSize + 8);
             }
 
             int index = hashFunc(key, maxSize);
@@ -177,7 +157,85 @@ namespace catos {
             }
         }
 
+
     private:
+
+        void cleanup() {
+            for (int i=0; i<maxSize; i++) {
+
+                // get the first bucket for the key / index.
+                auto entry = buf[i];
+
+                // loop through all off the buckets with the same key
+                while (entry != nullptr) {
+
+                    auto prev = entry;
+
+                    // set the entry to the next bucket of the same bucket.
+                    entry = entry->getNext();
+
+                    // delete this bucket
+                    delete prev;
+                }
+
+                buf[i] = nullptr;
+            }
+
+            //destroy the allocated buffer;
+            delete[] buf;
+        }
+
+
+        void rehash(int newSize) {
+
+            //First create a new table with the desired size and everything to nullptr's
+            hashnode<K, V>** temp = new hashnode<K, V>*[newSize]{nullptr};
+
+            //Loop through all of the old items of the old table.
+            for (int i=0; i<maxSize; i++) {
+
+                auto oldEntry = buf[i];
+
+                // Check if this object is empty, if so we have to rehash the object and its buckets.
+                while (oldEntry != nullptr) {
+
+                    // get the new hash
+                    int index = hashFunc(oldEntry->getKey(), newSize);
+
+                    auto newEntry = temp[index];
+
+                    // If the new location is empty create a new one.
+                    if (!newEntry) {
+                        temp[index] = new hashnode<K, V>(oldEntry->getKey(), oldEntry->getValue());
+                    } else {
+                        //if the new location isnt empty search for an empty bucket.
+                        auto prev = newEntry->getNext();
+
+                        // get the last bucket
+                        while (prev != nullptr) {
+                            prev = prev->getNext();
+                        }
+
+                        // put our entry in that bucket
+                        prev->setNext(new hashnode<K, V>(oldEntry->getKey(), oldEntry->getValue()));
+
+                    }
+
+                    // Get the next one to loop through all child buckets.
+                    oldEntry = oldEntry->getNext();
+                }
+            }
+            //Delete the old buffer
+            cleanup();
+
+            // switch!
+            maxSize = newSize;
+            buf = temp;
+
+
+
+
+        }
 
         F hashFunc;
 
