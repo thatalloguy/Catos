@@ -58,9 +58,10 @@ namespace catos {
 
             /// Returns a REFERENCE to the private transform.
             Transform& getTransform() { return _transform; };
+            EntityID& getID() { return _id; };
 
         private:
-            EntityID id;
+            EntityID _id;
             Transform _transform{};
 
 
@@ -75,16 +76,8 @@ namespace catos {
             /// Creates the world and allocates some data.
             World();
 
-            /// move constructor
-            World(World&& obj) noexcept ;
-
-            /// copy constructor.
-            World(const World& obj);
-
             /// Destroys the world.
             ~World();
-
-
 
 
             /// Returns the Entity with the corresponding ID.
@@ -93,6 +86,7 @@ namespace catos {
             /// Creates a new Entity.
             Entity& spawnEntity();
 
+            /// Deletes the Entity of the given ID
             void deleteEntity(EntityID id);
 
 

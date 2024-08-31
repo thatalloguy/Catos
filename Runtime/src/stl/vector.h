@@ -162,12 +162,12 @@ namespace catos {
 
         /// gives the last item.
         T& back() {
-            return buf[size];
+            return buf[size - 1];
         }
 
         ///Removes the last item
         void pop_back() {
-            remove(size);
+            remove(size - 1);
         }
 
         /// gives the internal buffer

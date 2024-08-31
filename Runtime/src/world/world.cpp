@@ -1,5 +1,6 @@
 
 #include "world.h"
+#include "spdlog/spdlog.h"
 
 unsigned int getIndex(catos::EntityID id) {
     return id >> 32;
@@ -9,15 +10,9 @@ unsigned int getIndex(catos::EntityID id) {
 // Contructors
 catos::World::World() {
     instances.reserve(8);
+    freeSlots.reserve(8);
 }
 
-catos::World::World(World &&obj) noexcept {
-
-}
-
-catos::World::World(const World &obj) {
-
-}
 
 catos::World::~World() {
     cleanUp();
@@ -47,17 +42,23 @@ catos::EntityID catos::World::getNewEntityID() {
 
 catos::Entity& catos::World::spawnEntity() {
 
+    Entity* entity = new Entity(getNewEntityID());
+
     //first check if we have any free spots.
     if (!freeSlots.empty()) {
 
-        instances[freeSlots.back()] = new Entity(getNewEntityID());
+        int index = (int) freeSlots.back();
+
+        instances[index] = entity;
+
         freeSlots.pop_back();
+
     } else { // if we dont have any just use push_back.
 
-        instances.push_back(new Entity(getNewEntityID()));
+        instances.push_back(entity);
     }
 
-    return *instances.back();
+    return *entity;
 }
 
 void catos::World::deleteEntity(catos::EntityID id) {
@@ -86,7 +87,7 @@ catos::Entity& catos::World::getEntity(catos::EntityID id) {
 
 
 catos::Entity::Entity(const catos::EntityID &id) {
-
+    _id = id;
 }
 
 catos::Entity::~Entity() {
