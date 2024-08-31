@@ -7,7 +7,14 @@
 
 namespace catos {
 
-        typedef unsigned int EntityID;
+        struct invalid_entity_id {
+            const char* what() {
+                return "The given Entity ID is invalid\n";
+            }
+        };
+
+        typedef unsigned long long EntityID;
+        typedef unsigned int EntityIndex;
         typedef unsigned int WorldID;
 
         /// A Script is an empty class that holds logic made in python.
@@ -44,19 +51,16 @@ namespace catos {
         public:
 
             /// creates the entity.
-            Entity();
+            Entity(const EntityID& id);
 
             /// Destroys the entity and its allocated resources.
-            Entity(Entity&& entity);
-
-            /// its ID represented by an uint
-            const EntityID  id;
+            ~Entity();
 
             /// Returns a REFERENCE to the private transform.
             Transform& getTransform() { return _transform; };
 
         private:
-
+            EntityID id;
             Transform _transform{};
 
 
@@ -80,24 +84,28 @@ namespace catos {
             /// Destroys the world.
             ~World();
 
-            /// Returns the Entity with the corresponding ID.
-            Entity* getEntity(EntityID id);
 
+
+
+            /// Returns the Entity with the corresponding ID.
+            Entity& getEntity(EntityID id);
 
             /// Creates a new Entity.
-            void spawnEntity();
+            Entity& spawnEntity();
 
-            /// returns the last created Entity.
-            Entity* getLastEntity();
+            void deleteEntity(EntityID id);
+
 
 
         private:
             void cleanUp();
 
-            void getNewWorldID();
-            void getNewEntityID();
+
+            EntityID getNewEntityID();
 
             catos::vector<Entity*> instances;
+            catos::vector<unsigned int> freeSlots;
+            unsigned int idCounter = 0;
 
         };
 

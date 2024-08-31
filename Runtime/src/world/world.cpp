@@ -1,6 +1,12 @@
 
 #include "world.h"
 
+unsigned int getIndex(catos::EntityID id) {
+    return id >> 32;
+}
+
+
+// Contructors
 catos::World::World() {
     instances.reserve(8);
 }
@@ -17,42 +23,76 @@ catos::World::~World() {
     cleanUp();
 }
 
-catos::Entity *catos::World::getEntity(EntityID id) {
-    return nullptr;
-}
-
 void catos::World::cleanUp() {
-
-    for (auto e : instances) {
-        delete e;
+    for (auto item : instances) {
+        if (item != nullptr) {
+            delete item;
+        }
     }
 }
 
-void catos::World::getNewWorldID() {
+
+
+// Entity handling
+catos::EntityID catos::World::getNewEntityID() {
+
+    unsigned int index = 0;
+
+    EntityID id = ((EntityID) index << 32 | (EntityID) idCounter);
+
+    idCounter++;
+
+    return id;
+}
+
+catos::Entity& catos::World::spawnEntity() {
+
+    //first check if we have any free spots.
+    if (!freeSlots.empty()) {
+
+        instances[freeSlots.back()] = new Entity(getNewEntityID());
+        freeSlots.pop_back();
+
+    } else { // if we dont have any just use push_back.
+
+        instances.push_back(new Entity(getNewEntityID()));
+    }
+
+    return *instances.back();
+}
+
+void catos::World::deleteEntity(catos::EntityID id) {
+
+    auto index = getIndex(id);
+
+    if (instances[index] != nullptr) {
+        delete instances[index];
+        freeSlots.push_back(index);
+    }
 
 }
 
-void catos::World::getNewEntityID() {
+catos::Entity& catos::World::getEntity(catos::EntityID id) {
 
-}
+    int index = (int) getIndex(id);
 
-void catos::World::spawnEntity() {
-    instances.push_back(new Entity{});
-}
+    if (instances.length() < index) {
+        throw catos::invalid_entity_id{};
+    }
 
-catos::Entity *catos::World::getLastEntity() {
-    return instances[(int) instances.length() - 1];
-}
+    auto ent = instances[index];
 
-catos::Entity::Entity() : id(23) {
-
-}
-
-catos::Entity::Entity(catos::Entity &&entity) : id(23) {
-
+    return *ent;
 }
 
 
+catos::Entity::Entity(const catos::EntityID &id) {
+
+}
+
+catos::Entity::~Entity() {
+
+}
 
 
 

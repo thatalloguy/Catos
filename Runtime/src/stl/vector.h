@@ -160,7 +160,15 @@ namespace catos {
             return buf[index];
         }
 
+        /// gives the last item.
+        T& back() {
+            return buf[size];
+        }
 
+        ///Removes the last item
+        void pop_back() {
+            remove(size);
+        }
 
         /// gives the internal buffer
         T* data() { return buf; };
@@ -168,6 +176,11 @@ namespace catos {
         /// returns the amount of objects in the internal buffer.
         unsigned int length() {
             return size;
+        }
+
+        ///Returns if the size is <= 0
+        bool empty() {
+            return size <= 0;
         }
 
         /// returns the maximum amount of objects in our internal buffer

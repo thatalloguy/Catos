@@ -66,9 +66,11 @@ namespace catos {
 
 
 
-    ///Hashmap structure object.
-    ///NOTE: alot of custom types such as catos::string dont work.
-    ///Which has to do with my hashing func. You can provide your own if you really want it.
+    /**
+     * Hashmap structure object.
+     * NOTE: alot of custom types such as catos::string dont work.
+     * Which has to do with my hashing func. You can provide your own if you really want it.
+    **/
     template<typename K, typename V, typename F = HashFunc<K>>
     class hashmap {
 

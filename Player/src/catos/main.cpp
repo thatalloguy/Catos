@@ -16,8 +16,10 @@ int main() {
 
     catos::hashmap<int, const char*> map;
 
-    for (int i=0; i<100; i++) {
+    int i =0;
+    while (true) {
         map.put(i, "world");
+        i++;
     }
 
     auto val = map.get(50);

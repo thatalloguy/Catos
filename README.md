@@ -21,9 +21,9 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Automatic pkpy binding generation.
 ---
 - [ ] Entity Model
+- - [ ] Worlds.
 - - [ ] Entities.
 - - [ ] Entity blueprints
-- - [ ] Scenes.
 ---
 - [ ] Scripting.
 - - [x] Loading python scripting.
