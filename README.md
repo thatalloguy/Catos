@@ -27,10 +27,10 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Loading python scripting.
 - - [ ] exposing cpp api to python.
 ---
-- [ ] Custom STL (standard Library)
+- [x] Custom STL (standard Library)
 - - [x] String
 - - [x] Vector
-- - [ ] HashMap
+- - [x] HashMap
 ---
 - [ ] Render Abstraction Layer (for vulkan).
 - - [ ] Ability to create new pipelines.
