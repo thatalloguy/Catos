@@ -103,13 +103,14 @@ namespace catos {
 
         };
 
+        //NOTE: not implemented yet :shrug:
 
         /// Returns the current active world
-        static World* getCurrentWorld();
+        static World& getCurrentWorld();
 
         /// changes the world via ID.
-        static World* setCurrentWorld(WorldID ID);
+        static World& setCurrentWorld(WorldID ID);
 
         /// Returns a world Via ID.
-        static World* getWorldViaID(WorldID ID);
+        static World& getWorldViaID(WorldID ID);
 }

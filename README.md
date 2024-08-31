@@ -20,19 +20,19 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Properties
 - - [x] Automatic pkpy binding generation.
 ---
+- [x] Custom STL (standard Library)
+- - [x] String
+- - [x] Vector
+- - [x] HashMap
+---
 - [ ] Entity Model
-- - [ ] Worlds.
+- - [x] Worlds.
 - - [ ] Entities.
 - - [ ] Entity blueprints
 ---
 - [ ] Scripting.
 - - [x] Loading python scripting.
 - - [ ] exposing cpp api to python.
----
-- [x] Custom STL (standard Library)
-- - [x] String
-- - [x] Vector
-- - [x] HashMap
 ---
 - [ ] Render Abstraction Layer (for vulkan).
 - - [ ] Ability to create new pipelines.
