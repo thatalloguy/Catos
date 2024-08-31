@@ -1,4 +1,6 @@
 # Catos Engine
+[![Language](https://img.shields.io/badge/Native_language-C++-blue.svg)](https://isocpp.org/)
+[![Language](https://img.shields.io/badge/Scripting_Language-Python-yellow.svg)](https://www.python.org/)
 
 
 
