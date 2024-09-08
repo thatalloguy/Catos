@@ -10,3 +10,6 @@
 [submodule "Thirdparty/pocketpy"]
 	path = Thirdparty/pocketpy
 	url = https://github.com/pocketpy/pocketpy.git
+[submodule "Thirdparty/--force"]
+	path = Thirdparty/--force
+	url = https://github.com/pocketpy/pocketpy.git

@@ -5,18 +5,24 @@
 #include "world/world.h"
 #include "spdlog/spdlog.h"
 #include "stl/string.h"
+#include "scripting/ScriptingEngine.h"
 
 struct Foo {
     int data = 0;
 };
 
-void test(const catos::string& test) {
-    spdlog::info("te {}", test.c_str());
-}
 
 int main() {
 
-    test("hello");
+    catos::ScriptingEngine& engine = catos::ScriptingEngine::getInstance();
+
+    engine.registerNewScript("../../../Resources/Catos/script_test.py");
+
+    engine.startScripts();
+
+    engine.updateScripts();
+
+    engine.endScripts();
 
     return 0;
 }

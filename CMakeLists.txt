@@ -15,7 +15,7 @@ add_subdirectory("Thirdparty/VulkanMemoryAllocator")
 add_subdirectory("Thirdparty/spdlog")
 add_subdirectory("Thirdparty/fastgltf")
 add_subdirectory("Thirdparty/glfw")
-add_subdirectory("Thirdparty/pocketpy/pocketpy")
+add_subdirectory("Thirdparty/pocketpy")
 
 file(GLOB_RECURSE IMGUI_SOURCE
         Thirdparty/imgui/imgui.cpp
@@ -48,9 +48,9 @@ include_directories("Thirdparty/stb")
 include_directories("Thirdparty/glm")
 include_directories("Thirdparty/glfw/include")
 
-include_directories(Thirdparty/pocketpy/numpy/include)
-include_directories(Thirdparty/pocketpy/pybind11/include)
-include_directories(Thirdparty/pocketpy/pocketpy/include)
+include_directories(Thirdparty/pocketpy/include/pybind11/)
+include_directories(Thirdparty/pocketpy/include/)
+include_directories(Thirdparty/pocketpy/include/pocketpy/)
 
 add_library(catos-headers INTERFACE)
 

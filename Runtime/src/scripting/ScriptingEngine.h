@@ -3,15 +3,14 @@
 //
 #pragma once
 
-#include <core/registry.h>
 #include <stl/string.h>
 #include "stl/vector.h"
-#include "world/world.h"
 #include "stl/pair.h"
 
 
-#include "pybind11/internal/class.h"
-#include <pybind11/pybind11.h>
+#include "stl/hashmap.h"
+#include <pocketpy/pocketpy.h>
+#include <pybind11.h>
 
 namespace py = pybind11;
 
@@ -40,18 +39,34 @@ namespace catos {
         ScriptingEngine();
         ~ScriptingEngine();
 
-        void registerNewScript(catos::string& pathToPythonFile);
+        void registerNewScript(const catos::string& pathToPythonFile);
 
         void startScripts();
         void updateScripts();
         void endScripts();
 
 
+        template<class T>
+        void registerClass(const char* name) {
+
+        };
+
+        template<class T, typename U>
+        void registerProperty(const char* name, T::U* ptr) {
+
+        }
+
+        template<class T, typename U>
+        void registerMethod(const char* name, T::U* ptr) {
+
+        }
+
     private:
 
+        py::scoped_interpreter* interpreter = nullptr;
 
 
-
+        catos::hashmap<size_t, void*> _pythonClassInstances;
         catos::vector<catos::Pair<py::object* , ScriptInfo>> _scripts;
 
     };

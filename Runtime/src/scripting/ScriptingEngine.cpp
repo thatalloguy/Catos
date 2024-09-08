@@ -2,16 +2,12 @@
 // Created by allos on 8/27/2024.
 //
 
+#include <iostream>
+#include <fstream>
 #include "ScriptingEngine.h"
 #include "spdlog/spdlog.h"
 
-PYBIND11_EMBEDDED_MODULE(catos, m) {
-
-    py::class_<Script>(m, "Script")
-            .def(py::init<>())
-            .def("update", &Script::update)
-            .def("end", &Script::end);
-}
+#include "world/world.h"
 
 catos::ScriptingEngine &catos::ScriptingEngine::getInstance() {
     static catos::ScriptingEngine instance{};
@@ -20,13 +16,24 @@ catos::ScriptingEngine &catos::ScriptingEngine::getInstance() {
 
 catos::ScriptingEngine::ScriptingEngine() {
 
+
+    interpreter = new py::scoped_interpreter{};
+
+    auto m = py::module::create("catos");
+
+    py::class_<Script>(m, "Script")
+            .def(py::init<>())
+            .def("update", &Script::update)
+            .def("end", &Script::end);
+
+
 }
 
 catos::ScriptingEngine::~ScriptingEngine() {
 
 }
 
-void catos::ScriptingEngine::registerNewScript(catos::string &pathToPythonFile) {
+void catos::ScriptingEngine::registerNewScript(const catos::string &pathToPythonFile) {
 
 
     try {
@@ -81,7 +88,7 @@ void catos::ScriptingEngine::registerNewScript(catos::string &pathToPythonFile) 
 
 }
 
-void ScriptingEngine::startScripts() {
+void catos::ScriptingEngine::startScripts() {
 
 
     for (int i = 0; i<_scripts.length(); i++) {
@@ -98,7 +105,7 @@ void ScriptingEngine::startScripts() {
     }
 }
 
-void ScriptingEngine::updateScripts() {
+void catos::ScriptingEngine::updateScripts() {
 
     for (int i = 0; i<_scripts.length(); i++) {
         auto& pair = _scripts[i];
@@ -110,9 +117,8 @@ void ScriptingEngine::updateScripts() {
     }
 }
 
-void ScriptingEngine::endScripts() {
+void catos::ScriptingEngine::endScripts() {
 
-    py::scoped_interpreter guard{};
     for (int i = 0; i<_scripts.length(); i++) {
         auto obj = _scripts[i].first;
 
@@ -121,4 +127,6 @@ void ScriptingEngine::endScripts() {
             delete obj;
         }
     }
+
+    delete interpreter;
 }

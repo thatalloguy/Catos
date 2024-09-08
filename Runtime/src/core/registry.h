@@ -1,12 +1,13 @@
 #pragma once
 
 
+
+#include "scripting/ScriptingEngine.h"
 #include <unordered_map>
 #include <iostream>
 #include <any>
 #include "type_utils.h"
 #include "types.h"
-#include "mono/metadata/loader.h"
 #include <functional>
 #include <deque>
 #include <fstream>
@@ -38,6 +39,8 @@ namespace catos {
         virtual size_t& get_type_hash() = 0;
 
         virtual void set_name(const char* name) = 0;
+
+        virtual void registerToPy() = 0;
 
         cstr desc = "NONE";
     };
@@ -91,10 +94,38 @@ namespace catos {
             return type_hash;
         };
 
+        void registerToPy() override {
+            auto& inst = catos::ScriptingEngine::getInstance();
+
+            //inst.registerProperty<T, U>(name, memberPtr);
+        }
+
     };
 
     //Method ;-; | I DID IT RAHHHHHHH
 
+    class MethodHolder {
+    public:
+
+        virtual void registerToPy(const char* name) = 0;
+    };
+
+    template<typename ReturnType, class ClassType, typename... Args>
+    class MethodHolderImpl : public MethodHolder {
+    private:
+        ReturnType(ClassType::* _ptr)(Args...);
+
+    public:
+        MethodHolderImpl(ReturnType(ClassType::* memberPtr)(Args...)) : _ptr(memberPtr) {
+
+        }
+
+        void registerToPy(const char* name) override {
+            auto& inst = catos::ScriptingEngine::getInstance();
+
+            //inst.registerMethod<ClassType>(name, _ptr);
+        }
+    };
 
 
     template<typename ReturnType, class ClassType, typename... Args>
@@ -147,9 +178,10 @@ namespace catos {
 
     public:
         template<typename ReturnType, class ClassType, typename... Args>
-        Method(ReturnType(ClassType::* method)(Args...), bool doCoolShit = false) {
+        Method(ReturnType(ClassType::* method)(Args...)) {
             _mFunc = MethodInvoker<ReturnType, ClassType, Args...>(method);
 
+            holder = new MethodHolderImpl<ReturnType, ClassType, Args...>(method);
 
             ptr = &MethodInvoker<ReturnType, ClassType, Args...>::callFunction;
 
@@ -189,6 +221,9 @@ namespace catos {
 
         };
 
+        ~Method() {
+            delete holder;
+        }
 
         template<typename R, typename... Args>
         R invoke_function(void* instance, Args... args) {
@@ -200,6 +235,10 @@ namespace catos {
             std::any_cast<void(*)(void*, void*, Args...)>(ptr)(&_mFunc, instance, args...);
         };
 
+        void registerToPy(const char* name) {
+            holder->registerToPy(name);
+        }
+
 
         cstr desc = "NONE";
         std::string returnName = "void";
@@ -210,6 +249,7 @@ namespace catos {
 
         std::any ptr;
         std::any _mFunc;
+        MethodHolder* holder;
     };
 
 
@@ -277,6 +317,15 @@ namespace catos {
             return nullptr;
         };
 
+        void registerToPython() {
+            for (auto property : properties) {
+                property.second->registerToPy();
+            }
+
+            for (auto method : methods) {
+                method.second->registerToPy(method.first.c_str());
+            }
+        };
 
         ///Checks wether or not the ptr is a nullptr;
         static bool is_valid(Property* ptr) { return ptr != nullptr; };
