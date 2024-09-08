@@ -11,6 +11,7 @@
 #include "stl/hashmap.h"
 #include <pocketpy/pocketpy.h>
 #include <pybind11.h>
+#include <any>
 
 namespace py = pybind11;
 
@@ -49,24 +50,41 @@ namespace catos {
         template<class T>
         void registerClass(const char* name) {
 
+            py::class_<T> pyClass = py::class_<T>(catosPyMod, name).def(py::init<>());
+            auto hash = typeid(T).hash_code();
+
+            _pythonClasses.put(hash, pyClass);
         };
 
-        template<class T, typename U>
-        void registerProperty(const char* name, T::U* ptr) {
+        template<typename T, typename U>
+        void registerProperty(const char* name, U T::* ptr) {
+            auto hash = typeid(T).hash_code();
 
+            auto obj = _pythonClasses.get(hash);
+
+            auto pyClass = std::any_cast<py::class_<T>>(obj);
+
+
+            pyClass.def_readwrite(name, ptr);
         }
 
         template<class T, typename U>
-        void registerMethod(const char* name, T::U* ptr) {
+        void registerMethod(const char* name, U T::* ptr) {
+            auto hash = typeid(T).hash_code();
 
+            auto obj = _pythonClasses.get(hash);
+
+            auto pyClass = std::any_cast<py::class_<T>>(obj);
+
+            pyClass.def(name, ptr);
         }
 
     private:
 
         py::scoped_interpreter* interpreter = nullptr;
+        py::module catosPyMod;
 
-
-        catos::hashmap<size_t, void*> _pythonClassInstances;
+        catos::hashmap<size_t, std::any> _pythonClasses;
         catos::vector<catos::Pair<py::object* , ScriptInfo>> _scripts;
 
     };

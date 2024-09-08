@@ -97,7 +97,7 @@ namespace catos {
         void registerToPy() override {
             auto& inst = catos::ScriptingEngine::getInstance();
 
-            //inst.registerProperty<T, U>(name, memberPtr);
+            inst.registerProperty<T, U>(name, memberPtr);
         }
 
     };
@@ -123,7 +123,7 @@ namespace catos {
         void registerToPy(const char* name) override {
             auto& inst = catos::ScriptingEngine::getInstance();
 
-            //inst.registerMethod<ClassType>(name, _ptr);
+            inst.registerMethod<ClassType>(name, _ptr);
         }
     };
 
@@ -317,7 +317,18 @@ namespace catos {
             return nullptr;
         };
 
+        template<typename T>
         void registerToPython() {
+            auto& inst = ScriptingEngine::getInstance();
+
+            auto structPos = name.find("struct");
+
+            if (structPos == std::string::npos) {
+                structPos = name.find("class");
+            }
+
+            inst.registerClass<T>(name.substr(structPos + 7).c_str());
+
             for (auto property : properties) {
                 property.second->registerToPy();
             }
@@ -361,7 +372,7 @@ namespace catos {
 
         /// Deprecated!!!
         void gen_python_bindings_file() {
-            std::ofstream out("../../script_test.py");
+            std::ofstream out("../../../Resources/Catos/catos.py");
 
             out << R"(""")" << "\n";
 

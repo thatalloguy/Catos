@@ -17,9 +17,9 @@ catos::ScriptingEngine &catos::ScriptingEngine::getInstance() {
 catos::ScriptingEngine::ScriptingEngine() {
     interpreter = new py::scoped_interpreter{};
 
-    auto m = py::module::create("catos");
+    catosPyMod = py::module::create("catos");
 
-    py::class_<Script>(m, "Script")
+    py::class_<Script>(catosPyMod, "Script")
             .def(py::init<>())
             .def("update", &Script::update)
             .def("end", &Script::end);
