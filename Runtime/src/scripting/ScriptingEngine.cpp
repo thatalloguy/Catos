@@ -15,8 +15,6 @@ catos::ScriptingEngine &catos::ScriptingEngine::getInstance() {
 }
 
 catos::ScriptingEngine::ScriptingEngine() {
-
-
     interpreter = new py::scoped_interpreter{};
 
     auto m = py::module::create("catos");
