@@ -15,7 +15,6 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 
 ---
 - [x] Reflection system
-- - [ ] ~~constructors~~
 - - [x] Methods
 - - [x] Properties
 - - [x] Automatic pkpy binding generation.
@@ -25,14 +24,13 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Vector
 - - [x] HashMap
 ---
-- [ ] Entity Model
+- [x] Entity Model
 - - [x] Worlds.
-- - [ ] Entities.
-- - [ ] Entity blueprints
+- - [x] Entities.
 ---
-- [ ] Scripting.
+- [x] Scripting.
 - - [x] Loading python scripting.
-- - [ ] exposing cpp api to python.
+- - [x] exposing cpp api to python.
 ---
 - [ ] Render Abstraction Layer (for vulkan).
 - - [ ] Ability to create new pipelines.
