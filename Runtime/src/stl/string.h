@@ -40,6 +40,7 @@ namespace catos {
         const char* c_str() const { return buf; };
 
 
+
         /// Deletes the allocated char array
         ~string();
 

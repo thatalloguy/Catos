@@ -24,6 +24,7 @@ catos::string::string(const catos::string &obj) {
     strncpy_s(buf, size + 1, obj.buf, size);
 }
 
+
 catos::string &catos::string::operator=(const catos::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
