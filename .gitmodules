@@ -3,7 +3,7 @@
 	url = https://github.com/mendsley/tinystl
 [submodule "Thirdparty/doctest"]
 	path = Thirdparty/doctest
-	url = https://github.com/doctest/doctest
+	url = https://github.com/doctest/doctest.git
 [submodule "Thirdparty/pocketpy"]
 	path = Thirdparty/pocketpy
 	url = https://github.com/pocketpy/pocketpy.git
