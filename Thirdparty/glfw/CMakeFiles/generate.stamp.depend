@@ -1,0 +1,19 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.24/Modules/BasicConfigVersion-SameMajorVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.24/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/CheckFunctionExists.c
+C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/CheckLibraryExists.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/FindThreads.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/Internal/CheckSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.24/Modules/WriteBasicConfigVersionFile.cmake
+C:/Users/allos/source/repos/Lomus Engine/CMakeFiles/cmake.verify_globs
+C:/Users/allos/source/repos/Lomus Engine/Thirdparty/glfw/CMakeLists.txt
+C:/Users/allos/source/repos/Lomus Engine/Thirdparty/glfw/src/glfw3.pc.in
+C:/Users/allos/source/repos/Lomus Engine/Thirdparty/glfw/src/glfw3Config.cmake.in
+C:/Users/allos/source/repos/Lomus Engine/Thirdparty/glfw/src/glfw_config.h.in

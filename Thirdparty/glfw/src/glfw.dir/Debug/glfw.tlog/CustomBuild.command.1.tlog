@@ -1,0 +1,10 @@
+^C:\USERS\ALLOS\SOURCE\REPOS\LOMUS ENGINE\THIRDPARTY\GLFW\SRC\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/allos/source/repos/Lomus Engine" "-BC:/Users/allos/source/repos/Lomus Engine" --check-stamp-file "C:/Users/allos/source/repos/Lomus Engine/Thirdparty/glfw/src/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
