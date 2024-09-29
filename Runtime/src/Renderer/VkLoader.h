@@ -58,10 +58,10 @@ struct MeshAsset {
 
 
 
-struct Node : public IRenderable {
+struct node : public IRenderable {
 
-    std::weak_ptr<Node> parent;
-    std::vector<std::shared_ptr<Node>> childern;
+    std::weak_ptr<node> parent;
+    std::vector<std::shared_ptr<node>> childern;
 
     glm::mat4 localTransform;
     glm::mat4 worldTransform;
@@ -87,12 +87,12 @@ struct LoadedGLTF : public IRenderable {
 
     //storage for all the data of a GLTF file
     std::unordered_map<std::string, std::shared_ptr<MeshAsset>> meshes;
-    std::unordered_map<std::string, std::shared_ptr<Node>> nodes;
+    std::unordered_map<std::string, std::shared_ptr<node>> nodes;
     std::unordered_map<std::string, AllocatedImage> images;
     std::unordered_map<std::string, std::shared_ptr<GLTFMaterial>> materials;
 
     //nodes that dont have a parent
-    std::vector<std::shared_ptr<Node>> topNodes;
+    std::vector<std::shared_ptr<node>> topNodes;
 
     std::vector<VkSampler> samplers;
 

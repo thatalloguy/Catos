@@ -101,7 +101,7 @@ struct DrawContext {
     std::vector<RenderObject> TransparentSurfaces;
 };
 
-struct MeshNode : public Node {
+struct MeshNode : public node {
 
     std::shared_ptr<MeshAsset> mesh;
 
@@ -189,7 +189,7 @@ class VulkanEngine {
         DrawContext mainDrawContext;
         GPUSceneData sceneData;
 
-        std::unordered_map<std::string, std::shared_ptr<Node>> loadedNodes;
+        std::unordered_map<std::string, std::shared_ptr<node>> loadedNodes;
 
 
         VkDescriptorSetLayout _gpuSceneDataDescriptorLayout;

@@ -197,7 +197,7 @@ namespace VkLoader {
 
         // temporal arrays 
         std::vector<std::shared_ptr<MeshAsset>> meshes;
-        std::vector<std::shared_ptr<Node>> nodes;
+        std::vector<std::shared_ptr<node>> nodes;
         std::vector<AllocatedImage> images;
         std::vector<std::shared_ptr<GLTFMaterial>> materials;
 
@@ -370,14 +370,14 @@ namespace VkLoader {
         }
         // load all nodes and their meshes
         for (fastgltf::Node& node : gltf.nodes) {
-            std::shared_ptr<Node> newNode;
+            std::shared_ptr<node> newNode;
 
             // find if the node has a mesh, and if it does hook it to the mesh pointer and allocate it with the meshnode class
             if (node.meshIndex.has_value()) {
                 newNode = std::make_shared<MeshNode>();
                 static_cast<MeshNode*>(newNode.get())->mesh = meshes[*node.meshIndex];
             } else {
-                newNode = std::make_shared<Node>();
+                newNode = std::make_shared<node>();
             }
 
             nodes.push_back(newNode);
@@ -404,7 +404,7 @@ namespace VkLoader {
         // run loop again to setup transform hierarchy
         for (int i = 0; i < gltf.nodes.size(); i++) {
             fastgltf::Node& node = gltf.nodes[i];
-            std::shared_ptr<Node>& sceneNode = nodes[i];
+            std::shared_ptr<node>& sceneNode = nodes[i];
 
             for (auto& c : node.children) {
                 sceneNode->childern.push_back(nodes[c]);

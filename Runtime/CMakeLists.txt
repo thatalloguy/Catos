@@ -23,8 +23,8 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
 
         src/tests/*.cpp
 
-        src/world/*.h
-        src/world/*.cpp
+        src/objects/*.h
+        src/objects/*.cpp
 
         src/scripting/*.h
         src/scripting/*.cpp

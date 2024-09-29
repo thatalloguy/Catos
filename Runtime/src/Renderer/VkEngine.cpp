@@ -1603,5 +1603,5 @@ void MeshNode::Draw(const glm::mat4 &topMatrix, DrawContext &ctx) {
 
     }
 
-    Node::Draw(topMatrix, ctx);
+    node::Draw(topMatrix, ctx);
 }
