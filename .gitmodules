@@ -1,6 +1,6 @@
 [submodule "Thirdparty/tinystl"]
 	path = Thirdparty/tinystl
-	url = https://github.com/mendsley/tinystl
+	url = https://github.com/mendsley/tinystl.git
 [submodule "Thirdparty/doctest"]
 	path = Thirdparty/doctest
 	url = https://github.com/doctest/doctest.git
@@ -22,3 +22,24 @@
 [submodule "VulkanMemoryAllocator"]
 	path = Thirdparty/VulkanMemoryAllocator
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+[submodule "doxygen"]
+	path = "docs/style/doxygen-awesome-css"
+	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "Thirdparty/glm"]
+	path = Thirdparty/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "Thirdparty/imgui"]
+	path = Thirdparty/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "Thirdparty/vk-bootstrap"]
+	path = Thirdparty/vk-bootstrap
+	url = https://github.com/charles-lunarg/vk-bootstrap.git
+[submodule "Thirdparty/VulkanMemoryAllocator"]
+	path = Thirdparty/VulkanMemoryAllocator
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+[submodule "Thirdparty/glfw"]
+	path = Thirdparty/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "Thirdparty/spdlog"]
+	path = Thirdparty/spdlog
+	url = https://github.com/gabime/spdlog.git
