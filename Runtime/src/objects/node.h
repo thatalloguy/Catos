@@ -6,9 +6,19 @@
 #define CATOS_NODE_H
 
 
-class node {
+namespace catos {
 
-};
+    class Node {
+    public:
+        Node();
+        Node(Node& node);
+        Node(Node&& node);
+
+
+    private:
+
+    };
+}
 
 
 #endif //CATOS_NODE_H
