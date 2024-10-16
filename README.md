@@ -4,7 +4,7 @@
 
 
 
-###### modern lightweight ECS cpp game engine
+###### modern lightweight cpp game engine
 
 Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.html)
 
