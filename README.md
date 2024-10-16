@@ -32,11 +32,20 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Loading python scripting.
 - - [x] exposing cpp api to python.
 ---
-- [ ] Renderer.
-- - [ ] Ability to create new RenderPasses.
+- [ ] Renderer (Low level).
+- - [x] Ability to create new RenderPasses.
 - - [ ] Ability to create new pipelines.
 - - [ ] Ability to bind objects to pipelines / passes.
 - - [ ] More general control over the entire render pipeline.
+---
+- [ ] Renderer (High level):
+- - [ ] Defered rendering.
+- - [ ] GLTF loader.
+- - [ ] Shadows (Either cascaded or new special technique).
+- - [ ] PBR render pipeline.
+- - [ ] SSAO.
+- - [ ] Bloom.
+- - [ ] (Skeleton) Animations.
 ---
 - [ ] Solid Serialization System.
 - - [ ] Saving most objects to json or binary.
