@@ -86,4 +86,4 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - spdlog
 ###  - stb_image
 ###  - tinystl ( REMOVED SOON )
-###  - GLAD
+###  - GLAD (gl 4.2)
