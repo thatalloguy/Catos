@@ -37,11 +37,18 @@ namespace catos {
 
         RenderStatus renderObjects(const RenderPipeline& pipeline, void* data, unsigned int objectAmount);
 
-        RenderStatus renderPassToScreen(const RenderPass& pass);
+        RenderStatus renderPassToScreen(RenderPass& pass);
 
 
     private:
+
+        void setupFinalRenderPlane();
+
         bool initialized = false;
+
+        unsigned int renderVAO;
+        unsigned int renderVBO;
+        Shader screenShader;
 
     };
 

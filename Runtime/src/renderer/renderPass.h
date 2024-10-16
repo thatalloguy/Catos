@@ -14,6 +14,13 @@ namespace catos {
     typedef unsigned int FrameBuffer;
     typedef unsigned int RenderBuffer;
 
+    enum PassType: unsigned int {
+        COLOR =  0x8CE0,
+        COLOR_SINGLE = 0x8CE1,
+        DEPTH = 0x8D00,
+        STENCIL = 0x8D20,
+    };
+
     struct RenderPassCreationInfo {
         //If the Pass will be presented to the Window.
         bool willBeVisible = false;
@@ -24,9 +31,7 @@ namespace catos {
         //If the pass should resize to the global Render size.
         bool resizeToRenderSize = false;
 
-        bool genColorAttachment = true;
-        bool genDepthAttachment = true;
-        bool genStencilAttachment = false;
+        PassType passType = PassType::COLOR;
 
     };
 
@@ -44,14 +49,21 @@ namespace catos {
         ColorBuffer getPassTexture() { return colorBuffer; };
         RenderBuffer getRenderBuffer() { return renderBuffer; };
 
+        bool isFinal() { return _isFinal; };
+
     private:
 
-        void generateBuffers();
-        void destroyBuffers();
+        void generateFrameBuffer(const Vector2& size);
+        void generateColorBuffer(const Vector2& size, PassType type);
+        void generateRenderBuffer(const Vector2& size);
+
 
         unsigned int frameBuffer;
         unsigned int colorBuffer;
         unsigned int renderBuffer;
+
+        bool _isFinal = false;
+        bool _shouldResize = false;
 
         Shader& shader;
 

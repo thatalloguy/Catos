@@ -6,7 +6,9 @@
 #include "glad/glad.h"
 #include "spdlog/spdlog.h"
 
-catos::Shader::Shader(const catos::ShaderCreateInfo &createInfo) {
+catos::Shader::Shader() { }
+
+void catos::Shader::init(const catos::ShaderCreateInfo &createInfo) {
 
     shaderProgram = glCreateProgram();
 
@@ -22,6 +24,7 @@ catos::Shader::Shader(const catos::ShaderCreateInfo &createInfo) {
 
     glLinkProgram(shaderProgram);
 }
+
 
 catos::Shader::~Shader() {
     glDeleteProgram(shaderProgram);
@@ -73,4 +76,8 @@ catos::ShaderProgram catos::Shader::loadShader(const char *src, catos::ShaderTyp
 
 void catos::Shader::bind() {
     glUseProgram(shaderProgram);
+}
+
+void catos::Shader::setInt(const char *name, int val) {
+    glUniform1i(glGetUniformLocation(shaderProgram, name), val);
 }

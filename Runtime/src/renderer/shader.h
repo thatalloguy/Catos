@@ -30,8 +30,10 @@ namespace catos {
     class Shader {
 
     public:
-        Shader(const ShaderCreateInfo& createInfo);
+        Shader();
         ~Shader();
+
+        void init(const ShaderCreateInfo& createInfo);
 
         ShaderStatus addSubShader(const char* src, ShaderType type);
 
@@ -40,6 +42,8 @@ namespace catos {
         ShaderProgram getShaderProgram() { return shaderProgram; };
 
         void bind();
+
+        void setInt(const char* name, int val);
 
     private:
 

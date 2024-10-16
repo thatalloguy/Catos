@@ -5,6 +5,8 @@
 #include <core/window.h>
 #include "spdlog/spdlog.h"
 #include "renderer/shader.h"
+#include "renderer/renderPass.h"
+#include "renderer/renderer.h"
 
 using namespace catos;
 
@@ -65,20 +67,39 @@ int main() {
         fragmentShaderSource
     };
 
-    Shader triangleShader(shaderInfo);
 
+    RenderPassCreationInfo passInfo{
+            .willBeVisible = true,
+            .size = {800, 600}
+    };
+
+    RendererCreateInfo rendererInfo {};
+
+    Shader triangleShader;
+
+    triangleShader.init(shaderInfo);
+
+
+    RenderPass defaultPass{passInfo, triangleShader};
+
+    Renderer& renderer = Renderer::getInstance();
+    renderer.init(rendererInfo);
 
 
     while (!window.should_window_close()) {
         window.update();
 
-        glClearColor(1, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        defaultPass.bindPass();
+
 
         glBindVertexArray(VAO);
-        triangleShader.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
+
+        defaultPass.unbindPass();
+
+
+        renderer.renderPassToScreen(defaultPass);
 
     }
 
