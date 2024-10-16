@@ -7,7 +7,6 @@
 #include "ScriptingEngine.h"
 #include "spdlog/spdlog.h"
 
-#include "world/world.h"
 
 catos::ScriptingEngine &catos::ScriptingEngine::getInstance() {
     static catos::ScriptingEngine instance{};
@@ -18,11 +17,13 @@ catos::ScriptingEngine::ScriptingEngine() {
     interpreter = new py::scoped_interpreter{};
 
     catosPyMod = py::module::create("catos");
+/*
 
     py::class_<Script>(catosPyMod, "Script")
             .def(py::init<>())
             .def("update", &Script::update)
             .def("end", &Script::end);
+*/
 
 
 }

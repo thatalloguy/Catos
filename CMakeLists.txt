@@ -10,8 +10,6 @@ find_package(Vulkan REQUIRED)
 #dependencies
 add_subdirectory(Thirdparty/doctest)
 
-add_subdirectory("Thirdparty/vk-bootstrap")
-add_subdirectory("Thirdparty/VulkanMemoryAllocator")
 add_subdirectory("Thirdparty/spdlog")
 add_subdirectory("Thirdparty/fastgltf")
 add_subdirectory("Thirdparty/glfw")
@@ -28,8 +26,7 @@ file(GLOB_RECURSE IMGUI_SOURCE
         Thirdparty/imgui/imgui_tables.cpp
         Thirdparty/imgui/imgui_widgets.cpp
         Thirdparty/imgui/imgui_demo.cpp
-        Thirdparty/imgui/backends/imgui_impl_vulkan.h
-        Thirdparty/imgui/backends/imgui_impl_vulkan.cpp
+
         Thirdparty/imgui/backends/imgui_impl_glfw.h
         Thirdparty/imgui/backends/imgui_impl_glfw.cpp
 

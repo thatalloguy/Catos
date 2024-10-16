@@ -1,16 +1,18 @@
 //
 // Created by allos on 5/16/2024.
 //
-#include "window.h"
 
 #ifdef _WIN32
-#include "GLFW/glfw3native.h"
+#include "window.h"
 
-#include <Windows.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
 #include <dwmapi.h>
-
-
 #endif
+
+
+#include "spdlog/spdlog.h"
 
 using namespace catos;
 

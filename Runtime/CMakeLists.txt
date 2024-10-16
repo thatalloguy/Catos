@@ -1,9 +1,6 @@
 add_library(catos-runtime INTERFACE)
 target_include_directories(catos-runtime INTERFACE include)
 
-find_package(Vulkan REQUIRED)
-
-
 
 #static-lib
 file(GLOB_RECURSE FASTGLTF_DEPS
@@ -17,9 +14,6 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
 
         src/math/*.h
         src/math/*.cpp
-
-        src/Renderer/*.cpp
-        src/Renderer/*.h
 
         src/tests/*.cpp
 
@@ -46,9 +40,6 @@ target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glm")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pocketpy")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pybind11/")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glfw/include")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/vk-bootstrap")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/VulkanMemoryAllocator")
-
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c src/tests/*.cpp)
 add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST})
@@ -57,13 +48,10 @@ target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 target_link_libraries(catos-runtime-static PUBLIC dwmapi)
 
 
-
-target_link_libraries(catos-runtime-static PUBLIC vk-bootstrap::vk-bootstrap)
-target_link_libraries(catos-runtime-static PUBLIC GPUOpen::VulkanMemoryAllocator)
 target_link_libraries(catos-runtime-static PUBLIC spdlog)
 target_link_libraries(catos-runtime-static PUBLIC fastgltf)
 target_link_libraries(catos-runtime-static PUBLIC pocketpy)
-target_link_libraries(catos-runtime-static PUBLIC glfw Vulkan::Vulkan)
+target_link_libraries(catos-runtime-static PUBLIC glfw)
 
 
 

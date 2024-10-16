@@ -4,7 +4,7 @@
 
 #include "WorldTreeView.h"
 #include "../Editor.h"
-#include "world/world.h"
+
 #include "imgui_internal.h"
 #include <imgui.h>
 

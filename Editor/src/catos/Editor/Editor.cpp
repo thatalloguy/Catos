@@ -20,7 +20,6 @@ namespace catos::Editor {
     Window* _window;
     App* _app;
 
-    VulkanEngine _renderer;
     ImGuiID dockspaceID;
     DockInfo _dock_info;
 
@@ -51,8 +50,6 @@ void catos::Editor::init() {
     _window = new Window(windowCreationInfo);
 
 
-    _renderer.Init(_window->get_glfw_window(), false);
-
     init_tabs();
 
 
@@ -75,9 +72,6 @@ void catos::Editor::run() {
 
         _window->update();
 
-        _renderer.Run();
-
-        _renderer.start_imgui_frame();
 
         static bool first = true;
         static ImGuiID dockspace_id;
@@ -116,9 +110,6 @@ void catos::Editor::run() {
 
         ImGui::End();
 
-        _renderer.end_imgui_frame();
-
-        _renderer.Draw();
 
     }
 
@@ -131,7 +122,6 @@ void catos::Editor::cleanUp() {
         delete tab;
     }
 
-    _renderer.CleanUp();
 
     delete _app;
     delete _window;

@@ -6,11 +6,7 @@
 
 #include "core/registry.h"
 #include "core/application.h"
-#include "world/world.h"
-#include "spdlog/spdlog.h"
 #include "stl/vector.h"
-#include "stl/string.h"
-#include "math/vecs.h"
 #include "stl/hashmap.h"
 
 
@@ -142,25 +138,6 @@ namespace catos::tests {
         CHECK(map.get(40) == 100);
     }
 
-    TEST_CASE("WORLD::ENTITIES") {
-
-        catos::World testWorld{};
-
-        catos::EntityID id = testWorld.spawnEntity().getID();
-
-        testWorld.deleteEntity(id);
-
-        catos::EntityID newID = testWorld.spawnEntity().getID();
-
-        /*
-         * The id shouldnt be the same, since its a new entity.
-         * but the index should be the same since it should use the free spot,
-         * created when testWorld.deleteEntity was called.
-         */
-        CHECK(id != newID);
-        CHECK((id >> 32) == (newID >> 32));
-
-    }
 }
 
 

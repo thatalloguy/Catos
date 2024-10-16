@@ -9,7 +9,7 @@
 
 
 #include "math/vecs.h"
-#include "Renderer/VkEngine.h"
+#include <GLFW/glfw3.h>
 #include "types.h"
 
 namespace catos {
