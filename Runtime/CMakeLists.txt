@@ -23,11 +23,16 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
         src/scripting/*.h
         src/scripting/*.cpp
 
+        src/renderer/*.h
+        src/renderer/*.cpp
+        src/renderer/passes/*.h
+        src/renderer/passes/*.cpp
+
         src/stl/*.h
         src/stl/*.cpp
 
 )
-add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS})
+add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS} "../Thirdparty/GLAD/src/glad.c" )
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
 
@@ -40,6 +45,7 @@ target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glm")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pocketpy")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pybind11/")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glfw/include")
+target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glad/include/")
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c src/tests/*.cpp)
 add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST})

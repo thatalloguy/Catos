@@ -44,6 +44,7 @@ include_directories("Thirdparty/imgui")
 include_directories("Thirdparty/stb")
 include_directories("Thirdparty/glm")
 include_directories("Thirdparty/glfw/include")
+include_directories("Thirdparty/GLAD/include")
 
 include_directories(Thirdparty/pocketpy/include/pybind11/)
 include_directories(Thirdparty/pocketpy/include/)

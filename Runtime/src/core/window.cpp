@@ -25,7 +25,11 @@ Window::Window(catos::WindowCreationInfo &creationInfo) : _createInfo(creationIn
         spdlog::error("Could not initialize GLFW!");
         exit(-11); // For the game to run we would need glfw
     }
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+    // We do opengl 4.2
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
 
@@ -89,6 +93,7 @@ bool Window::should_window_close() {
 
 void Window::update() {
     glfwPollEvents();
+    glfwSwapBuffers(_raw_window);
 }
 
 GLFWwindow *Window::get_glfw_window() {
