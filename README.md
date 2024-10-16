@@ -32,9 +32,9 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Loading python scripting.
 - - [x] exposing cpp api to python.
 ---
-- [ ] Render Abstraction Layer (for vulkan).
-- - [ ] Ability to create new pipelines.
+- [ ] Renderer.
 - - [ ] Ability to create new RenderPasses.
+- - [ ] Ability to create new pipelines.
 - - [ ] Ability to bind objects to pipelines / passes.
 - - [ ] More general control over the entire render pipeline.
 ---
@@ -86,5 +86,4 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - spdlog
 ###  - stb_image
 ###  - tinystl ( REMOVED SOON )
-###  - vk-bootstrap
-###  - vkVulkanMemoryAllocator
+###  - GLAD
