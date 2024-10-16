@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <core/window.h>
 #include "spdlog/spdlog.h"
+#include "renderer/shader.h"
 
 using namespace catos;
 
@@ -59,26 +60,13 @@ int main() {
                                        "}\n";
 
 
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
+    ShaderCreateInfo shaderInfo {
+        vertexShaderSource,
+        fragmentShaderSource
+    };
 
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
+    Shader triangleShader(shaderInfo);
 
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    //clean up
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
 
 
     while (!window.should_window_close()) {
@@ -88,7 +76,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBindVertexArray(VAO);
-        glUseProgram(shaderProgram);
+        triangleShader.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
@@ -96,7 +84,6 @@ int main() {
 
     glDeleteBuffers(1, &VBO);
     glDeleteVertexArrays(1, &VAO);
-    glDeleteProgram(shaderProgram);
 
 }
 

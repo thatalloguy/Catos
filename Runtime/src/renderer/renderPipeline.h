@@ -12,7 +12,3 @@ namespace catos {
     };
 
 }
-
-
-
-#endif //CATOS_RENDERPIPELINE_H

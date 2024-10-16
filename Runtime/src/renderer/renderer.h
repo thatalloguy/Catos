@@ -5,6 +5,7 @@
 #pragma once
 
 #include <renderer/renderPipeline.h>
+#include <renderer/renderPass.h>
 
 namespace catos {
 
@@ -36,6 +37,8 @@ namespace catos {
 
         RenderStatus renderObjects(const RenderPipeline& pipeline, void* data, unsigned int objectAmount);
 
+        RenderStatus renderPassToScreen(const RenderPass& pass);
+
 
     private:
         bool initialized = false;
@@ -44,5 +47,3 @@ namespace catos {
 
 }
 
-
-#endif //CATOS_RENDERER_H

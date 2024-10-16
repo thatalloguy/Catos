@@ -28,9 +28,18 @@ catos::RenderStatus catos::Renderer::init(const catos::RendererCreateInfo &creat
 }
 
 
+
+
 catos::RenderStatus catos::Renderer::renderObjects(const catos::RenderPipeline &pipeline, void *data, unsigned int objectAmount) {
 
     //do stuff.
+
+    return RenderStatus::SUCCESSFUL;
+}
+
+
+catos::RenderStatus catos::Renderer::renderPassToScreen(const catos::RenderPass &pass) {
+
 
     return RenderStatus::SUCCESSFUL;
 }

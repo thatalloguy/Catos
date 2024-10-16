@@ -3,3 +3,7 @@
 //
 
 #include "renderPass.h"
+
+catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::Shader &shaderToUse) : shader(shaderToUse) {
+
+}
