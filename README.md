@@ -34,9 +34,10 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ---
 - [ ] Renderer (Low level).
 - - [x] Ability to create new RenderPasses.
-- - [ ] Ability to create new pipelines.
-- - [ ] Ability to bind objects to pipelines / passes.
+- - [x] Ability to create new pipelines.
+- - [x] Ability to bind objects to pipelines / passes.
 - - [ ] More general control over the entire render pipeline.
+- - [ ] Loading GLTF files.
 ---
 - [ ] Renderer (High level):
 - - [ ] Defered rendering.
