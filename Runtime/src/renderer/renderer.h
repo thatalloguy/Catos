@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <renderer/renderPipeline.h>
 #include <renderer/renderPass.h>
 
 namespace catos {
@@ -39,9 +38,6 @@ namespace catos {
 
         /// If the renderer isnt already initialized then it initializes.
         RenderStatus init(const RendererCreateInfo& createInfo);
-
-        /// Renders all objects via the pipeline given.
-        RenderStatus renderObjects(const RenderPipeline& pipeline, void* data, unsigned int objectAmount);
 
         /// Renders the given pass to the screen. NOTE: its public for overriding.
         RenderStatus renderPassToScreen(RenderPass& pass);

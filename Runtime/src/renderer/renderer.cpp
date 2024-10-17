@@ -17,6 +17,8 @@ float quadVertices[] = { // vertex attributes for a quad that fills the entire s
         1.0f,  1.0f,  1.0f, 1.0f
 };
 
+
+
 const char *screenVertexSource = "#version 420 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
                                  "layout (location = 1) in vec2 aTexCoords;\n"
@@ -79,21 +81,19 @@ catos::RenderStatus catos::Renderer::init(const catos::RendererCreateInfo &creat
 
 
 
-catos::RenderStatus catos::Renderer::renderObjects(const catos::RenderPipeline &pipeline, void *data, unsigned int objectAmount) {
-
-    //do stuff.
-
-    return RenderStatus::SUCCESSFUL;
-}
-
-
 catos::RenderStatus catos::Renderer::renderPassToScreen(catos::RenderPass &pass) {
+
+
+    glDisable(GL_DEPTH_TEST);
 
     glBindVertexArray(renderVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, pass.getPassTexture());
     screenShader.bind();
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glEnable(GL_DEPTH_TEST);
+
 
     return RenderStatus::SUCCESSFUL;
 }

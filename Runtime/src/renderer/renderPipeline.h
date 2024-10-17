@@ -4,29 +4,44 @@
 
 #pragma once
 
-#include <stl/string.h>
 #include <stl/vector.h>
-#include <stl/hashmap.h>
 
 #include <renderer/renderPass.h>
 
+#include "mesh.h"
+#include "renderer.h"
+
 namespace catos {
 
-    struct PipelineCreationInfo {
-
+    enum class RenderPipelineStatus: unsigned int {
+        SUCCESS = 0,
+        INVALID_REQUIREMENTS = 1,
+        UNKNOWN_MESH = 2,
+        ID_ALREADY_USED = 3,
+        PASS_ALREADY_EXISTS = 4,
+        UNKNOWN_PASS = 5,
     };
 
     class RenderPipeline {
 
     public:
-        RenderPipeline(PipelineCreationInfo& creationInfo);
+        RenderPipeline();
         ~RenderPipeline();
 
-        void addRenderPass(string&& name, RenderPass& pass, vector<string> requirements);
-        void removePass(string&& name);
+        RenderPipelineStatus setBeginPass(RenderPass& pass);
+
+        RenderPipelineStatus addMesh(Mesh& mesh);
+
+        void draw();
 
 
     private:
+
+        Renderer& _renderer;
+
+        RenderPass* beginPass;
+        vector<Mesh> _meshes;
+
     };
 
 }

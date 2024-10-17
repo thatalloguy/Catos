@@ -103,6 +103,24 @@ namespace catos {
             throw no_item_found{};
         }
 
+        bool has(const K& key)
+        {
+
+            unsigned int index = hashFunc(key, maxSize);
+            auto entry = buf[index];
+
+            // loop through all of the buckets with the same hash until we found the right key.
+            while (entry != nullptr) {
+                if (entry->getKey() == key) {
+                    return true;
+                }
+                entry = entry->getNext();
+            }
+
+            // could not find item based on given key
+           return false;
+        }
+
         /// puts an item in the table.
         void put(const K& key, const V& value) {
 

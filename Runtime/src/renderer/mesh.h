@@ -4,40 +4,26 @@
 
 #pragma once
 
+#include <glad/glad.h>
+
 namespace catos {
 
     struct Vertex {
         float x, y, z;
     };
 
-    class Mesh {
-    public:
-
-        Mesh() = default;
-        ~Mesh();
-
-        void init(void* raw_mesh, int sizeof_mesh);
-
-        void draw();
-
-    protected:
+    struct Mesh
+    {
         unsigned int VAO;
         unsigned int VBO;
+        int size;
 
-        int vertCount = 0;
-
-    };
-
-    class TriangleMesh: Mesh {
-
-    public:
-
-        TriangleMesh();
-        ~TriangleMesh() = default;
-
-        void draw();
-
-
+        void draw()
+        {
+            glBindVertexArray(VAO);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBindVertexArray(0);
+        }
     };
 
 }

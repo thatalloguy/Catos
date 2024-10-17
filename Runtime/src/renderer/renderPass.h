@@ -6,9 +6,12 @@
 #include <math/vecs.h>
 #include <renderer/shader.h>
 
+#include "stl/string.h"
+
 using namespace catos::math;
 
 namespace catos {
+    class RenderPass;
 
     typedef unsigned int ColorBuffer;
     typedef unsigned int FrameBuffer;
@@ -20,8 +23,14 @@ namespace catos {
         COLOR =  0x8CE0,
         /// 1 single color support
         COLOR_SINGLE = 0x8CE1,
+
         DEPTH = 0x8D00,
         STENCIL = 0x8D20,
+    };
+
+    enum ImageType: unsigned int {
+        RGB = 0x1907,
+        DEPTH_IMG  =  0x1902,
     };
 
     ///Info about how the RenderPass should be created
@@ -36,6 +45,10 @@ namespace catos {
         bool resizeToRenderSize = false;
 
         PassType passType = PassType::COLOR;
+        ImageType imageType = ImageType::RGB;
+
+        RenderPass* next = nullptr;
+        string&& name = "None";
 
     };
 
@@ -58,13 +71,18 @@ namespace catos {
         ColorBuffer getPassTexture() { return colorBuffer; };
         RenderBuffer getRenderBuffer() { return renderBuffer; };
 
+        Shader& getShader() { return shader; };
+
         /// isFinal is wether or not the User will see this texture.
         bool isFinal() { return _isFinal; };
+
+        string& getName() { return name; };
+        RenderPass* getNext() { return next; };
 
     private:
 
         void generateFrameBuffer(const Vector2& size);
-        void generateColorBuffer(const Vector2& size, PassType type);
+        void generateColorBuffer(const Vector2& size, PassType type, ImageType imageType);
         void generateRenderBuffer(const Vector2& size);
 
 
@@ -76,6 +94,8 @@ namespace catos {
         bool _shouldResize = false;
 
         Shader& shader;
+        RenderPass* next = nullptr;
+        string name = "None";
 
     };
 

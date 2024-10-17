@@ -14,14 +14,20 @@ catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::
 
     generateFrameBuffer(info.size);
 
-    generateColorBuffer(info.size, info.passType);
+    generateColorBuffer(info.size, info.passType, info.imageType);
 
-    generateRenderBuffer(info.size);
+    if (info.passType != DEPTH) {
+        generateRenderBuffer(info.size);
+    }
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         spdlog::error("Error creating RenderPass");
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    next = info.next;
+    name = info.name;
+
 }
 
 catos::RenderPass::~RenderPass() {
@@ -35,16 +41,22 @@ void catos::RenderPass::generateFrameBuffer(const Vector2 &size) {
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 }
 
-void catos::RenderPass::generateColorBuffer(const Vector2 &size, PassType type) {
+void catos::RenderPass::generateColorBuffer(const Vector2 &size, PassType type, ImageType imageType) {
     glGenTextures(1, &colorBuffer);
 
     glBindTexture(GL_TEXTURE_2D, colorBuffer);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.x, size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, imageType, size.x, size.y, 0, imageType, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, type, GL_TEXTURE_2D, colorBuffer, 0);
+
+    if (type == PassType::DEPTH)
+    {
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+    }
 }
 
 void catos::RenderPass::generateRenderBuffer(const Vector2 &size) {
@@ -58,11 +70,10 @@ void catos::RenderPass::generateRenderBuffer(const Vector2 &size) {
 
 void catos::RenderPass::bindPass() {
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-    glEnable(GL_DEPTH_TEST);
 
 
 
-    glClearColor(1, 0, 0, 1);
+    glClearColor(1, 0, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -71,10 +82,10 @@ void catos::RenderPass::bindPass() {
 
 void catos::RenderPass::unbindPass() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDisable(GL_DEPTH_TEST);
+    glUseProgram(0);
 
     glClearColor(1, 1, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
 
 }
 
