@@ -60,23 +60,38 @@ int main() {
 
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f
-};
-    Mesh triangle;
+            0.5f,  0.5f, 0.0f,  // top right
+            0.5f, -0.5f, 0.0f,  // bottom right
+            -0.5f, -0.5f, 0.0f,  // bottom left
+            -0.5f,  0.5f, 0.0f   // top left
+    };
 
-    triangle.init(vertices, sizeof(vertices), 3);
+    unsigned int indices[] = {
+            0, 1, 3,   // first triangle
+            1, 2, 3    // second triangle
+    };
+
+
+    MeshCreationInfo triangleInfo {
+        .vertices = vertices,
+        .indices = indices,
+
+        .sizeOfVertices = sizeof(vertices),
+        .sizeOfIndices = sizeof(indices),
+
+        .verticesAmount = 3,
+        .indicesAmount = 6
+    };
+
+    Mesh triangle{};
+
+    triangle.init(triangleInfo);
 
     // Shaders.
-
-
-
     ShaderCreateInfo shaderInfo {
         vertexShaderSource,
         fragmentShaderSource
     };
-
 
     ShaderCreateInfo shadowShaderInfo {
         shadowVertex,
