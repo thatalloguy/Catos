@@ -79,6 +79,8 @@ namespace catos {
         string& getName() { return name; };
         RenderPass* getNext() { return next; };
 
+        Vector2 getSize() { return _size; };
+
     private:
 
         void generateFrameBuffer(const Vector2& size);
@@ -89,6 +91,8 @@ namespace catos {
         unsigned int frameBuffer;
         unsigned int colorBuffer;
         unsigned int renderBuffer;
+
+        Vector2 _size;
 
         bool _isFinal = false;
         bool _shouldResize = false;

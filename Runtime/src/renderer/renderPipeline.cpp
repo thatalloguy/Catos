@@ -46,6 +46,8 @@ void catos::RenderPipeline::draw() {
         }
 
 
+        glViewport(0, 0, pass->getSize().x, pass->getSize().y);
+
         for (auto mesh: _meshes) {
             mesh.draw();
         }
