@@ -65,23 +65,9 @@ int main() {
         0.5f, -0.5f, 0.0f,
         0.0f,  0.5f, 0.0f
 };
+    Mesh triangle;
 
-    unsigned int VBO;
-
-    glGenBuffers(1, &VBO);
-
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-    // load the vertices into the VAO and VBO
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    Mesh triangle{VAO, VBO, 3};
+    triangle.init(vertices, sizeof(vertices), 3);
 
     // Shaders.
 
