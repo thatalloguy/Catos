@@ -33,22 +33,34 @@ void catos::RenderPipeline::draw() {
 
     while (pass != nullptr) {
 
-
+        //todo FIX RENDER PASSES!!!!
         pass->bindPass();
 
         if (previous != nullptr)
         {
-            //pass->getShader().setInt(previous->getName().c_str(), 0);
+            pass->getShader().bind();
+            pass->getShader().setInt(previous->getName().c_str(), 0);
 
-
-            //glActiveTexture(GL_TEXTURE0);
-            //glBindTexture(GL_TEXTURE_2D, previous->getPassTexture());
         }
 
 
         glViewport(0, 0, pass->getSize().x, pass->getSize().y);
 
+
+
         for (auto mesh: _meshes) {
+            pass->getShader().bind();
+            pass->getShader().setInt("albedo", 1);
+
+            if (previous != nullptr) {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, previous->getPassTexture());
+            }
+
+            if (mesh._texture != nullptr) {
+                mesh._texture->bind();
+            }
+
             mesh.draw();
         }
 

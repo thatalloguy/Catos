@@ -36,12 +36,15 @@ const char* fragmentShaderSource = "#version 330 core\n"
                                    "in vec2 TexCoord;\n"
                                    "\n"
                                    "// texture samplers\n"
-                                   "uniform sampler2D texture1;\n"
+                                   "uniform sampler2D shadowPass;\n"
+                                   "uniform sampler2D albedo;\n"
                                    "\n"
                                    "void main()\n"
                                    "{\n"
                                    "\t// linearly interpolate between both textures (80% container, 20% awesomeface)\n"
-                                   "\tFragColor = vec4(texture(texture1, TexCoord).rgb, 1.0);\n"
+                                   "\tvec4 shadow = texture(shadowPass, TexCoord);\n"
+                                   "\tvec4 col = texture(albedo, TexCoord);\n"
+                                   "\tFragColor = vec4(mix(col.rgb, shadow.rgb, 1.0), 0.5);\n"
                                    "}";
 
 const char *shadowVertex = "#version 420 core\n"
@@ -136,7 +139,7 @@ int main() {
     shadowShader.init(shadowShaderInfo);
 
 
-    triangleShader.setInt("texture1", 1);
+//    triangleShader.setInt("texture1", 1);
 
     RenderPass defaultPass{colorPassInfo, triangleShader};
 
@@ -151,6 +154,7 @@ int main() {
 
 
     RenderPass shadowPass{shadowPassInfo, shadowShader};
+    //triangleShader.setInt("texture1", 1);
 
     Renderer& renderer = Renderer::getInstance();
     renderer.init(rendererInfo);
@@ -165,12 +169,7 @@ int main() {
         window.update();
 
 
-        //defaultPipeline.draw();
-        triangleShader.setInt("texture1", 1);
-        tex.bind();
-        triangleShader.bind();
-
-        triangle.draw();
+        defaultPipeline.draw();
     }
 
     triangle.destroy();

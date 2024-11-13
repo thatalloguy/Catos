@@ -5,6 +5,7 @@
 #ifndef CATOS_SHADER_H
 #define CATOS_SHADER_H
 
+#include "glad/glad.h"
 
 namespace catos {
 
@@ -20,8 +21,8 @@ namespace catos {
 
     /// Shader Type (more to be added in the future such as geometry).
     enum ShaderType: unsigned int {
-        VERTEX = 0x8B31,
-        FRAGMENT = 0x8B30,
+        VERTEX = GL_VERTEX_SHADER,
+        FRAGMENT = GL_FRAGMENT_SHADER,
     };
 
     struct ShaderCreateInfo {

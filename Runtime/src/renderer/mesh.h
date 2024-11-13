@@ -73,10 +73,6 @@ namespace catos {
 
         void draw()
         {
-            if (_texture != nullptr) {
-                _texture->bind();
-            }
-
             glBindVertexArray(VAO);
             glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
             glBindVertexArray(0);

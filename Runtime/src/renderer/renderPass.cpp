@@ -12,6 +12,8 @@ catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::
 
     _shouldResize = info.resizeToRenderSize;
 
+    _size = info.size;
+
     generateFrameBuffer(info.size);
 
     generateColorBuffer(info.size, info.passType, info.imageType);
@@ -77,7 +79,7 @@ void catos::RenderPass::bindPass() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    shader.bind();
+    //shader.bind();
 }
 
 void catos::RenderPass::unbindPass() {

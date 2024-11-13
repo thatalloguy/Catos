@@ -3,7 +3,6 @@
 //
 
 #include "shader.h"
-#include "glad/glad.h"
 #include "spdlog/spdlog.h"
 
 catos::Shader::Shader() { }
@@ -14,11 +13,15 @@ void catos::Shader::init(const catos::ShaderCreateInfo &createInfo) {
 
     if (createInfo.vertexSRC != nullptr) {
         addSubShader(createInfo.vertexSRC, ShaderType::VERTEX);
+    } else {
+        spdlog::info("W");
     }
 
 
     if (createInfo.fragmentSRC != nullptr) {
         addSubShader(createInfo.fragmentSRC, ShaderType::FRAGMENT);
+    } else {
+        spdlog::info("W");
     }
 
 
@@ -37,6 +40,7 @@ catos::ShaderStatus catos::Shader::addSubShader(const char *src, catos::ShaderTy
     try {
         shader = loadShader(src, type);
     } catch (ShaderStatus error) {
+        spdlog::error("Compilation Failure");
         return error;
     }
 
@@ -79,5 +83,6 @@ void catos::Shader::bind() {
 }
 
 void catos::Shader::setInt(const char *name, int val) {
-    glUniform1i(glGetUniformLocation(shaderProgram, name), val);
+    unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    glUniform1i(loc, val);
 }
