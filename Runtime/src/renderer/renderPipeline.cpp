@@ -50,6 +50,7 @@ void catos::RenderPipeline::draw() {
 
         for (auto mesh: _meshes) {
             pass->getShader().bind();
+            //todo need better way to do this :|
             pass->getShader().setInt("albedo", 1);
 
             if (previous != nullptr) {
