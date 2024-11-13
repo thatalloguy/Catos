@@ -14,23 +14,35 @@
 using namespace catos;
 
 
-const char *vertexShaderSource = "#version 420 core\n"
+const char *vertexShaderSource = "#version 330 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
-                                 "out vec3 pos;\n"
+                                 "layout (location = 1) in vec3 aColor;\n"
+                                 "layout (location = 2) in vec2 aTexCoord;\n"
+                                 "\n"
+                                 "out vec3 ourColor;\n"
+                                 "out vec2 TexCoord;\n"
+                                 "\n"
                                  "void main()\n"
                                  "{\n"
-                                 "   pos = aPos;\n"
-                                 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-                                 "}\0";
+                                 "\tgl_Position = vec4(aPos, 1.0);\n"
+                                 "\tourColor = aColor;\n"
+                                 "\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
+                                 "}";
 
-const char* fragmentShaderSource = "#version 420 core\n"
-                                   "out vec4 outColor;\n"
-                                   "in vec3 pos;\n"
-                                   "uniform sampler2D shadowPass;\n"
-                                   "void main() {\n"
-                                    " vec3 col = texture(shadowPass, vec2(pos.x, pos.y)).rgb;\n"
-                                   " outColor = vec4(1.0f, 0.5f, 0.4f, 1.0f); \n"
-                                   "}\n";
+const char* fragmentShaderSource = "#version 330 core\n"
+                                   "out vec4 FragColor;\n"
+                                   "\n"
+                                   "in vec3 ourColor;\n"
+                                   "in vec2 TexCoord;\n"
+                                   "\n"
+                                   "// texture samplers\n"
+                                   "uniform sampler2D texture1;\n"
+                                   "\n"
+                                   "void main()\n"
+                                   "{\n"
+                                   "\t// linearly interpolate between both textures (80% container, 20% awesomeface)\n"
+                                   "\tFragColor = vec4(texture(texture1, TexCoord).rgb, 1.0);\n"
+                                   "}";
 
 const char *shadowVertex = "#version 420 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
@@ -60,15 +72,15 @@ int main() {
 
 
     float vertices[] = {
-            0.5f,  0.5f, 0.0f,  // top right
-            0.5f, -0.5f, 0.0f,  // bottom right
-            -0.5f, -0.5f, 0.0f,  // bottom left
-            -0.5f,  0.5f, 0.0f   // top left
+            // positions          // colors           // texture coords
+            0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
     };
-
     unsigned int indices[] = {
-            0, 1, 3,   // first triangle
-            1, 2, 3    // second triangle
+            0, 1, 3, // first triangle
+            1, 2, 3  // second triangle
     };
 
 
@@ -83,9 +95,17 @@ int main() {
         .indicesAmount = 6
     };
 
+    TextureCreationInfo texinfo {
+        .path = "../../../Assets/Logo.jpeg"
+    };
+
     Mesh triangle{};
+    Texture tex{};
+
+    tex.init(texinfo);
 
     triangle.init(triangleInfo);
+    triangle._texture = &tex;
 
     // Shaders.
     ShaderCreateInfo shaderInfo {
@@ -116,6 +136,8 @@ int main() {
     shadowShader.init(shadowShaderInfo);
 
 
+    triangleShader.setInt("texture1", 1);
+
     RenderPass defaultPass{colorPassInfo, triangleShader};
 
     RenderPassCreationInfo shadowPassInfo{
@@ -143,10 +165,15 @@ int main() {
         window.update();
 
 
-        defaultPipeline.draw();
+        //defaultPipeline.draw();
+        triangleShader.setInt("texture1", 1);
+        tex.bind();
+        triangleShader.bind();
 
+        triangle.draw();
     }
 
+    triangle.destroy();
 
 }
 

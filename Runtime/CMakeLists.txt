@@ -6,6 +6,8 @@ target_include_directories(catos-runtime INTERFACE include)
 file(GLOB_RECURSE FASTGLTF_DEPS
         Thirdparty/fastgltf/deps/simdjson/simdjson.h
         Thirdparty/fastgltf/deps/simdjson/simdjson.cpp
+
+        Thirdparty/stb/stb_image.h
 )
 file(GLOB_RECURSE CATOS_RUNTIME_SRC
 

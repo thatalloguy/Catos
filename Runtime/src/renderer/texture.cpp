@@ -4,6 +4,8 @@
 
 #include "texture.h"
 #include "spdlog/spdlog.h"
+
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 
@@ -45,4 +47,8 @@ void catos::Texture::init(catos::TextureCreationInfo &creationInfo) {
 void catos::Texture::bind(int slot) {
     glActiveTexture(slot);
     glBindTexture((GLenum) _type, textureGPUId);
+}
+
+catos::Texture::~Texture() {
+    glDeleteTextures(1, &textureGPUId);
 }

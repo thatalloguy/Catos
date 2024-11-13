@@ -38,11 +38,11 @@ void catos::RenderPipeline::draw() {
 
         if (previous != nullptr)
         {
-            pass->getShader().setInt(previous->getName().c_str(), 0);
+            //pass->getShader().setInt(previous->getName().c_str(), 0);
 
 
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, previous->getPassTexture());
+            //glActiveTexture(GL_TEXTURE0);
+            //glBindTexture(GL_TEXTURE_2D, previous->getPassTexture());
         }
 
 

@@ -45,7 +45,7 @@ namespace catos {
 
         float borderColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-        FilterType minFilter = FilterType::NEAREST;
+        FilterType minFilter = FilterType::LINEAR;
         FilterType magFilter = FilterType::LINEAR;
 
         TextureColor color = TextureColor::RGB;
@@ -55,6 +55,8 @@ namespace catos {
     class Texture {
 
     public:
+        Texture() = default;
+        ~Texture();
 
         void init(TextureCreationInfo& creationInfo);
 

@@ -6,11 +6,14 @@
 
 #include <glad/glad.h>
 #include "spdlog/spdlog.h"
+#include "texture.h"
 
 namespace catos {
 
     struct Vertex {
         float x, y, z;
+        float r, g, b;
+        float uv_x, uv_y;
     };
 
     struct MeshCreationInfo {
@@ -30,6 +33,8 @@ namespace catos {
         unsigned int VBO;
         unsigned int EBO;
 
+        Texture* _texture = nullptr;
+
         int size;
         int indicesAmount;
 
@@ -48,9 +53,18 @@ namespace catos {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshCreationInfo.sizeOfIndices, meshCreationInfo.indices, GL_STATIC_DRAW);
 
-
-            glVertexAttribPointer(0, meshCreationInfo.verticesAmount, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+            // pos
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
             glEnableVertexAttribArray(0);
+
+            // vertex colors
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            // tex_coords
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(6 * sizeof(float)));
+            glEnableVertexAttribArray(2);
+
 
             size = meshCreationInfo.verticesAmount;
             indicesAmount = meshCreationInfo.indicesAmount;
@@ -59,13 +73,18 @@ namespace catos {
 
         void draw()
         {
+            if (_texture != nullptr) {
+                _texture->bind();
+            }
+
             glBindVertexArray(VAO);
-            glDrawElements(GL_LINE_LOOP, indicesAmount, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
             glBindVertexArray(0);
         }
 
         void destroy() {
-            //todo
+            glDeleteVertexArrays(1, &VAO);
+            glDeleteBuffers(1, &VBO);
         }
     };
 
