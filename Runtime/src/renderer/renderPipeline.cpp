@@ -62,7 +62,7 @@ void catos::RenderPipeline::draw() {
                 mesh._texture->bind();
             }
 
-            mesh.draw();
+            mesh.draw(pass->getShader());
         }
 
 

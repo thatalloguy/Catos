@@ -5,6 +5,8 @@
 #pragma once
 
 #include <glad/glad.h>
+
+#include "shader.h"
 #include "spdlog/spdlog.h"
 #include "texture.h"
 
@@ -37,6 +39,8 @@ namespace catos {
 
         int size;
         int indicesAmount;
+
+        float* transform;
 
         void init(MeshCreationInfo& meshCreationInfo) {
             //Generate needed buffers
@@ -71,8 +75,9 @@ namespace catos {
 
         }
 
-        void draw()
+        void draw(Shader& shader)
         {
+            shader.setTransform("transform", transform);
             glBindVertexArray(VAO);
             glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
             glBindVertexArray(0);

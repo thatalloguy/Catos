@@ -86,3 +86,8 @@ void catos::Shader::setInt(const char *name, int val) {
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
     glUniform1i(loc, val);
 }
+
+void catos::Shader::setTransform(const char* name, float* val) {
+    unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    glUniformMatrix4fv(loc, 1, GL_FALSE, val);
+}

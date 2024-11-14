@@ -11,6 +11,9 @@
 #include "renderer/renderer.h"
 #include "renderer/renderPipeline.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 using namespace catos;
 
 
@@ -22,9 +25,12 @@ const char *vertexShaderSource = "#version 330 core\n"
                                  "out vec3 ourColor;\n"
                                  "out vec2 TexCoord;\n"
                                  "\n"
+                                 "uniform cameraMat;\n"
+                                 "uniform mat4 transform;\n"
+                                 "\n"
                                  "void main()\n"
                                  "{\n"
-                                 "\tgl_Position = vec4(aPos, 1.0);\n"
+                                 "\tgl_Position = cameraMat * transform * vec4(aPos, 1.0);\n"
                                  "\tourColor = aColor;\n"
                                  "\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
                                  "}";
@@ -47,9 +53,14 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 const char *shadowVertex = "#version 420 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
+                                 "uniform mat4 transform;\n"
+                                 "\n"
+                                 "uniform cameraMat;\n"
+                                 "uniform mat4 transform;\n"
+                                 "\n"
                                  "void main()\n"
                                  "{\n"
-                                 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+                                 "\tgl_Position = cameraMat * transform * vec4(aPos, 1.0);\n"
                                  "}\0";
 
 const char* shadowFragment = "#version 420 core\n"
@@ -103,10 +114,17 @@ int main() {
     Mesh triangle{};
     Texture tex{};
 
+
+    glm::mat4 mat{1.0f};
+
+    mat = glm::translate(mat, {0.2, 0.2, 0.0});
+    mat = glm::rotate(mat, glm::radians(30.0f), glm::vec3(0, 0, 1));
+
     tex.init(texinfo);
 
     triangle.init(triangleInfo);
     triangle._texture = &tex;
+    triangle.transform = glm::value_ptr(mat);
 
     // Shaders.
     ShaderCreateInfo shaderInfo {
@@ -136,9 +154,6 @@ int main() {
     triangleShader.init(shaderInfo);
     shadowShader.init(shadowShaderInfo);
 
-
-//    triangleShader.setInt("texture1", 1);
-
     RenderPass defaultPass{colorPassInfo, triangleShader};
 
     RenderPassCreationInfo shadowPassInfo{
@@ -152,7 +167,6 @@ int main() {
 
 
     RenderPass shadowPass{shadowPassInfo, shadowShader};
-    //triangleShader.setInt("texture1", 1);
 
     Renderer& renderer = Renderer::getInstance();
     renderer.init(rendererInfo);

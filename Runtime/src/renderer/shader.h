@@ -1,12 +1,12 @@
 //
 // Created by allos on 10/16/2024.
 //
+#pragma once
 
 #ifndef CATOS_SHADER_H
 #define CATOS_SHADER_H
 
 #include "glad/glad.h"
-
 namespace catos {
 
     typedef unsigned int ShaderProgram;
@@ -56,6 +56,8 @@ namespace catos {
 
         /// Sets a int uniform
         void setInt(const char* name, int val);
+
+        void setTransform(const char* name,float* val);
 
     private:
 

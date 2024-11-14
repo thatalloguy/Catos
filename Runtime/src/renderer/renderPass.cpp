@@ -18,7 +18,7 @@ catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::
 
     generateColorBuffer(info.size, info.passType, info.imageType);
 
-    if (info.passType != DEPTH) {
+    if (info.passType != PassType::DEPTH) {
         generateRenderBuffer(info.size);
     }
 
