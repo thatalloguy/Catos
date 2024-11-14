@@ -46,17 +46,20 @@ namespace catos {
             //Generate needed buffers
             glGenBuffers(1, &VBO);
             glGenVertexArrays(1, &VAO);
-            glGenBuffers(1, &EBO);
+            if (meshCreationInfo.indices != nullptr) {
+                glGenBuffers(1, &EBO);
+            }
 
             glBindVertexArray(VAO);
             // load the vertices into the VAO and VBO
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferData(GL_ARRAY_BUFFER, meshCreationInfo.sizeOfVertices, meshCreationInfo.vertices, GL_STATIC_DRAW);
 
-            //do the same for indices.
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshCreationInfo.sizeOfIndices, meshCreationInfo.indices, GL_STATIC_DRAW);
-
+            if (meshCreationInfo.indices != nullptr) {
+                //do the same for indices.
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshCreationInfo.sizeOfIndices, meshCreationInfo.indices, GL_STATIC_DRAW);
+            }
             // pos
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
             glEnableVertexAttribArray(0);
@@ -79,7 +82,8 @@ namespace catos {
         {
             shader.setTransform("transform", transform);
             glBindVertexArray(VAO);
-            glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
+            //glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
             glBindVertexArray(0);
         }
 

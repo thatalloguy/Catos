@@ -25,7 +25,7 @@ const char *vertexShaderSource = "#version 330 core\n"
                                  "out vec3 ourColor;\n"
                                  "out vec2 TexCoord;\n"
                                  "\n"
-                                 "uniform cameraMat;\n"
+                                 "uniform mat4 cameraMat;\n"
                                  "uniform mat4 transform;\n"
                                  "\n"
                                  "void main()\n"
@@ -53,9 +53,8 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 const char *shadowVertex = "#version 420 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
-                                 "uniform mat4 transform;\n"
                                  "\n"
-                                 "uniform cameraMat;\n"
+                                 "uniform mat4 cameraMat;\n"
                                  "uniform mat4 transform;\n"
                                  "\n"
                                  "void main()\n"
@@ -66,7 +65,7 @@ const char *shadowVertex = "#version 420 core\n"
 const char* shadowFragment = "#version 420 core\n"
                                    "out vec4 outColor;\n"
                                    "void main() {\n"
-                                   " outColor = vec4(0.5f, 0.5f, 1.0f, 1.0f); \n"
+                                   "\toutColor = vec4(0.5f, 0.5f, 1.0f, 1.0f); \n"
                                    "}\n";
 
 
@@ -84,26 +83,57 @@ int main() {
 
 
     float vertices[] = {
-            // positions          // colors           // texture coords
-            0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
-    };
-    unsigned int indices[] = {
-            0, 1, 3, // first triangle
-            1, 2, 3  // second triangle
+        //x    y      z      r     g     b     uv    uv
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
     };
 
 
     MeshCreationInfo triangleInfo {
         .vertices = vertices,
-        .indices = indices,
 
         .sizeOfVertices = sizeof(vertices),
-        .sizeOfIndices = sizeof(indices),
 
-        .verticesAmount = 3,
+        .verticesAmount = 36,
         .indicesAmount = 6
     };
 
@@ -117,8 +147,8 @@ int main() {
 
     glm::mat4 mat{1.0f};
 
-    mat = glm::translate(mat, {0.2, 0.2, 0.0});
-    mat = glm::rotate(mat, glm::radians(30.0f), glm::vec3(0, 0, 1));
+    mat = glm::translate(mat, {0.2, 0.2, -0.4});
+    mat = glm::rotate(mat, glm::radians(30.0f), glm::vec3(0, 1, 0));
 
     tex.init(texinfo);
 
@@ -177,11 +207,33 @@ int main() {
 
     defaultPipeline.addMesh(triangle);
 
+
+    //calc camera
+
+    glm::mat4 proj{1.0f};
+    glm::mat4 view{1.0f};
+    glm::mat4 cam{1.0f};
+
+    glm::vec3 cameraPos{0.0f, 0.0f, 3.0f};
+    glm::vec3 cameraFront{0.0f, 0.0f, -1.0f};
+    glm::vec3 cameraUp{0.0f, 1.0f, 0.0f};
+
+
     while (!window.should_window_close()) {
         window.update();
 
+        if (glfwGetKey(window.get_glfw_window(), GLFW_KEY_S) == GLFW_PRESS)
+        {
+            cameraPos.z += 0.1f;
+        }
 
-        defaultPipeline.draw();
+        proj = glm::perspective(glm::radians(90.0f), (float) 800 / (float) 600, 0.01f, 1000.0f);
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+        cam = proj * view;
+
+
+        defaultPipeline.draw(glm::value_ptr(cam));
     }
 
     triangle.destroy();

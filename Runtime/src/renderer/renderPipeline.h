@@ -32,7 +32,7 @@ namespace catos {
 
         RenderPipelineStatus addMesh(Mesh& mesh);
 
-        void draw();
+        void draw(float* cameraMat);
 
 
     private:

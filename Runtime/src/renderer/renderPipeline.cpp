@@ -25,7 +25,7 @@ catos::RenderPipelineStatus catos::RenderPipeline::addMesh(Mesh& mesh) {
     return RenderPipelineStatus::SUCCESS;
 }
 
-void catos::RenderPipeline::draw() {
+void catos::RenderPipeline::draw(float* cameraMat) {
 
     RenderPass* pass = beginPass;
     RenderPass* previous = nullptr;
@@ -52,6 +52,7 @@ void catos::RenderPipeline::draw() {
             pass->getShader().bind();
             //todo need better way to do this :|
             pass->getShader().setInt("albedo", 1);
+            pass->getShader().setTransform("cameraMat", cameraMat);
 
             if (previous != nullptr) {
                 glActiveTexture(GL_TEXTURE0);
