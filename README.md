@@ -95,5 +95,4 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - pocketpy / gsoc24 (Experimental)
 ###  - spdlog
 ###  - stb_image
-###  - tinystl ( REMOVED SOON )
 ###  - GLAD (gl 4.2)
