@@ -63,7 +63,18 @@ void catos::RenderPipeline::draw(float* cameraMat) {
                 mesh._texture->bind();
             }
 
+            RenderPassLogic* renderLogic = pass->getRenderPassLogic();
+
+            if (renderLogic != nullptr){
+                renderLogic->onMeshPrepare(*pass, mesh);
+            }
+
             mesh.draw(pass->getShader());
+
+
+            if (renderLogic != nullptr){
+                renderLogic->onMeshEnd(*pass, mesh);
+            }
         }
 
 

@@ -10,6 +10,8 @@ catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::
 
     _isFinal = info.willBeVisible;
 
+    _render_logic = info.passLogic;
+
     _shouldResize = info.resizeToRenderSize;
 
     _size = info.size;
@@ -35,6 +37,8 @@ catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::
 catos::RenderPass::~RenderPass() {
     glDeleteRenderbuffers(1, &renderBuffer);
     glDeleteFramebuffers(1, &frameBuffer);
+
+    delete _render_logic;
 }
 
 
@@ -78,11 +82,17 @@ void catos::RenderPass::bindPass() {
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-    //shader.bind();
+    if (_render_logic != nullptr){
+        _render_logic->onPassPrepare(*this);
+    }
 }
 
 void catos::RenderPass::unbindPass() {
+
+    if (_render_logic != nullptr){
+        _render_logic->onPassEnd(*this);
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glUseProgram(0);
 

@@ -64,7 +64,7 @@ namespace catos {
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
             glEnableVertexAttribArray(0);
 
-            // vertex colors
+            // normals
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
 

@@ -6,6 +6,7 @@
 #include <math/vecs.h>
 #include <renderer/shader.h>
 
+#include "mesh.h"
 #include "stl/string.h"
 
 using namespace catos::math;
@@ -33,6 +34,18 @@ namespace catos {
         DEPTH_IMG  =  0x1902,
     };
 
+    struct RenderPassLogic {
+
+        virtual ~RenderPassLogic() = default;
+
+        virtual void onPassPrepare(RenderPass& pass) {};
+        virtual void onPassEnd(RenderPass& pass) {};
+
+        virtual void onMeshPrepare(RenderPass& pass, Mesh& mesh) {};
+        virtual void onMeshEnd(RenderPass& pass, Mesh& mesh) {};
+
+    };
+
     ///Info about how the RenderPass should be created
     struct RenderPassCreationInfo {
         /// If the Pass will be presented to the Window.
@@ -50,7 +63,10 @@ namespace catos {
         RenderPass* next = nullptr;
         string&& name = "None";
 
+        RenderPassLogic* passLogic = nullptr;
+
     };
+
 
     /* a RenderPass is a object that renders everything with a given shader
      * This then generates a texture which can be used for displaying or info for a different pass / shader.
@@ -81,6 +97,8 @@ namespace catos {
 
         Vector2 getSize() { return _size; };
 
+        RenderPassLogic* getRenderPassLogic() { return _render_logic; };
+
     private:
 
         void generateFrameBuffer(const Vector2& size);
@@ -98,6 +116,9 @@ namespace catos {
         bool _shouldResize = false;
 
         Shader& shader;
+        RenderPassLogic* _render_logic;
+
+
         RenderPass* next = nullptr;
         string name = "None";
 

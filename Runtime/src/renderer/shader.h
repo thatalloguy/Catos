@@ -7,6 +7,8 @@
 #define CATOS_SHADER_H
 
 #include "glad/glad.h"
+#include "math/vecs.h"
+
 namespace catos {
 
     typedef unsigned int ShaderProgram;
@@ -58,6 +60,8 @@ namespace catos {
         void setInt(const char* name, int val);
 
         void setTransform(const char* name,float* val);
+
+        void setVector3(const char* name, math::Vector3 vec);
 
     private:
 

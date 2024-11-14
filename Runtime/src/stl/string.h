@@ -18,6 +18,8 @@ namespace catos {
         /// Copies the char array to the internal buffer.
         string(const char* buffer);
 
+        void reserve(int length);
+
         /// Copies string object to its internal values.
         string(const string& obj);
 
@@ -33,6 +35,7 @@ namespace catos {
         /// Adds a string to itself.
         string operator+(const string& obj);
 
+        char operator[](int a);
 
         /// Returns the size of the internal buffer.
         unsigned int length() { return size; };

@@ -14,62 +14,55 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <fstream>
+
 using namespace catos;
 
 
-const char *vertexShaderSource = "#version 330 core\n"
-                                 "layout (location = 0) in vec3 aPos;\n"
-                                 "layout (location = 1) in vec3 aColor;\n"
-                                 "layout (location = 2) in vec2 aTexCoord;\n"
-                                 "\n"
-                                 "out vec3 ourColor;\n"
-                                 "out vec2 TexCoord;\n"
-                                 "\n"
-                                 "uniform mat4 cameraMat;\n"
-                                 "uniform mat4 transform;\n"
-                                 "\n"
-                                 "void main()\n"
-                                 "{\n"
-                                 "\tgl_Position = cameraMat * transform * vec4(aPos, 1.0);\n"
-                                 "\tourColor = aColor;\n"
-                                 "\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
-                                 "}";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-                                   "out vec4 FragColor;\n"
-                                   "\n"
-                                   "in vec3 ourColor;\n"
-                                   "in vec2 TexCoord;\n"
-                                   "\n"
-                                   "uniform sampler2D shadowPass;\n"
-                                   "uniform sampler2D albedo;\n"
-                                   "\n"
-                                   "void main()\n"
-                                   "{\n"
-                                   "\t// linearly interpolate between both textures (80% container, 20% awesomeface)\n"
-                                   "\tFragColor = texture(albedo, TexCoord);\n"
-                                   "}";
+std::string vertexShaderSource;
+std::string fragmentShaderSource;
 
 
-const char *shadowVertex = "#version 420 core\n"
-                                 "layout (location = 0) in vec3 aPos;\n"
-                                 "\n"
-                                 "uniform mat4 cameraMat;\n"
-                                 "uniform mat4 transform;\n"
-                                 "\n"
-                                 "void main()\n"
-                                 "{\n"
-                                 "\tgl_Position = cameraMat * transform * vec4(aPos, 1.0);\n"
-                                 "}\0";
+std::string shadowVertex;
+std::string shadowFragment;
 
-const char* shadowFragment = "#version 420 core\n"
-                                   "out vec4 outColor;\n"
-                                   "void main() {\n"
-                                   "\toutColor = vec4(0.5f, 0.5f, 1.0f, 1.0f); \n"
-                                   "}\n";
+std::string loadTxtFromFile(const char* path){
+    std::ifstream in(path, std::ios::binary);
+    if (in)
+    {
+        std::string contents;
+        in.seekg(0, std::ios::end);
+        contents.resize(in.tellg());
 
+        in.seekg(0, std::ios::beg);
+        in.read(&contents[0], contents.length());
+        in.close();
+        return contents;
+    }
+    spdlog::error("Couldn't load: ", path);
+    throw(errno);
+}
+
+struct LightRenderLogic: RenderPassLogic {
+
+    glm::vec3* cameraPos;
+
+    void onMeshPrepare(RenderPass& pass, Mesh& mesh) override{
+
+        Shader& passShader = pass.getShader();
+
+        passShader.setVector3("lightColor", {1, 1, 1});
+        passShader.setVector3("lightPos", {0, 5, 3});
+        passShader.setVector3("viewPos", {cameraPos->x, cameraPos->y, cameraPos->z});
+    }
+};
 
 int main() {
+
+    vertexShaderSource   = loadTxtFromFile("../../../Assets/Shaders/default.vert");
+    fragmentShaderSource = loadTxtFromFile("../../../Assets/Shaders/default.frag");
+    shadowVertex         = loadTxtFromFile("../../../Assets/Shaders/shadow.vert");
+    shadowFragment       = loadTxtFromFile("../../../Assets/Shaders/shadow.frag");
 
     WindowCreationInfo windowCreationInfo{};
 
@@ -83,48 +76,48 @@ int main() {
 
 
     float vertices[] = {
-        //x    y      z      r     g     b     uv    uv
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        // positions          // normals           // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
 
@@ -145,9 +138,14 @@ int main() {
     Texture tex{};
 
 
+    glm::vec3 cameraPos{0.0f, 0.0f, 0.0f};
+    glm::vec3 cameraFront{0.0f, 0.0f, -1.0f};
+    glm::vec3 cameraUp{0.0f, 1.0f, 0.0f};
+
+
     glm::mat4 mat{1.0f};
 
-    mat = glm::translate(mat, {0.2, 0.2, -0.4});
+    mat = glm::translate(mat, {0.2, 0.2, -2});
     mat = glm::rotate(mat, glm::radians(30.0f), glm::vec3(0, 1, 0));
 
     tex.init(texinfo);
@@ -158,20 +156,25 @@ int main() {
 
     // Shaders.
     ShaderCreateInfo shaderInfo {
-        vertexShaderSource,
-        fragmentShaderSource
+        vertexShaderSource.c_str(),
+        fragmentShaderSource.c_str()
     };
 
     ShaderCreateInfo shadowShaderInfo {
-        shadowVertex,
-        shadowFragment
+        shadowVertex.c_str(),
+        shadowFragment.c_str()
     };
 
 
+    LightRenderLogic* lightLogic = new LightRenderLogic;
+
+    lightLogic->cameraPos = &cameraPos;
 
     RenderPassCreationInfo colorPassInfo{
             .willBeVisible = true,
-            .size = {800, 600}
+            .size = {800, 600},
+
+            .passLogic = lightLogic
     };
 
 
@@ -214,24 +217,15 @@ int main() {
     glm::mat4 view{1.0f};
     glm::mat4 cam{1.0f};
 
-    glm::vec3 cameraPos{0.0f, 0.0f, 3.0f};
-    glm::vec3 cameraFront{0.0f, 0.0f, -1.0f};
-    glm::vec3 cameraUp{0.0f, 1.0f, 0.0f};
+
+    proj = glm::perspective(glm::radians(90.0f), (float) 800 / (float) 600, 0.01f, 1000.0f);
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+    cam = proj * view;
 
 
     while (!window.should_window_close()) {
         window.update();
-
-        if (glfwGetKey(window.get_glfw_window(), GLFW_KEY_S) == GLFW_PRESS)
-        {
-            cameraPos.z += 0.1f;
-        }
-
-        proj = glm::perspective(glm::radians(90.0f), (float) 800 / (float) 600, 0.01f, 1000.0f);
-        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-        cam = proj * view;
-
 
         defaultPipeline.draw(glm::value_ptr(cam));
     }

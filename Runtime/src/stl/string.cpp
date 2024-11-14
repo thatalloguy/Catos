@@ -18,6 +18,8 @@ catos::string::string(const char *buffer) {
 
 }
 
+void catos::string::reserve(int length){}
+
 catos::string::string(const catos::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
@@ -73,4 +75,8 @@ catos::string catos::string::operator+(const catos::string &obj) {
     strncpy_s(s.buf + this->size, obj.size + 1, obj.buf, obj.size); // Then the other obj.
 
     return s;
+}
+
+char catos::string::operator[](int a) {
+    return buf[a];
 }
