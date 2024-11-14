@@ -40,9 +40,9 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] Loading GLTF files.
 ---
 - [ ] Renderer (High level):
-- - [ ] Defered rendering.
+- - [ ] ~~Defered rendering~~.
 - - [ ] GLTF loader.
-- - [ ] Shadows (Either cascaded or new special technique).
+- - [ ] Shadows (Either cascaded or adaptive shadow mapping).
 - - [ ] PBR render pipeline.
 - - [ ] SSAO.
 - - [ ] Bloom.
