@@ -41,7 +41,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
                                    "void main()\n"
                                    "{\n"
                                    "\t// linearly interpolate between both textures (80% container, 20% awesomeface)\n"
-                                   "\tFragColor = mix(texture(shadowPass, TexCoord), texture(albedo, TexCoord), 0.2);\n"
+                                   "\tFragColor = texture(albedo, TexCoord);\n"
                                    "}";
 
 
@@ -97,7 +97,7 @@ int main() {
     };
 
     TextureCreationInfo texinfo {
-        .path = "../../../Assets/Logo.jpeg"
+        .path = "../../../Assets/images.jpg"
     };
 
     Mesh triangle{};
