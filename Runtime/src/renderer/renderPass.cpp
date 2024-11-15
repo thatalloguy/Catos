@@ -14,6 +14,9 @@ catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::
 
     _shouldResize = info.resizeToRenderSize;
 
+    _passType = info.passType;
+    _imageType = info.imageType;
+
     _size = info.size;
 
     generateFrameBuffer(info.size);
@@ -41,6 +44,15 @@ catos::RenderPass::~RenderPass() {
     delete _render_logic;
 }
 
+
+void catos::RenderPass::destroyTextures(){
+    glDeleteRenderbuffers(1, &renderBuffer);
+    glDeleteFramebuffers(1, &frameBuffer);
+}
+
+void catos::RenderPass::setSize(const Vector2& newSize) {
+    _size = newSize;
+}
 
 void catos::RenderPass::generateFrameBuffer(const Vector2 &size) {
     glGenFramebuffers(1, &frameBuffer);
@@ -79,7 +91,8 @@ void catos::RenderPass::bindPass() {
 
 
 
-    glClearColor(0, 0, 0, 1);
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (_render_logic != nullptr){
@@ -96,8 +109,9 @@ void catos::RenderPass::unbindPass() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glUseProgram(0);
 
-    glClearColor(1, 1, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 }
 

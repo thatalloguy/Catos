@@ -16,6 +16,11 @@
 
 using namespace catos;
 
+static bool resized = false;
+
+void on_window_resized(GLFWwindow* window, int w, int h){
+    resized = true;
+}
 
 Window::Window(catos::WindowCreationInfo &creationInfo) : _createInfo(creationInfo) {
 
@@ -53,6 +58,7 @@ Window::Window(catos::WindowCreationInfo &creationInfo) : _createInfo(creationIn
     }
 
     glfwMakeContextCurrent(_raw_window);
+    glfwSetWindowSizeCallback(_raw_window, on_window_resized);
 }
 
 Window::~Window() {
@@ -87,8 +93,23 @@ math::Vector2 Window::getMonitorSize() {
 
 }
 
+math::Vector2 Window::getSize(){
+    int w, h;
+    glfwGetWindowSize(_raw_window, &w, &h);
+
+    return {(float) w, (float) h};
+}
+
 bool Window::should_window_close() {
     return glfwWindowShouldClose(_raw_window);
+}
+
+bool Window::is_resized() {
+    return resized;
+}
+
+void Window::set_resized() {
+    resized = false;
 }
 
 void Window::update() {

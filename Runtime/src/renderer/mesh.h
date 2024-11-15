@@ -80,11 +80,10 @@ namespace catos {
 
         void draw(Shader& shader)
         {
-            shader.setTransform("transform", transform);
             glBindVertexArray(VAO);
-            //glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
+            shader.setTransform("transform", transform);
             glDrawArrays(GL_TRIANGLES, 0, 36);
-            glBindVertexArray(0);
+
         }
 
         void destroy() {

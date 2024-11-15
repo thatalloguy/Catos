@@ -135,6 +135,7 @@ int main() {
     };
 
     Mesh triangle{};
+    Mesh floor{};
     Texture tex{};
 
 
@@ -148,11 +149,19 @@ int main() {
     mat = glm::translate(mat, {0.2, 0.2, -2});
     mat = glm::rotate(mat, glm::radians(30.0f), glm::vec3(0, 1, 0));
 
+    glm::mat4 floorMat{1.0f};
+    floorMat = glm::translate(floorMat, {0, -5, 0});
+    floorMat = glm::scale(floorMat, {100, 1, 100});
+
     tex.init(texinfo);
 
     triangle.init(triangleInfo);
     triangle._texture = &tex;
     triangle.transform = glm::value_ptr(mat);
+
+    floor.init(triangleInfo);
+    floor._texture = &tex;
+    floor.transform = glm::value_ptr(floorMat);
 
     // Shaders.
     ShaderCreateInfo shaderInfo {
@@ -173,6 +182,7 @@ int main() {
     RenderPassCreationInfo colorPassInfo{
             .willBeVisible = true,
             .size = {800, 600},
+            .resizeToRenderSize = true,
 
             .passLogic = lightLogic
     };
@@ -209,6 +219,7 @@ int main() {
     defaultPipeline.setBeginPass(shadowPass);
 
     defaultPipeline.addMesh(triangle);
+    defaultPipeline.addMesh(floor);
 
 
     //calc camera
@@ -218,16 +229,25 @@ int main() {
     glm::mat4 cam{1.0f};
 
 
-    proj = glm::perspective(glm::radians(90.0f), (float) 800 / (float) 600, 0.01f, 1000.0f);
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-    cam = proj * view;
 
 
     while (!window.should_window_close()) {
         window.update();
 
+        auto winSize = window.getSize();
+
+        proj = glm::perspective(glm::radians(90.0f), winSize.x / winSize.y, 0.01f, 1000.0f);
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+        cam = proj * view;
+
         defaultPipeline.draw(glm::value_ptr(cam));
+
+        if (window.is_resized()) {
+
+            defaultPipeline.resize(winSize.x, winSize.y);
+            window.set_resized();
+        }
     }
 
     triangle.destroy();

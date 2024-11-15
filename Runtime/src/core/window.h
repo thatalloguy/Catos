@@ -36,7 +36,11 @@ namespace catos {
 
         static math::Vector2 getMonitorSize();
 
+        math::Vector2 getSize();
+
         bool should_window_close();
+        bool is_resized();
+        void set_resized();
 
         void update();
 
@@ -46,6 +50,8 @@ namespace catos {
     private:
         GLFWwindow* _raw_window;
         WindowCreationInfo& _createInfo;
+
+        bool _is_resized = false;
 
         void enable_dark_theme();
 

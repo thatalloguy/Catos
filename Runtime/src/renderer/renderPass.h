@@ -91,20 +91,24 @@ namespace catos {
 
         /// isFinal is wether or not the User will see this texture.
         bool isFinal() { return _isFinal; };
+        bool shouldResize() { return _shouldResize; };
+
+        PassType getPassType() { return _passType; };
+        ImageType getImageType() { return _imageType; };
 
         string& getName() { return name; };
         RenderPass* getNext() { return next; };
-
         Vector2 getSize() { return _size; };
-
         RenderPassLogic* getRenderPassLogic() { return _render_logic; };
 
-    private:
+        void destroyTextures();
+        void setSize(const Vector2& newSize);
 
         void generateFrameBuffer(const Vector2& size);
         void generateColorBuffer(const Vector2& size, PassType type, ImageType imageType);
         void generateRenderBuffer(const Vector2& size);
 
+    private:
 
         unsigned int frameBuffer;
         unsigned int colorBuffer;
@@ -114,6 +118,9 @@ namespace catos {
 
         bool _isFinal = false;
         bool _shouldResize = false;
+
+        PassType _passType;
+        ImageType _imageType;
 
         Shader& shader;
         RenderPassLogic* _render_logic;

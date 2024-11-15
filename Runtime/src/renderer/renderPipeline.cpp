@@ -29,11 +29,9 @@ void catos::RenderPipeline::draw(float* cameraMat) {
 
     RenderPass* pass = beginPass;
     RenderPass* previous = nullptr;
-    string& passName = beginPass->getName();
 
     while (pass != nullptr) {
 
-        //todo FIX RENDER PASSES!!!!
         pass->bindPass();
 
         if (previous != nullptr)
@@ -82,7 +80,6 @@ void catos::RenderPipeline::draw(float* cameraMat) {
 
 
         if (pass->isFinal()) {
-
             _renderer.renderPassToScreen(*pass);
             break;
         }
@@ -96,4 +93,26 @@ void catos::RenderPipeline::draw(float* cameraMat) {
 
 
 
+}
+
+void catos::RenderPipeline::resize(int newWidth, int newHeight){
+    RenderPass* pass = beginPass;
+
+    while (pass != nullptr) {
+
+        if (pass->shouldResize()){
+
+            pass->destroyTextures();
+
+            pass->generateFrameBuffer({(float) newWidth,(float) newHeight});
+            pass->generateColorBuffer({(float) newWidth,(float) newHeight}, pass->getPassType(), pass->getImageType());
+
+            pass->generateRenderBuffer({(float) newWidth,(float) newHeight});
+
+
+            pass->setSize({(float) newWidth,(float) newHeight});
+        }
+
+        pass = pass->getNext();
+    }
 }

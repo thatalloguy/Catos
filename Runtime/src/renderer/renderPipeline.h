@@ -34,6 +34,8 @@ namespace catos {
 
         void draw(float* cameraMat);
 
+        void resize(int newWidth, int newHeight);
+
 
     private:
 
