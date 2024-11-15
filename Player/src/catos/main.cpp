@@ -232,7 +232,6 @@ int main() {
         defaultPipeline.draw(glm::value_ptr(cam));
 
         if (window.is_resized()) {
-
             defaultPipeline.resize(winSize.x, winSize.y);
             window.set_resized();
         }
