@@ -16,6 +16,8 @@
 
 #include <fstream>
 
+#include "renderer/passes/MainPass.h"
+
 using namespace catos;
 
 
@@ -42,20 +44,6 @@ std::string loadTxtFromFile(const char* path){
     spdlog::error("Couldn't load: ", path);
     throw(errno);
 }
-
-struct LightRenderLogic: RenderPassLogic {
-
-    glm::vec3* cameraPos;
-
-    void onMeshPrepare(RenderPass& pass, Mesh& mesh) override{
-
-        Shader& passShader = pass.getShader();
-
-        passShader.setVector3("lightColor", {1, 1, 1});
-        passShader.setVector3("lightPos", {0, 5, 3});
-        passShader.setVector3("viewPos", {cameraPos->x, cameraPos->y, cameraPos->z});
-    }
-};
 
 int main() {
 
@@ -175,7 +163,7 @@ int main() {
     };
 
 
-    LightRenderLogic* lightLogic = new LightRenderLogic;
+    renderPasses::MainRenderPassLogic* lightLogic = new renderPasses::MainRenderPassLogic;
 
     lightLogic->cameraPos = &cameraPos;
 
@@ -236,7 +224,7 @@ int main() {
 
         auto winSize = window.getSize();
 
-        proj = glm::perspective(glm::radians(90.0f), winSize.x / winSize.y, 0.01f, 1000.0f);
+        proj = glm::perspective(glm::radians(90.0f), winSize.x / winSize.y, 0.01f, 10000.0f);
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         cam = proj * view;
