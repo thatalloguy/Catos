@@ -119,7 +119,7 @@ int main() {
     };
 
     TextureCreationInfo texinfo {
-        .path = "../../../Assets/images.jpg"
+        .path = "../../../Assets/Logo.jpeg"
     };
 
     Mesh triangle{};
