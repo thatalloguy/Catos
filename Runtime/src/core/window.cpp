@@ -47,7 +47,7 @@ Window::Window(catos::WindowCreationInfo &creationInfo) : _createInfo(creationIn
         monitor = NULL;
     }
 
-    _raw_window = glfwCreateWindow(creationInfo.size.x, creationInfo.size.y, creationInfo.title, monitor, NULL);
+    _raw_window = glfwCreateWindow(creationInfo.size.x(), creationInfo.size.y(), creationInfo.title, monitor, NULL);
 
     if (!_raw_window) {
         spdlog::error("Could not create Window");
@@ -88,7 +88,7 @@ math::Vector2 Window::getMonitorSize() {
     glfwInit();
     auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    return math::Vector2{.x = (float) mode->width, .y = (float) mode->height};
+    return math::Vector2{(float) mode->width,(float) mode->height};
 
 
 }

@@ -94,6 +94,5 @@ void catos::Shader::setTransform(const char* name, float* val) {
 
 void catos::Shader::setVector3(const char* name, math::Vector3 vec){
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
-    float _f[3] = {vec.x, vec.y, vec.z};
-    glUniform3fv(loc, 1, _f);
+    glUniform3fv(loc, 1, vec.value_ptr());
 }

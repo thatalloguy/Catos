@@ -4,6 +4,7 @@
 #pragma once
 #include "renderer/renderPass.h"
 #include "stl/vector.h"
+#include "glm/vec3.hpp"
 
 namespace catos::renderPasses {
 

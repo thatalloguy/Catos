@@ -17,6 +17,7 @@
 #include <fstream>
 
 #include "renderer/passes/MainPass.h"
+#include "math/matrix4.h"
 
 using namespace catos;
 
@@ -132,10 +133,10 @@ int main() {
     glm::vec3 cameraUp{0.0f, 1.0f, 0.0f};
 
 
-    glm::mat4 mat{1.0f};
+    math::Matrix4 mat{};
 
-    mat = glm::translate(mat, {0.2, 0.2, -2});
-    mat = glm::rotate(mat, glm::radians(30.0f), glm::vec3(0, 1, 0));
+    mat.translate({0.2, 0.2, -2});
+    mat.rotate(math::toRadians(30.0f), {0, 1, 0});
 
     glm::mat4 floorMat{1.0f};
     floorMat = glm::translate(floorMat, {0, -5, 0});
@@ -145,7 +146,7 @@ int main() {
 
     triangle.init(triangleInfo);
     triangle._texture = &tex;
-    triangle.transform = glm::value_ptr(mat);
+    triangle.transform = mat.value_ptr();
 
     floor.init(triangleInfo);
     floor._texture = &tex;
@@ -224,7 +225,7 @@ int main() {
 
         auto winSize = window.getSize();
 
-        proj = glm::perspective(glm::radians(90.0f), winSize.x / winSize.y, 0.01f, 10000.0f);
+        proj = glm::perspective(glm::radians(90.0f), winSize.x() / winSize.y(), 0.01f, 10000.0f);
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         cam = proj * view;
@@ -232,7 +233,7 @@ int main() {
         defaultPipeline.draw(glm::value_ptr(cam));
 
         if (window.is_resized()) {
-            defaultPipeline.resize(winSize.x, winSize.y);
+            defaultPipeline.resize(winSize.x(), winSize.y());
             window.set_resized();
         }
     }
