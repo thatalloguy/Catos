@@ -25,9 +25,13 @@ void catos::renderPasses::MainRenderPassLogic::onMeshPrepare(RenderPass& pass, M
 
     Shader& passShader = pass.getShader();
 
-    passShader.setVector3("lightColor", {1, 1, 1});
-    passShader.setVector3("lightPos", {0, 5, 3});
-    passShader.setVector3("viewPos", {cameraPos->x, cameraPos->y, cameraPos->z});
+    static Vector3 lightColor{1, 1, 1};
+    static Vector3 lightPos{0, 5, 3};
+    static Vector3 viewPos{cameraPos->x, cameraPos->y, cameraPos->z};
+
+    passShader.setVector3("lightColor", lightColor);
+    passShader.setVector3("lightPos", lightPos);
+    passShader.setVector3("viewPos", viewPos);
 
 }
 

@@ -61,7 +61,7 @@ namespace catos {
 
         void setTransform(const char* name,float* val);
 
-        void setVector3(const char* name, math::Vector3 vec);
+        void setVector3(const char* name, math::Vector3& vec);
 
     private:
 

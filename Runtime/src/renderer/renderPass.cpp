@@ -64,7 +64,7 @@ void catos::RenderPass::generateColorBuffer(const Vector2 &size, PassType type, 
 
     glBindTexture(GL_TEXTURE_2D, colorBuffer);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, imageType, size.x(), size.y(), 0, imageType, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, imageType, size.x, size.y, 0, imageType, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -81,7 +81,7 @@ void catos::RenderPass::generateRenderBuffer(const Vector2 &size) {
     glGenRenderbuffers(1, &renderBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
 
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, size.x(), size.y());
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, size.x, size.y);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
 }
 

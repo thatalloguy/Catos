@@ -47,7 +47,7 @@ Window::Window(catos::WindowCreationInfo &creationInfo) : _createInfo(creationIn
         monitor = NULL;
     }
 
-    _raw_window = glfwCreateWindow(creationInfo.size.x(), creationInfo.size.y(), creationInfo.title, monitor, NULL);
+    _raw_window = glfwCreateWindow(creationInfo.size.x, creationInfo.size.y, creationInfo.title, monitor, NULL);
 
     if (!_raw_window) {
         spdlog::error("Could not create Window");

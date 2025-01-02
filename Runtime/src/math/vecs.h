@@ -10,34 +10,36 @@ namespace catos::math {
 
     struct Vector2 {
 
+
         float _[2] = { 0.0f, 0.0f };
 
-        float& x() {
-            return _[0];
-        }
-        float& y() {
-            return _[1];
+        float& x = _[0];
+        float& y = _[1];
+
+        float getX() const {
+            return x;
         }
 
-        float x() const {
-            return _[0];
+        float getY() const {
+            return y;
         }
-        float y() const {
-            return _[1];
-        }
-
 
         float operator[](int index) const {
             return _[index];
         }
 
         bool operator==(Vector2& b) {
-            return (this->x() == b.x() && this->y() == b.y());
+            return (this->x == b.x && this->y == b.y);
         }
 
         void operator+(Vector2& b) {
-            this->x() += b.x();
-            this->y() += b.y();
+            this->x += b.x;
+            this->y += b.y;
+        }
+
+        void operator=(const Vector2& b) {
+            _[0] = b.getX();
+            _[1] = b.getY();
         }
 
     };
@@ -52,27 +54,21 @@ namespace catos::math {
 
         float _[3] = {0.0f, 0.0f, 0.0f};
 
-        float& x() {
-            return _[0];
-        }
-        float& y() {
-            return _[1];
-        }
-        float& z() {
-            return _[2];
+        float& x = _[0];
+        float& y = _[1];
+        float& z = _[2];
+
+        float getX() const {
+            return x;
         }
 
-
-        float x() const{
-            return _[0];
-        }
-        float y() const {
-            return _[1];
-        }
-        float z() const {
-            return _[2];
+        float getY() const {
+            return y;
         }
 
+        float getZ() const {
+            return z;
+        }
 
 
         float operator[](int index) const {
@@ -80,14 +76,20 @@ namespace catos::math {
         }
 
         bool operator==(Vector3 &b) {
-            return (this->x() == b.x() && this->y() == b.y() && this->z() == b.z());
+            return (this->x == b.x && this->y == b.y && this->z == b.z);
         }
 
         Vector3& operator=(float val) {
-            this->x() = val;
-            this->y() = val;
-            this->z() = val;
+            this->x = val;
+            this->y = val;
+            this->z = val;
             return *this;
+        }
+
+        void operator=(const Vector3& b) {
+            _[0] = b.getX();
+            _[1] = b.getY();
+            _[2] = b.getZ();
         }
 
         Vector3 operator*(float v) {
@@ -96,20 +98,21 @@ namespace catos::math {
 
 
         void operator+=(Vector3 &b) {
-            this->x() += b.x();
-            this->y() += b.y();
-            this->z() += b.z();
+            this->x += b.x;
+            this->y += b.y;
+            this->z += b.z;
         }
 
         float* value_ptr() {
             return &_[0];
         }
+
     };
 
     static Vector3 normalize(const Vector3& v) {
-        float a = sqrt((v.x() * v.x()) + (v.y() * v.y()) + (v.z() + v.z()));
+        float a = sqrt((v.x * v.x) + (v.y * v.y) + (v.z + v.z));
 
-        return Vector3{v.x() / a, v.y() / a, v.z() / a};
+        return Vector3{v.x / a, v.y / a, v.z / a};
     }
 
     struct Vector4 {
@@ -125,6 +128,27 @@ namespace catos::math {
 
         //Our internal buffer.
         float _[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+        float& x = _[0];
+        float& y = _[1];
+        float& z = _[2];
+        float& w = _[3];
+
+        float getX() const {
+            return x;
+        }
+
+        float getY() const {
+            return y;
+        }
+
+        float getZ() const {
+            return z;
+        }
+
+        float getW() const {
+            return z;
+        }
 
         //Returns the value of the given axis.
         float operator[](int index) const {
@@ -149,8 +173,27 @@ namespace catos::math {
             return {_[0] + v[0], _[1] + v[1], _[2] + v[2], _[3] + v[3]};
         }
 
+        Vector4& operator=(const Vector4& b) {
+            _[0] = b.getX();
+            _[1] = b.getY();
+            _[2] = b.getZ();
+            _[3] = b.getW();
+
+            return *this;
+        }
     };
 
+
+    struct Vector3i {
+
+        Vector3i(float _x, float _y, float _z) {
+            x = _x;
+            y = _y;
+            z = _z;
+        }
+
+        float x, y, z;
+    };
 
     template<typename T>
     static T toRadians(T degrees) {

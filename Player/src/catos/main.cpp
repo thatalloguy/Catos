@@ -225,7 +225,7 @@ int main() {
 
         auto winSize = window.getSize();
 
-        proj = glm::perspective(glm::radians(90.0f), winSize.x() / winSize.y(), 0.01f, 10000.0f);
+        proj = glm::perspective(glm::radians(90.0f), winSize.x / winSize.y, 0.01f, 10000.0f);
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         cam = proj * view;
@@ -233,7 +233,7 @@ int main() {
         defaultPipeline.draw(glm::value_ptr(cam));
 
         if (window.is_resized()) {
-            defaultPipeline.resize(winSize.x(), winSize.y());
+            defaultPipeline.resize(winSize.x, winSize.y);
             window.set_resized();
         }
     }

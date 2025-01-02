@@ -42,7 +42,7 @@ void catos::RenderPipeline::draw(float* cameraMat) {
         }
 
 
-        glViewport(0, 0, pass->getSize().x(), pass->getSize().y());
+        glViewport(0, 0, pass->getSize().x, pass->getSize().y);
 
 
 
