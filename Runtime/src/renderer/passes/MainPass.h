@@ -2,35 +2,35 @@
 // Created by allos on 11/15/2024.
 //
 #pragma once
+
 #include "renderer/renderPass.h"
 #include "stl/vector.h"
-#include "glm/vec3.hpp"
 
 namespace catos::renderPasses {
 
     struct DirectLightUniform {
-        glm::vec3 direction;
+        math::Vector3i direction;
 
-        glm::vec3 ambient;
-        glm::vec3 diffuse;
-        glm::vec3 specular;
+        math::Vector3i ambient;
+        math::Vector3i diffuse;
+        math::Vector3i specular;
     };
 
     struct PointLightUniform {
-        glm::vec3 position;
+        math::Vector3i position;
 
         float constant;
         float linear;
         float quadratic;
 
-        glm::vec3 ambient;
-        glm::vec3 diffuse;
-        glm::vec3 specular;
+        math::Vector3i ambient;
+        math::Vector3i diffuse;
+        math::Vector3i specular;
     };
 
     struct SpotLightUniform {
-        glm::vec3 position;
-        glm::vec3 direction;
+        math::Vector3i position;
+        math::Vector3i direction;
         float cutOff;
         float outerCutOff;
 
@@ -38,15 +38,15 @@ namespace catos::renderPasses {
         float linear;
         float quadratic;
 
-        glm::vec3 ambient;
-        glm::vec3 diffuse;
-        glm::vec3 specular;
+        math::Vector3i ambient;
+        math::Vector3i diffuse;
+        math::Vector3i specular;
     };
 
     struct MainRenderPassLogic: RenderPassLogic {
 
 
-        glm::vec3* cameraPos;
+        math::Vector3* cameraPos;
 
         MainRenderPassLogic();
         ~MainRenderPassLogic();

@@ -43,7 +43,6 @@ target_include_directories(catos-runtime-static PUBLIC src)
 
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/imgui")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/stb")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glm")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pocketpy")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pybind11/")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glfw/include")

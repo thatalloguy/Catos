@@ -11,9 +11,6 @@
 #include "renderer/renderer.h"
 #include "renderer/renderPipeline.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include <fstream>
 
 #include "renderer/passes/MainPass.h"
@@ -128,19 +125,19 @@ int main() {
     Texture tex{};
 
 
-    glm::vec3 cameraPos{0.0f, 0.0f, 0.0f};
-    glm::vec3 cameraFront{0.0f, 0.0f, -1.0f};
-    glm::vec3 cameraUp{0.0f, 1.0f, 0.0f};
+    Vector3 cameraPos{0.0f, 0.0f, 0.0f};
+    Vector3 cameraFront{0.0f, 0.0f, -1.0f};
+    Vector3 cameraUp{0.0f, 1.0f, 0.0f};
 
 
-    math::Matrix4 mat{};
+    Matrix4 mat{};
 
     mat.translate({0.2, 0.2, -2});
     mat.rotate(math::toRadians(30.0f), {0, 1, 0});
 
-    glm::mat4 floorMat{1.0f};
-    floorMat = glm::translate(floorMat, {0, -5, 0});
-    floorMat = glm::scale(floorMat, {100, 1, 100});
+    Matrix4 floorMat{};
+    floorMat.translate({0, -5.0f, 0});
+    floorMat.scale({100, 1.0f, 100});
 
     tex.init(texinfo);
 
@@ -150,7 +147,7 @@ int main() {
 
     floor.init(triangleInfo);
     floor._texture = &tex;
-    floor.transform = glm::value_ptr(floorMat);
+    floor.transform = floorMat.value_ptr();
 
     // Shaders.
     ShaderCreateInfo shaderInfo {
@@ -164,7 +161,7 @@ int main() {
     };
 
 
-    renderPasses::MainRenderPassLogic* lightLogic = new renderPasses::MainRenderPassLogic;
+    auto* lightLogic = new renderPasses::MainRenderPassLogic;
 
     lightLogic->cameraPos = &cameraPos;
 
@@ -213,10 +210,9 @@ int main() {
 
     //calc camera
 
-    glm::mat4 proj{1.0f};
-    glm::mat4 view{1.0f};
-    glm::mat4 cam{1.0f};
-
+    Matrix4 proj{};
+    Matrix4 view{};
+    Matrix4 cam{};
 
 
 
@@ -225,12 +221,13 @@ int main() {
 
         auto winSize = window.getSize();
 
-        proj = glm::perspective(glm::radians(90.0f), winSize.x / winSize.y, 0.01f, 10000.0f);
-        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        proj = math::perspective(math::toRadians(90.0f), winSize.x / winSize.y, 0.01f, 100000.0f);
+        view = math::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
 
         cam = proj * view;
 
-        defaultPipeline.draw(glm::value_ptr(cam));
+        defaultPipeline.draw(cam.value_ptr());
 
         if (window.is_resized()) {
             defaultPipeline.resize(winSize.x, winSize.y);

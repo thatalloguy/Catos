@@ -4,8 +4,6 @@
 
 #include "renderPipeline.h"
 
-#include "spdlog/spdlog.h"
-
 catos::RenderPipeline::RenderPipeline() : _renderer(Renderer::getInstance()) {
 }
 

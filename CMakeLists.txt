@@ -42,7 +42,6 @@ include_directories(Thirdparty/Mono/include/mono-2.0/)
 
 include_directories("Thirdparty/imgui")
 include_directories("Thirdparty/stb")
-include_directories("Thirdparty/glm")
 include_directories("Thirdparty/glfw/include")
 include_directories("Thirdparty/GLAD/include")
 
