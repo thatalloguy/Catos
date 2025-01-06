@@ -53,6 +53,8 @@ namespace catos::renderPasses {
 
         void onPassPrepare(RenderPass& pass) override;
         void onPassEnd(RenderPass& pass) override;
+
+
         void onMeshPrepare(RenderPass& pass, Mesh& mesh) override;
         void onMeshEnd(RenderPass& pass, Mesh& mesh) override;
 

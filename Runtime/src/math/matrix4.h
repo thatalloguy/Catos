@@ -66,6 +66,10 @@ namespace catos::math {
         float* value_ptr() {
             return _[0];
         };
+
+        const float* value_ptr() const {
+            return _[0];
+        }
     };
 
 
@@ -96,6 +100,20 @@ namespace catos::math {
         result[2][2] = - (zFar + zNear) / (zFar - zNear);
         result[2][3] = - 1;
         result[3][2] = - (2 * zFar * zNear) / (zFar - zNear);
+
+        return result;
+    }
+
+    static Matrix4 ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
+        Matrix4 result;
+
+        result[0][0] = 2 / (right - left);
+        result[1][1] = 2 / (top - bottom);
+        result[2][2] = -2 / (zFar - zNear);
+
+        result[3][0] = -(right + left) / (right - left);
+        result[3][1] = -(top + bottom) / (top - bottom);
+        result[3][2] = -(zFar + zNear) / (zFar - zNear);
 
         return result;
     }

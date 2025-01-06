@@ -15,6 +15,7 @@
 
 #include "renderer/passes/MainPass.h"
 #include "math/matrix4.h"
+#include "renderer/passes/ShadowPass.h"
 
 using namespace catos;
 
@@ -125,7 +126,7 @@ int main() {
     Texture tex{};
 
 
-    Vector3 cameraPos{0.0f, 0.0f, 0.0f};
+    Vector3 cameraPos{0.0f, 10.0f, -10.0f};
     Vector3 cameraFront{0.0f, 0.0f, -1.0f};
     Vector3 cameraUp{0.0f, 1.0f, 0.0f};
 
@@ -136,7 +137,7 @@ int main() {
     mat.rotate(math::toRadians(30.0f), {0, 1, 0});
 
     Matrix4 floorMat{};
-    floorMat.translate({0, -5.0f, 0});
+    floorMat.translate({0, -1.0f, 0});
     floorMat.scale({100, 1.0f, 100});
 
     tex.init(texinfo);
@@ -165,7 +166,7 @@ int main() {
 
     lightLogic->cameraPos = &cameraPos;
 
-    RenderPassCreationInfo colorPassInfo{
+    RenderPassCreationInfo colorPassInfo {
             .willBeVisible = true,
             .size = {800, 600},
             .resizeToRenderSize = true,
@@ -185,13 +186,20 @@ int main() {
 
     RenderPass defaultPass{colorPassInfo, triangleShader};
 
-    RenderPassCreationInfo shadowPassInfo{
+    renderPasses::ShadowPassLogic* shadowPassLogic = new renderPasses::ShadowPassLogic{};
+    shadowPassLogic->setDirection({0.7f, 1.0f, 0});
+    shadowPassLogic->setDistance(20.0f);
+    shadowPassLogic->setOrigin({0, 0, 0});
+
+    RenderPassCreationInfo shadowPassInfo {
         .willBeVisible = false,
-        .size = {800, 600},
+        .size = {1024, 1024},
         .passType =  PassType::DEPTH,
         .imageType = ImageType::DEPTH_IMG,
         .next = &defaultPass,
-        .name = "shadowPass"
+        .name = "shadowPass",
+
+        .passLogic = shadowPassLogic
     };
 
 
@@ -222,7 +230,7 @@ int main() {
         auto winSize = window.getSize();
 
         proj = math::perspective(math::toRadians(90.0f), winSize.x / winSize.y, 0.01f, 100000.0f);
-        view = math::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        view = math::lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, cameraUp);
 
 
         cam = proj * view;

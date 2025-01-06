@@ -6,6 +6,7 @@
 #include <math/vecs.h>
 #include <renderer/shader.h>
 
+#include "math/matrix4.h"
 #include "mesh.h"
 #include "stl/string.h"
 
@@ -40,6 +41,7 @@ namespace catos {
 
         virtual void onPassPrepare(RenderPass& pass) {};
         virtual void onPassEnd(RenderPass& pass) {};
+
 
         virtual void onMeshPrepare(RenderPass& pass, Mesh& mesh) {};
         virtual void onMeshEnd(RenderPass& pass, Mesh& mesh) {};

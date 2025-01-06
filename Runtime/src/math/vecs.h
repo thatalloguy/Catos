@@ -123,7 +123,7 @@ namespace catos::math {
             return {x - b.x, y - b.y, z - b.z};
         }
 
-        Vector3 operator+(Vector3& b) const {
+        Vector3 operator+(const Vector3& b) const {
             return Vector3{x + b.x, y + b.y, z + b.z};
         }
 
