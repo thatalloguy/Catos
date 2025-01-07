@@ -17,8 +17,6 @@
 #include "math/matrix4.h"
 #include "renderer/passes/ShadowPass.h"
 
-#include "../../Thirdparty/glm/glm/mat4x4.hpp"
-
 using namespace catos;
 
 
@@ -188,7 +186,6 @@ int main() {
 
     RenderPass defaultPass{colorPassInfo, triangleShader};
 
-    /*
     renderPasses::ShadowPassLogic* shadowPassLogic = new renderPasses::ShadowPassLogic{};
     shadowPassLogic->setDirection({0.7f, 1.0f, 0});
     shadowPassLogic->setDistance(20.0f);
@@ -206,7 +203,6 @@ int main() {
     };
 
     RenderPass shadowPass{shadowPassInfo, shadowShader};
-    */
 
     Renderer& renderer = Renderer::getInstance();
     renderer.init(rendererInfo);
