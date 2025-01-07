@@ -23,8 +23,9 @@ namespace catos {
 
     /// Shader Type (more to be added in the future such as geometry).
     enum ShaderType: unsigned int {
-        VERTEX = GL_VERTEX_SHADER,
-        FRAGMENT = GL_FRAGMENT_SHADER,
+        VERTEX = 0x8B31,
+        FRAGMENT = 0x8B30,
+        GEOMETRY = 0x8DD9,
     };
 
     struct ShaderCreateInfo {
