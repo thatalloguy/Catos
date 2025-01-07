@@ -80,7 +80,7 @@ namespace WorldTreeView {
     }
 
     void setup_docking(ImGuiID dockspace, DockInfo& info) {
-        ImGui::DockBuilderDockWindow("World Tree", info.right);
+        //ImGui::DockBuilderDockWindow("World Tree", info.right);
     }
 
 

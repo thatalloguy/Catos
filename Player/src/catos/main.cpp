@@ -188,6 +188,7 @@ int main() {
 
     RenderPass defaultPass{colorPassInfo, triangleShader};
 
+    /*
     renderPasses::ShadowPassLogic* shadowPassLogic = new renderPasses::ShadowPassLogic{};
     shadowPassLogic->setDirection({0.7f, 1.0f, 0});
     shadowPassLogic->setDistance(20.0f);
@@ -205,13 +206,14 @@ int main() {
     };
 
     RenderPass shadowPass{shadowPassInfo, shadowShader};
+    */
 
     Renderer& renderer = Renderer::getInstance();
     renderer.init(rendererInfo);
 
     RenderPipeline defaultPipeline{};
 
-    defaultPipeline.setBeginPass(shadowPass);
+    defaultPipeline.setBeginPass(defaultPass);
 
     defaultPipeline.addMesh(triangle);
     defaultPipeline.addMesh(floor);

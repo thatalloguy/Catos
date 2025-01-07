@@ -9,7 +9,7 @@
 #include "imgui_internal.h"
 
 #include "World/WorldTreeView.h"
-#include "extensions/imgui_dock.h"
+//#include "extensions/imgui_dock.h"
 
 namespace catos::Editor {
 
@@ -53,14 +53,15 @@ void catos::Editor::init() {
     init_tabs();
 
 
+    /*
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    ImGui::GetIO().IniFilename = nullptr; /// todo add this
+    ImGui::GetIO().IniFilename = nullptr; /// todo add this*/
 
     init_style();
 
     _initialized = true;
 
-    ImGui::InitDock();
+    //ImGui::InitDock();
 
 
 }
@@ -73,6 +74,7 @@ void catos::Editor::run() {
         _window->update();
 
 
+        /*
         static bool first = true;
         static ImGuiID dockspace_id;
         if (first) {
@@ -109,6 +111,7 @@ void catos::Editor::run() {
         }
 
         ImGui::End();
+        */
 
 
     }

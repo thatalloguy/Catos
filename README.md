@@ -36,22 +36,19 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Ability to create new RenderPasses.
 - - [x] Ability to create new pipelines.
 - - [x] Ability to bind objects to pipelines / passes.
-- - [ ] More general control over the entire render pipeline.
-- - [ ] Loading GLTF files.
+- - [x] More general control over the entire render pipeline.
 ---
 - [ ] Renderer (High level):
-- - [ ] ~~Defered rendering~~.
-- - [ ] GLTF loader.
-- - [ ] Shadows (Either cascaded or adaptive shadow mapping).
-- - [ ] PBR render pipeline.
-- - [ ] SSAO.
+- - [ ] Cascaded Shadows.
 - - [ ] Bloom.
+- - [ ] GLTF loader.
+- - [ ] PBR render pipeline.
 - - [ ] (Skeleton) Animations.
 ---
 - [ ] Solid Serialization System.
 - - [ ] Saving most objects to json or binary.
 - - [ ] Loading most objects from json or binary.
-- - [ ] Support for (custom) STL objects (string, vector, etc..)
+- - [ ] Support for (custom) STL objects (string, vector, hashmap)
 ---
 - [ ] Resource manager
 - - [ ] Finding files only by Name not a path.
@@ -64,24 +61,36 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] Better audio settings.
 - - [ ] Better steam audio integration.
 - - [ ] Effects such as fall-off.
+- - [ ] More optimization
 ---
 - Good Input System
 - - [ ] Ability to define actions.
 - - [ ] Binding both controller input and keyboard / mouse input to actions.
+- - [ ] API func that only returns true when an action is pressed initially 
+---
+- Nodes
+- - [ ] Camera3D
+- - [ ] Mesh3D
+- - [ ] RigidBody3D
+- - [ ] Collider3D
+- - [ ] Attaching scripts to nodes.
 ---
 - [ ] A tweening API.
 ---
 - Utils
 - - [ ] Commands.
+- - [ ] Debug camera
 --- 
 - [ ] UI system.
 - - [ ] Kinda like HTML.
 ---
 - [ ] Editor 
-- - [ ] ECS manipulation.
+- - [ ] Node manipulation.
 - - [ ] Project management.
 - - [ ] World View tab
 - - [ ] Asset browser.
+- - [ ] Undo/redo
+- - [ ] Copy/paste
 #
 
 
