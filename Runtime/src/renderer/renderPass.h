@@ -30,9 +30,14 @@ namespace catos {
         STENCIL = 0x8D20,
     };
 
-    enum ImageType: unsigned int {
+    enum ColorType: unsigned int {
         RGB = 0x1907,
         DEPTH_IMG  =  0x1902,
+    };
+
+    enum ImageType {
+        IMG_2D = 0x0DE1,
+        IMG_ARRAY = 0x8C1A,
     };
 
     struct RenderPassLogic {
@@ -60,7 +65,10 @@ namespace catos {
         bool resizeToRenderSize = false;
 
         PassType passType = PassType::COLOR;
-        ImageType imageType = ImageType::RGB;
+        ColorType colorType = ColorType::RGB;
+        ImageType imageType = ImageType::IMG_2D;
+
+        int textureAmount = 1;
 
         RenderPass* next = nullptr;
         string&& name = "None";
@@ -96,7 +104,9 @@ namespace catos {
         bool shouldResize() { return _shouldResize; };
 
         PassType getPassType() { return _passType; };
+        ColorType getColorType() { return _colorType; };
         ImageType getImageType() { return _imageType; };
+        int getTexAmount() { return _tex_amount; };
 
         string& getName() { return name; };
         RenderPass* getNext() { return next; };
@@ -107,7 +117,7 @@ namespace catos {
         void setSize(const Vector2& newSize);
 
         void generateFrameBuffer(const Vector2& size);
-        void generateColorBuffer(const Vector2& size, PassType type, ImageType imageType);
+        void generateColorBuffer(const Vector2& size, PassType type, ColorType colorType, ImageType imageType, int tex_amount);
         void generateRenderBuffer(const Vector2& size);
 
     private:
@@ -122,7 +132,9 @@ namespace catos {
         bool _shouldResize = false;
 
         PassType _passType;
+        ColorType _colorType;
         ImageType _imageType;
+        int _tex_amount = 0;
 
         Shader& shader;
         RenderPassLogic* _render_logic;

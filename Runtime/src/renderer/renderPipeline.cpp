@@ -103,7 +103,7 @@ void catos::RenderPipeline::resize(int newWidth, int newHeight){
             pass->destroyTextures();
 
             pass->generateFrameBuffer({(float) newWidth,(float) newHeight});
-            pass->generateColorBuffer({(float) newWidth,(float) newHeight}, pass->getPassType(), pass->getImageType());
+            pass->generateColorBuffer({(float) newWidth,(float) newHeight}, pass->getPassType(), pass->getColorType(), pass->getImageType(), pass->getTexAmount());
 
             pass->generateRenderBuffer({(float) newWidth,(float) newHeight});
 

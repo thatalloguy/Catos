@@ -15,13 +15,15 @@ catos::RenderPass::RenderPass(const catos::RenderPassCreationInfo &info, catos::
     _shouldResize = info.resizeToRenderSize;
 
     _passType = info.passType;
+    _colorType = info.colorType;
     _imageType = info.imageType;
+    _tex_amount = info.textureAmount;
 
     _size = info.size;
 
     generateFrameBuffer(info.size);
 
-    generateColorBuffer(info.size, info.passType, info.imageType);
+    generateColorBuffer(info.size, info.passType, info.colorType, info.imageType, info.textureAmount);
 
     if (info.passType != PassType::DEPTH) {
         generateRenderBuffer(info.size);
@@ -59,16 +61,23 @@ void catos::RenderPass::generateFrameBuffer(const Vector2 &size) {
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 }
 
-void catos::RenderPass::generateColorBuffer(const Vector2 &size, PassType type, ImageType imageType) {
+void catos::RenderPass::generateColorBuffer(const Vector2 &size, PassType type, ColorType colorType, ImageType imageType, int tex_amount) {
     glGenTextures(1, &colorBuffer);
 
-    glBindTexture(GL_TEXTURE_2D, colorBuffer);
+    glBindTexture(imageType, colorBuffer);
+    if (imageType == IMG_ARRAY) {
+        glTexImage3D(
+                imageType, 0, colorType, size.x, size.y,  tex_amount,
+                0, type, GL_FLOAT, nullptr
+            );
+    } else {
+        glTexImage2D(imageType, 0, colorType, size.x, size.y, 0, colorType, GL_UNSIGNED_BYTE, NULL);
+    }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, imageType, size.x, size.y, 0, imageType, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(imageType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(imageType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, type, GL_TEXTURE_2D, colorBuffer, 0);
+    glFramebufferTexture(GL_FRAMEBUFFER, type, colorBuffer, 0);
 
     if (type == PassType::DEPTH)
     {

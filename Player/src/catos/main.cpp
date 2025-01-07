@@ -17,6 +17,8 @@
 #include "math/matrix4.h"
 #include "renderer/passes/ShadowPass.h"
 
+#include "../../Thirdparty/glm/glm/mat4x4.hpp"
+
 using namespace catos;
 
 
@@ -195,13 +197,12 @@ int main() {
         .willBeVisible = false,
         .size = {1024, 1024},
         .passType =  PassType::DEPTH,
-        .imageType = ImageType::DEPTH_IMG,
+        .colorType = ColorType::DEPTH_IMG,
         .next = &defaultPass,
         .name = "shadowPass",
 
         .passLogic = shadowPassLogic
     };
-
 
     RenderPass shadowPass{shadowPassInfo, shadowShader};
 
