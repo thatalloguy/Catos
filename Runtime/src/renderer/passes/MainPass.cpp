@@ -13,7 +13,7 @@ catos::renderPasses::MainRenderPassLogic::~MainRenderPassLogic() {
 
 }
 
-void catos::renderPasses::MainRenderPassLogic::onPassPrepare(RenderPass& pass) {
+void catos::renderPasses::MainRenderPassLogic::onPassPrepare(RenderPass& pass, Matrix4& camera) {
 
 }
 

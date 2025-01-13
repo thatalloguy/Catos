@@ -4,8 +4,10 @@
 
 #ifndef CATOS_HASHMAP_H
 #define CATOS_HASHMAP_H
+#include "string.h"
 
-namespace catos {
+
+namespace catos{
 
     //std::exception kiss my ass >:(
     struct no_item_found {
@@ -65,6 +67,16 @@ namespace catos {
     };
 
 
+        struct StringHashFunc {
+        size_t operator()(const string& key, int Size) const {
+            unsigned int hash = 0;
+            for (auto it = key.begin(); it != key.end(); ++it) {
+                hash = *it + (hash << 6) + (hash << 16) - hash;
+            }
+            hash = hash % Size;
+            return hash;
+        }
+    };
 
     /**
      * Hashmap structure object.
@@ -84,6 +96,21 @@ namespace catos {
         ~hashmap() {
            cleanup();
         }
+
+
+        hashnode<K, V>* getStartHashNode() {
+            auto entry = buf[0];
+            int i = 0;
+            while (entry == nullptr && i<maxSize) {
+                i++;
+                entry = buf[i];
+                if (entry != nullptr) {
+                    return entry;
+                }
+            }
+
+            return buf[0];
+        };
 
         /// Gets the value based on the key given.
         V get(const K& key) {
@@ -106,7 +133,7 @@ namespace catos {
         bool has(const K& key)
         {
 
-            unsigned int index = hashFunc(key, maxSize);
+            int index = hashFunc(key, maxSize);
             auto entry = buf[index];
 
             // loop through all of the buckets with the same hash until we found the right key.
@@ -232,6 +259,11 @@ namespace catos {
             buf = temp;
         }
 
+        int maxLength() { return maxSize; };
+
+        hashnode<K, V>* getNode(int pos) {
+            return buf[pos];
+        }
     private:
 
         void cleanup() {
@@ -270,6 +302,7 @@ namespace catos {
         int maxSize = 0;
 
     };
+
 
 }
 

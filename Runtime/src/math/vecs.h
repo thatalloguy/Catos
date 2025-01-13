@@ -105,10 +105,10 @@ namespace catos::math {
             return *this;
         }
 
-        void operator=(const Vector3& b) {
-            x = b.getX();
-            y = b.getY();
-            z = b.getZ();
+        void operator=(const Vector3i& b) {
+            x = b.x;
+            y = b.y;
+            z = b.z;
         }
 
         Vector3 operator*(float v) const {
@@ -127,10 +127,16 @@ namespace catos::math {
             return Vector3{x + b.x, y + b.y, z + b.z};
         }
 
-        void operator+=(Vector3 &b) {
+        void operator+=(const Vector3 &b) {
             this->x += b.x;
             this->y += b.y;
             this->z += b.z;
+        }
+
+        void operator/=(float v) {
+            x /= v;
+            y /= v;
+            z /= v;
         }
 
         float* value_ptr() {
@@ -188,6 +194,13 @@ namespace catos::math {
             _[3] = w;
         };
 
+        Vector4(float val): Vector4i(val, val, val, val) {
+            _[0] = x;
+            _[1] = y;
+            _[2] = z;
+            _[3] = w;
+        }
+
         Vector4() = default;
 
         //Our internal buffer.
@@ -213,7 +226,26 @@ namespace catos::math {
         // Returns the begin of our internal buffer.
         // Meant for opengl uniforms
         float* value_ptr() {
+            _[0] = x;
+            _[1] = y;
+            _[2] = z;
+            _[3] = w;
+
             return &_[0];
+        }
+
+
+        float operator[](int index)const {
+            return _[index];
+        }
+
+        float operator[](int index)  {
+            _[0] = x;
+            _[1] = y;
+            _[2] = z;
+            _[3] = w;
+
+            return _[index];
         }
 
         Vector4 operator*(float v) {
@@ -228,14 +260,10 @@ namespace catos::math {
             return {x + v.x, y +  v.x, z + v.z, w +  v.w};
         }
 
-        Vector4& operator=(const Vector4& b) {
-            x = b.getX();
-            y = b.getY();
-            z = b.getZ();
-            w = b.getW();
-
-            return *this;
+        Vector4 operator/(float val) const {
+            return {x / val, y / val, z / val, w / val};
         }
+
     };
 
 

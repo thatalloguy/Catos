@@ -32,7 +32,7 @@ namespace catos {
 
         RenderPipelineStatus addMesh(Mesh& mesh);
 
-        void draw(float* cameraMat);
+        void draw(Matrix4& camera);
 
         void resize(int newWidth, int newHeight);
 

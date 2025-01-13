@@ -44,7 +44,7 @@ namespace catos {
 
         virtual ~RenderPassLogic() = default;
 
-        virtual void onPassPrepare(RenderPass& pass) {};
+        virtual void onPassPrepare(RenderPass& pass, Matrix4& camera_matrix) {};
         virtual void onPassEnd(RenderPass& pass) {};
 
 

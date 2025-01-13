@@ -5,31 +5,35 @@
 
 #include "renderer/renderPass.h"
 
+#include <glm/mat4x4.hpp>
+
 namespace catos::renderPasses {
 
 
     struct ShadowPassLogic: RenderPassLogic {
 
         ShadowPassLogic();
-        ~ShadowPassLogic();
+        ~ShadowPassLogic() override;
 
-        void onPassPrepare(RenderPass& pass) override;
+        void updateCameraInfo(Matrix4& view, const Vector2& viewport, float fov, float near_plane, float far_plane);
+        void setDirection(const Vector3i& vec);
+
+        void onPassPrepare(RenderPass& pass, Matrix4& camera) override;
         void onPassEnd(RenderPass& pass) override;
         void onMeshPrepare(RenderPass& pass, Mesh& mesh) override;
         void onMeshEnd(RenderPass& pass, Mesh& mesh) override;
 
-        void setDistance(float new_distance);
-        void setOrigin(const Vector3i& vec);
-        void setDirection(const Vector3i& vec);
 
     private:
-        float distance = 0.0f;
-        math::Vector3 origin{0, 0, 0};
-        math::Vector3 direction{0, 0, 0};
+        unsigned int matricesUBO;
 
-        math::Matrix4 shadowView{};
+        Vector3 lightDir{20.0f, 50.0f, 0.0f};
+        Vector3 origin{0.0f, 0.0f, 0.0f};
+        catos::vector<float> shadowCascadeLevels;
+        catos::vector<Matrix4> lightMatrices;
+        Matrix4 cameraView{};
 
-        void calcShadowMat4();
+        Matrix4 calcLightMatrices(float distance);
 
     };
 

@@ -24,6 +24,10 @@ void catos::Shader::init(const catos::ShaderCreateInfo &createInfo) {
         spdlog::info("W");
     }
 
+    if (createInfo.geometrySRC != nullptr) {
+        addSubShader(createInfo.geometrySRC, ShaderType::GEOMETRY);
+    }
+
 
     glLinkProgram(shaderProgram);
 }
@@ -95,4 +99,14 @@ void catos::Shader::setTransform(const char* name, float* val) {
 void catos::Shader::setVector3(const char* name, math::Vector3& vec){
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
     glUniform3fv(loc, 1, vec.value_ptr());
+}
+
+void catos::Shader::setFloat(const char *name, float val) {
+    unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    glUniform1f(loc, val);
+}
+
+void catos::Shader::setVector3GLM(const char *name, float *ptr) {
+    unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    glUniform3fv(loc, 1, ptr);
 }

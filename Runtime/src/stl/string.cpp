@@ -3,6 +3,7 @@
 //
 
 #include <cstring>
+#include <cstdio>
 #include "string.h"
 
 catos::string::~string() {
@@ -11,14 +12,17 @@ catos::string::~string() {
 
 }
 
+catos::string::string(int new_size) {
+    size = new_size;
+    buf = new char[size];
+}
+
 catos::string::string(const char *buffer) {
     size = strlen(buffer);
     buf = new char[size + 1];
     strncpy_s(buf, size + 1, buffer, size);
 
 }
-
-void catos::string::reserve(int length){}
 
 catos::string::string(const catos::string &obj) {
     size = obj.size;
@@ -77,6 +81,20 @@ catos::string catos::string::operator+(const catos::string &obj) {
     return s;
 }
 
-char catos::string::operator[](int a) {
-    return buf[a];
+
+
+bool catos::string::operator==(const string& obj) const {
+    const char* a = obj.c_str();
+    const char* b = buf;
+    bool result = strcmp(a, b);
+
+    return !result;
+}
+
+bool catos::string::operator!=(const string& obj) const {
+    const char* a = obj.c_str();
+    const char* b = buf;
+    bool result = strcmp(a, b);
+
+    return result;
 }

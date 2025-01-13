@@ -48,6 +48,7 @@ include_directories("Thirdparty/GLAD/include")
 include_directories(Thirdparty/pocketpy/include/pybind11/)
 include_directories(Thirdparty/pocketpy/include/)
 include_directories(Thirdparty/pocketpy/include/pocketpy/)
+include_directories("Thirdparty/glm")
 
 add_library(catos-headers INTERFACE)
 

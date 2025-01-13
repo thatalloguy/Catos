@@ -54,11 +54,15 @@ namespace catos {
             (push_back(args), ...);
         }
 
-        /// Copies the obj.
-        vector<T>& operator=(const vector<T>& obj) {
-            if (this == obj) return *this; // no self asignment.
+        ~vector() {
+            delete[] buf;
+        }
 
-            if (maxSize >= obj.size)
+        /// Copies the obj.
+        vector& operator=(vector& obj) {
+            //if (*this == obj) return *this; // no self asignment.
+
+            if (obj.size >= maxSize)
                 reserve(obj.size);
 
 
@@ -74,7 +78,6 @@ namespace catos {
 
             // no need if its the smaller or same size.
             if (amount <= maxSize) return;
-
 
             //allocate a new buffer with the desired size.
             T* temp = new T[amount];
@@ -134,15 +137,7 @@ namespace catos {
 
         /// clears the buffer
         void clear() {
-
-
-            if (buf != nullptr) {
-                delete[] buf;
-            }
-
-            maxSize = 0;
             size = 0;
-
         };
 
         /// removes the item at the index
@@ -196,13 +191,7 @@ namespace catos {
 
 
         /// Deletes the allocated objects.
-        ~vector() {
 
-            if (buf != nullptr) {
-                delete[] buf;
-            }
-
-        };
 
 
         /* --- Iterator stuff */

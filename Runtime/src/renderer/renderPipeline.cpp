@@ -23,14 +23,20 @@ catos::RenderPipelineStatus catos::RenderPipeline::addMesh(Mesh& mesh) {
     return RenderPipelineStatus::SUCCESS;
 }
 
-void catos::RenderPipeline::draw(float* cameraMat) {
+void catos::RenderPipeline::draw(Matrix4& cameraMat) {
 
     RenderPass* pass = beginPass;
     RenderPass* previous = nullptr;
 
     while (pass != nullptr) {
 
+
+        RenderPassLogic* renderLogic = pass->getRenderPassLogic();
         pass->bindPass();
+
+        if (renderLogic != nullptr) {
+            renderLogic->onPassPrepare(*pass, cameraMat);
+        }
 
         if (previous != nullptr)
         {
@@ -48,18 +54,17 @@ void catos::RenderPipeline::draw(float* cameraMat) {
             pass->getShader().bind();
             //todo need better way to do this :|
             pass->getShader().setInt("albedo", 1);
-            pass->getShader().setTransform("cameraMat", cameraMat);
+            pass->getShader().setTransform("cameraMat", cameraMat.value_ptr());
 
             if (previous != nullptr) {
                 glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, previous->getPassTexture());
+                glBindTexture(previous->getImageType(), previous->getPassTexture());
             }
 
             if (mesh._texture != nullptr) {
                 mesh._texture->bind();
             }
 
-            RenderPassLogic* renderLogic = pass->getRenderPassLogic();
 
             if (renderLogic != nullptr){
                 renderLogic->onMeshPrepare(*pass, mesh);
@@ -73,6 +78,9 @@ void catos::RenderPipeline::draw(float* cameraMat) {
             }
         }
 
+        if (renderLogic != nullptr) {
+            renderLogic->onPassEnd(*pass);
+        }
 
         pass->unbindPass();
 

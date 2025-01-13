@@ -47,6 +47,7 @@ target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/incl
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pybind11/")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glfw/include")
 target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glad/include/")
+target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glm")
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c src/tests/*.cpp)
 add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST})

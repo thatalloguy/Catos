@@ -31,6 +31,7 @@ namespace catos {
     struct ShaderCreateInfo {
         const char* vertexSRC = nullptr;
         const char* fragmentSRC = nullptr;
+        const char* geometrySRC = nullptr;
     };
 
     /*
@@ -59,10 +60,11 @@ namespace catos {
 
         /// Sets a int uniform
         void setInt(const char* name, int val);
-
+        void setFloat(const char* name, float val);
         void setTransform(const char* name,float* val);
 
         void setVector3(const char* name, math::Vector3& vec);
+        void setVector3GLM(const char* name, float* ptr);
 
     private:
 

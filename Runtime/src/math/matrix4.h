@@ -90,6 +90,21 @@ namespace catos::math {
         return result;
     }
 
+    inline Vector4 operator*(Matrix4& m, const Vector4& v) {
+        Vector4 mov0{v[0]};
+        Vector4 mov1{v[1]};
+        Vector4 mul0 = Vector4{m[0][0], m[0][1], m[0][2], m[0][3]} * mov0;
+        Vector4 mul1 =Vector4{m[1][0], m[1][1], m[1][2], m[1][3]}  * mov1;
+        Vector4 add0 = mul0 + mul1;
+        Vector4 mov2{v[2]};
+        Vector4 mov3{v[3]};
+        Vector4 mul2 = Vector4{m[2][0], m[2][1], m[2][2], m[2][3]} * mov2;
+        Vector4 mul3 = Vector4{m[3][0], m[3][1], m[3][2], m[3][3]}  * mov3;
+        Vector4 add1 = mul2 + mul3;
+        Vector4 add2 = add0 + add1;
+        return add2;
+    }
+
     static Matrix4 perspective(float fov, float aspect, float zNear, float zFar) {
         Matrix4 result{};
 

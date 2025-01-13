@@ -15,10 +15,10 @@ namespace catos {
         /// Initializes the internal buff to nullptr and size to 0.
         string() : buf(nullptr), size(0) {};
 
+        string(int size);
+
         /// Copies the char array to the internal buffer.
         string(const char* buffer);
-
-        void reserve(int length);
 
         /// Copies string object to its internal values.
         string(const string& obj);
@@ -35,7 +35,11 @@ namespace catos {
         /// Adds a string to itself.
         string operator+(const string& obj);
 
-        char operator[](int a);
+        /// returns if the strings are not the same
+        bool operator==(const string& obj) const;
+
+        /// returns if the strings are the same
+        bool operator!=(const string& obj) const;
 
         /// Returns the size of the internal buffer.
         unsigned int length() { return size; };
@@ -43,7 +47,8 @@ namespace catos {
         /// Returns the internal buffer;
         const char* c_str() const { return buf; };
 
-
+        char* begin() const {return &buf[0]; };
+        char* end() const {return &buf[size - 1]; };
 
         /// Deletes the allocated char array
         ~string();

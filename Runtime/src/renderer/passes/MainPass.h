@@ -51,7 +51,7 @@ namespace catos::renderPasses {
         MainRenderPassLogic();
         ~MainRenderPassLogic();
 
-        void onPassPrepare(RenderPass& pass) override;
+        void onPassPrepare(RenderPass& pass, Matrix4& camera) override;
         void onPassEnd(RenderPass& pass) override;
 
 

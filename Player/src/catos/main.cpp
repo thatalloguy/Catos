@@ -26,6 +26,7 @@ std::string fragmentShaderSource;
 
 std::string shadowVertex;
 std::string shadowFragment;
+std::string shadowGeometry;
 
 std::string loadTxtFromFile(const char* path){
     std::ifstream in(path, std::ios::binary);
@@ -50,6 +51,9 @@ int main() {
     fragmentShaderSource = loadTxtFromFile("../../../Assets/Shaders/default.frag");
     shadowVertex         = loadTxtFromFile("../../../Assets/Shaders/shadow.vert");
     shadowFragment       = loadTxtFromFile("../../../Assets/Shaders/shadow.frag");
+    shadowGeometry       = loadTxtFromFile("../../../Assets/Shaders/shadow.geom");
+
+
 
     WindowCreationInfo windowCreationInfo{};
 
@@ -133,7 +137,7 @@ int main() {
 
     Matrix4 mat{};
 
-    mat.translate({0.2, 0.2, -2});
+    mat.translate({0.2, 2, -2});
     mat.rotate(math::toRadians(30.0f), {0, 1, 0});
 
     Matrix4 floorMat{};
@@ -158,7 +162,8 @@ int main() {
 
     ShaderCreateInfo shadowShaderInfo {
         shadowVertex.c_str(),
-        shadowFragment.c_str()
+        shadowFragment.c_str(),
+        shadowGeometry.c_str()
     };
 
 
@@ -187,15 +192,15 @@ int main() {
     RenderPass defaultPass{colorPassInfo, triangleShader};
 
     renderPasses::ShadowPassLogic* shadowPassLogic = new renderPasses::ShadowPassLogic{};
-    shadowPassLogic->setDirection({0.7f, 1.0f, 0});
-    shadowPassLogic->setDistance(20.0f);
-    shadowPassLogic->setOrigin({0, 0, 0});
+    shadowPassLogic->setDirection({0.6, 1.0f, 0.0f});
 
     RenderPassCreationInfo shadowPassInfo {
         .willBeVisible = false,
         .size = {1024, 1024},
         .passType =  PassType::DEPTH,
         .colorType = ColorType::DEPTH_IMG,
+        .imageType = ImageType::IMG_ARRAY,
+        .textureAmount = 5,
         .next = &defaultPass,
         .name = "shadowPass",
 
@@ -209,7 +214,7 @@ int main() {
 
     RenderPipeline defaultPipeline{};
 
-    defaultPipeline.setBeginPass(defaultPass);
+    defaultPipeline.setBeginPass(shadowPass);
 
     defaultPipeline.addMesh(triangle);
     defaultPipeline.addMesh(floor);
@@ -234,7 +239,9 @@ int main() {
 
         cam = proj * view;
 
-        defaultPipeline.draw(cam.value_ptr());
+        shadowPassLogic->updateCameraInfo(view, winSize, 90.0f, 0.01f, 100000.0f);
+
+        defaultPipeline.draw(cam);
 
         if (window.is_resized()) {
             defaultPipeline.resize(winSize.x, winSize.y);

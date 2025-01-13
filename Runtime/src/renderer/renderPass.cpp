@@ -67,8 +67,8 @@ void catos::RenderPass::generateColorBuffer(const Vector2 &size, PassType type, 
     glBindTexture(imageType, colorBuffer);
     if (imageType == IMG_ARRAY) {
         glTexImage3D(
-                imageType, 0, colorType, size.x, size.y,  tex_amount,
-                0, type, GL_FLOAT, nullptr
+                imageType, 0, GL_DEPTH_COMPONENT32F, size.x, size.y,  tex_amount,
+                0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr
             );
     } else {
         glTexImage2D(imageType, 0, colorType, size.x, size.y, 0, colorType, GL_UNSIGNED_BYTE, NULL);
@@ -101,22 +101,12 @@ void catos::RenderPass::generateRenderBuffer(const Vector2 &size) {
 void catos::RenderPass::bindPass() {
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
-
-
-
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.0f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (_render_logic != nullptr){
-        _render_logic->onPassPrepare(*this);
-    }
 }
 
 void catos::RenderPass::unbindPass() {
-
-    if (_render_logic != nullptr){
-        _render_logic->onPassEnd(*this);
-    }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glUseProgram(0);
