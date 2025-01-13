@@ -28,7 +28,7 @@ uniform float cascadePlaneDistances[16];
 uniform int cascadeCount;   // number of frusta - 1
 
 
-float ShadowCalculation(vec3 fragPosWorldSpace)
+vec2 ShadowCalculation(vec3 fragPosWorldSpace)
 {
 
     vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
@@ -72,11 +72,11 @@ float ShadowCalculation(vec3 fragPosWorldSpace)
        }
 
     if (projCoords.x < 0.3 || projCoords.y < 0.3 || projCoords.z * 200 > 0.7)
-        return 0.0;
+        return vec2(0.0, layer);
 
     shadow /= 9.0;
 
-    return shadow;
+    return vec2(shadow, layer);
 }
 
 void main()
@@ -98,8 +98,8 @@ void main()
 
     objectColor = vec3(0.6, 0.6, 0.6);
 
-    float shadow = ShadowCalculation(FragPos);
+    vec2 shadow = ShadowCalculation(FragPos);
 
-    vec3 result = (ambient + (1.0f - shadow) * (diffuse + specular)) * objectColor;
-    FragColor = vec4(result, 1.0);
+    vec3 result = (ambient + (1.0f - shadow.x) * (diffuse + specular)) * objectColor;
+    FragColor = vec4(result.x, result.y + (shadow.y / 10), result.z, 1.0);
 }
