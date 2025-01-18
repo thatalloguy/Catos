@@ -39,8 +39,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] More general control over the entire render pipeline.
 ---
 - [ ] Renderer (High level):
-- - [ ] Cascaded Shadows.
-- - [ ] Bloom.
+- - [x] Shadows.
 - - [ ] GLTF loader.
 - - [ ] PBR render pipeline.
 - - [ ] (Skeleton) Animations.
