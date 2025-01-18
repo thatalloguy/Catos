@@ -7,82 +7,51 @@ in vec2 TexCoord;
 in vec3 FragPos;
 in vec4 shadowFragPos;
 
-uniform sampler2DArray shadowPass;
+uniform sampler2D shadowPass;
 uniform sampler2D albedo;
-
-uniform mat4 view;
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;
-uniform vec3 lightDir;
 uniform vec3 viewPos;
 
-const float farPlane = 100000.0f;
+float shadowCalc(vec4 shadowFragSpace) {
 
-layout (std140) uniform LightSpaceMatrices
-{
-    mat4 lightSpaceMatrices[16];
-};
-
-uniform float cascadePlaneDistances[16];
-uniform int cascadeCount;   // number of frusta - 1
-
-
-vec2 ShadowCalculation(vec3 fragPosWorldSpace)
-{
-
-    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
-    float depthValue = abs(fragPosViewSpace.z);
-
-    int layer = -1;
-    for (int i = 0; i < cascadeCount; ++i)
-    {
-        if (depthValue < cascadePlaneDistances[i])
-        {
-            layer = i;
-            break;
-        }
-    }
-    if (layer == -1)
-    {
-        layer = cascadeCount;
-    }
-
-    vec4 shadowFragView = lightSpaceMatrices[layer] * vec4(fragPosWorldSpace, 1.0);
-
-    vec3 projCoords = shadowFragView.xyz / shadowFragView.w;
-
+    vec3 projCoords = shadowFragSpace.xyz / shadowFragSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
 
-    float closestDepth = texture(shadowPass, vec3(projCoords.xy, layer)).r * 200.0f;
+    float closestDepth = texture(shadowPass, projCoords.xy).r;
 
-    float currentDepth = projCoords.z * 200.0f;
+    float currentDepth = projCoords.z;
 
-    float bias = 0.005;
+    vec3 lightDir = vec3(0.7, 1.0, 0);
+
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.005);
+
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / vec2(textureSize(shadowPass, layer));
+    vec2 texelSize = 1.0 / textureSize(shadowPass, 0);
 
-       for(int x = -1; x <= 1; ++x)
-       {
-           for(int y = -1; y <= 1; ++y)
-           {
-               float pcfDepth = texture(shadowPass, vec3(projCoords.xy + vec2(x, y) * texelSize, layer)).r * 200.0f;
-               shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
-           }
-       }
-
-    if (projCoords.x < 0.3 || projCoords.y < 0.3 || projCoords.z * 200 > 0.7)
-        return vec2(0.0, layer);
-
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowPass, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
     shadow /= 9.0;
 
-    return vec2(shadow, layer);
+        if (projCoords.x > 0.6 || projCoords.y > 0.6 || projCoords.z > 0.6 ||
+            projCoords.x < 0.3 || projCoords.y < 0.3)
+            return 0.0;
+
+
+    return shadow;
 }
 
 void main()
 {
     vec3 objectColor = texture(albedo, TexCoord).rgb;
-    float ambientStrength = 0.7;
+    float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
 
     vec3 norm = normalize(Normal);
@@ -96,10 +65,10 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0),  16);
     vec3 specular = specularStrength * spec * lightColor;
 
+    float shadow = shadowCalc(shadowFragPos);
+
     objectColor = vec3(0.6, 0.6, 0.6);
 
-    vec2 shadow = ShadowCalculation(FragPos);
-
-    vec3 result = (ambient + (1.0f - shadow.x) * (diffuse + specular)) * objectColor;
-    FragColor = vec4(result.x, result.y + (shadow.y / 10), result.z, 1.0);
+    vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular)) * objectColor;
+    FragColor = vec4(result, 1.0);
 }

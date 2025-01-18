@@ -16,6 +16,8 @@
 #include "renderer/passes/MainPass.h"
 #include "math/matrix4.h"
 #include "renderer/passes/ShadowPass.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 using namespace catos;
 
@@ -111,6 +113,15 @@ int main() {
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
+    IMGUI_CHECKVERSION();
+
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window.get_glfw_window(), true);
+    ImGui_ImplOpenGL3_Init("#version 420");
+
+    ImGui::GetIO().IniFilename = nullptr;
 
     MeshCreationInfo triangleInfo {
         .vertices = vertices,
@@ -130,8 +141,9 @@ int main() {
     Texture tex{};
 
 
-    Vector3 cameraPos{0.0f, 10.0f, -10.0f};
+    Vector3 cameraPos{-21, 12, -4};
     Vector3 cameraFront{0.0f, 0.0f, -1.0f};
+    Vector3 cameraRight{1.0f, 0.0f, 0.0f};
     Vector3 cameraUp{0.0f, 1.0f, 0.0f};
 
 
@@ -162,8 +174,7 @@ int main() {
 
     ShaderCreateInfo shadowShaderInfo {
         shadowVertex.c_str(),
-        shadowFragment.c_str(),
-        shadowGeometry.c_str()
+        shadowFragment.c_str()
     };
 
 
@@ -195,17 +206,17 @@ int main() {
     shadowPassLogic->setDirection({0.6, 1.0f, 0.0f});
 
     RenderPassCreationInfo shadowPassInfo {
-        .willBeVisible = false,
-        .size = {1024, 1024},
-        .passType =  PassType::DEPTH,
-        .colorType = ColorType::DEPTH_IMG,
-        .imageType = ImageType::IMG_ARRAY,
-        .textureAmount = 5,
-        .next = &defaultPass,
-        .name = "shadowPass",
-
-        .passLogic = shadowPassLogic
+            .willBeVisible = false,
+            .size = {1024, 1024},
+            .passType =  PassType::DEPTH,
+            .colorType = ColorType::DEPTH_IMG,
+            .imageType = ImageType::IMG_2D,
+            .next = &defaultPass,
+            .name = "shadowPass",
+            .passLogic = shadowPassLogic
     };
+
+
 
     RenderPass shadowPass{shadowPassInfo, shadowShader};
 
@@ -226,7 +237,15 @@ int main() {
     Matrix4 view{};
     Matrix4 cam{};
 
+    float pitch = 0.0f;
+    float yaw = 0.0f;
+    float roll = 0.0f;
 
+    float distance = 20.0f;
+
+    shadowPassLogic->setDirection({0.7f, 1.0f, 0});
+    shadowPassLogic->setDistance(20.0f);
+    shadowPassLogic->setOrigin({0, 0, 0});
 
     while (!window.should_window_close()) {
         window.update();
@@ -234,12 +253,30 @@ int main() {
         auto winSize = window.getSize();
 
         proj = math::perspective(math::toRadians(90.0f), winSize.x / winSize.y, 0.01f, 100000.0f);
-        view = math::lookAt(cameraPos, {0.0f, 0.0f, 0.0f}, cameraUp);
 
+
+        Matrix4 rot{};
+        rot.rotate(toRadians(pitch), {1.0f, 0.0f, 0.0f});
+        rot.rotate(toRadians(yaw),  {0.0f, 1.0f, 0.0f});
+        rot.rotate(toRadians(roll), {0.0f, 0.0f, 1.0f});
+
+        cameraFront.x = cos(toRadians(yaw)) * cos(toRadians(pitch));
+        cameraFront.y = sin(toRadians(pitch));
+        cameraFront.z = sin(toRadians(yaw)) * cos(toRadians(pitch));
+
+        cameraFront = normalize(cameraFront);
+
+        cameraRight = normalize(cross(cameraFront, {0, 1, 0}));
+        cameraUp = normalize(cross(cameraRight, cameraFront));
+
+
+        view = math::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+
+        view = view * rot;
 
         cam = proj * view;
 
-        shadowPassLogic->updateCameraInfo(view, winSize, 90.0f, 0.01f, 100000.0f);
 
         defaultPipeline.draw(cam);
 
@@ -247,9 +284,46 @@ int main() {
             defaultPipeline.resize(winSize.x, winSize.y);
             window.set_resized();
         }
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+
+        if (ImGui::Begin("Debug Info")) {
+
+            ImGui::DragFloat3("Camera Pos", cameraPos.value_ptr());
+
+            cameraPos.x = cameraPos._[0];
+            cameraPos.y = cameraPos._[1];
+            cameraPos.z = cameraPos._[2];
+
+            ImGui::DragFloat("Size", &distance);
+
+            shadowPassLogic->setDistance(distance);
+            shadowPassLogic->setOrigin(cameraPos);
+
+            if (ImGui::TreeNode("ShadowMap")) {
+
+                ImGui::Image(reinterpret_cast<ImTextureID>(shadowPass.getPassTexture()), {250, 250});
+
+
+                ImGui::TreePop();
+            }
+
+
+        }
+
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
     triangle.destroy();
 
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
 
