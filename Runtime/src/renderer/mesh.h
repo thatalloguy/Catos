@@ -14,8 +14,8 @@
 namespace catos {
 
     struct Vertex {
-        float x, y, z;
-        float r, g, b;
+        Vector3i position;
+        Vector3i normal;
         float uv_x, uv_y;
     };
 

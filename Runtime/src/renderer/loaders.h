@@ -36,23 +36,35 @@ namespace catos {
         catos::vector<RawMesh> meshes;
 
         void draw(Shader& shader) {
-
-            spdlog::info("helppp");
             shader.bind();
             shader.setTransform("transform", transform);
 
 
             for (auto mesh: meshes) {
-                spdlog::info("MAX = {} {}", meshes.maxLength(), mesh.count);
 
                 glBindVertexArray(mesh.VAO);
-
-
                 glDrawElements(GL_TRIANGLES, mesh.indices_count, GL_UNSIGNED_INT, 0);
                 glBindVertexArray(0);
 
             }
 
+        }
+
+
+        void destroy() {
+
+            for (auto mesh : meshes) {
+                glDeleteVertexArrays(1, &mesh.VAO);
+                glDeleteBuffers(1, &mesh.VBO);
+                glDeleteBuffers(1, &mesh.EBO);
+            }
+
+        }
+
+
+
+        ~LoadedMesh() {
+            destroy();
         }
     };
 

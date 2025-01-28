@@ -215,19 +215,32 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
 
             fastgltf::iterateAccessorWithIndex<Vector3i>(gltf, pos_accessor, [&](Vector3i v, size_t index){
                 Vertex new_vtx{};
-                new_vtx.x = v.x;
-                new_vtx.y = v.y;
-                new_vtx.z = v.z;
+                new_vtx.position = v;
 
-                new_vtx.r = 0.0f;
-                new_vtx.g = 1.0f;
-                new_vtx.b = 0.0f;
+                new_vtx.normal = { 0.0f, 1.0f, 0.0f};
 
                 new_vtx.uv_x = 0.0f;
                 new_vtx.uv_y = 0.0f;
 
                 vertices[index] = new_vtx;
             });
+
+            auto normal_accessor = primitive.findAttribute("NORMAL");
+            if (normal_accessor != primitive.attributes.end()) {
+                fastgltf::iterateAccessorWithIndex<Vector3i>(gltf, gltf.accessors[(*normal_accessor).second], [&](Vector3i n, size_t index) {
+                    vertices[index].normal = n;
+                });
+            }
+
+            auto uv_accessor = primitive.findAttribute("TEXCOORD_0");
+            if (uv_accessor != primitive.attributes.end()) {
+
+                fastgltf::iterateAccessorWithIndex<Vector2i>(gltf, gltf.accessors[(*uv_accessor).second], [&](Vector2i uv, size_t index) {
+                    vertices[index].uv_x = uv.x;
+                    vertices[index].uv_y = uv.y;
+                });
+
+            }
 
             {
 
