@@ -13,7 +13,7 @@ void catos::renderPasses::ShadowPassLogic::onPassPrepare(RenderPass& pass, Matri
     calcShadowMat4();
     glCullFace(GL_FRONT);
 }
-void catos::renderPasses::ShadowPassLogic::onMeshPrepare(catos::RenderPass &pass, catos::Mesh &mesh) {
+void catos::renderPasses::ShadowPassLogic::onMeshPrepare(catos::RenderPass &pass, catos::LoadedMesh &mesh) {
     pass.getShader().setTransform("cameraMat", shadowView.value_ptr());
 }
 void catos::renderPasses::ShadowPassLogic::onPassEnd(catos::RenderPass &pass) {
@@ -24,7 +24,7 @@ void catos::renderPasses::ShadowPassLogic::onPassEnd(catos::RenderPass &pass) {
         next_pass->getShader().setTransform("shadowView", shadowView.value_ptr());
     }
 }
-void catos::renderPasses::ShadowPassLogic::onMeshEnd(catos::RenderPass &pass, catos::Mesh &mesh) { }
+void catos::renderPasses::ShadowPassLogic::onMeshEnd(catos::RenderPass &pass, catos::LoadedMesh &mesh) { }
 void catos::renderPasses::ShadowPassLogic::calcShadowMat4() {
     Vector3 position = origin + (direction * distance);
     Matrix4 proj = math::ortho(-20, 20, -20, 20, 0.01f, 100.0f);

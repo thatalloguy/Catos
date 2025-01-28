@@ -17,8 +17,8 @@ catos::RenderPipelineStatus catos::RenderPipeline::setBeginPass(RenderPass& pass
 }
 
 
-catos::RenderPipelineStatus catos::RenderPipeline::addMesh(Mesh& mesh) {
-    _meshes.push_back(mesh);
+catos::RenderPipelineStatus catos::RenderPipeline::addMesh(LoadedMesh& mesh) {
+    _meshes.push_back(&mesh);
 
     return RenderPipelineStatus::SUCCESS;
 }
@@ -61,20 +61,20 @@ void catos::RenderPipeline::draw(Matrix4& cameraMat) {
                 glBindTexture(previous->getImageType(), previous->getPassTexture());
             }
 
-            if (mesh._texture != nullptr) {
-                mesh._texture->bind();
+            if (mesh->_texture != nullptr) {
+                mesh->_texture->bind();
             }
 
 
             if (renderLogic != nullptr){
-                renderLogic->onMeshPrepare(*pass, mesh);
+                renderLogic->onMeshPrepare(*pass, *mesh);
             }
 
-            mesh.draw(pass->getShader());
+            mesh->draw(pass->getShader());
 
 
             if (renderLogic != nullptr){
-                renderLogic->onMeshEnd(*pass, mesh);
+                renderLogic->onMeshEnd(*pass, *mesh);
             }
         }
 

@@ -21,7 +21,7 @@ void catos::renderPasses::MainRenderPassLogic::onPassEnd(RenderPass& pass) {
 
 }
 
-void catos::renderPasses::MainRenderPassLogic::onMeshPrepare(RenderPass& pass, Mesh& mesh) {
+void catos::renderPasses::MainRenderPassLogic::onMeshPrepare(RenderPass& pass, LoadedMesh& mesh) {
 
     Shader& passShader = pass.getShader();
 
@@ -35,7 +35,7 @@ void catos::renderPasses::MainRenderPassLogic::onMeshPrepare(RenderPass& pass, M
 
 }
 
-void catos::renderPasses::MainRenderPassLogic::onMeshEnd(RenderPass& pass, Mesh& mesh) {
+void catos::renderPasses::MainRenderPassLogic::onMeshEnd(RenderPass& pass, LoadedMesh& mesh) {
 
 }
 

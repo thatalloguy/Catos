@@ -10,6 +10,7 @@
 
 #include "mesh.h"
 #include "renderer.h"
+#include "loaders.h"
 
 namespace catos {
 
@@ -30,7 +31,7 @@ namespace catos {
 
         RenderPipelineStatus setBeginPass(RenderPass& pass);
 
-        RenderPipelineStatus addMesh(Mesh& mesh);
+        RenderPipelineStatus addMesh(LoadedMesh& mesh);
 
         void draw(Matrix4& camera);
 
@@ -42,7 +43,7 @@ namespace catos {
         Renderer& _renderer;
 
         RenderPass* beginPass;
-        vector<Mesh> _meshes;
+        vector<LoadedMesh*> _meshes;
 
     };
 

@@ -24,7 +24,7 @@ namespace catos {
     public:
 
         /// Initializes the vector to empty.
-        vector(): buf(nullptr), size(0) {};
+        vector(): buf(nullptr), size(0), maxSize(0) {};
 
         /// Copy Constructor
         vector(const vector& obj) {
@@ -77,7 +77,13 @@ namespace catos {
         void reserve(unsigned int amount) {
 
             // no need if its the smaller or same size.
-            if (amount <= maxSize) return;
+            if (amount <= maxSize || amount <= 0) return;
+
+            if (buf == nullptr || maxSize == 0) {
+                buf = new T[amount];
+                maxSize = amount;
+                return;
+            }
 
             //allocate a new buffer with the desired size.
             T* temp = new T[amount];
@@ -100,14 +106,14 @@ namespace catos {
             // no need if its the smaller or same size.
             if (newSize == maxSize) return;
 
-            if (newSize > size) throw out_of_range();
+            //if (newSize > size) throw out_of_range();
 
 
             //allocate a new buffer with the desired size.
             T* temp = new T[newSize];
 
             // copy our current items to that array.
-            for (int i=0; i < newSize; i++)
+            for (int i=0; i < size; i++)
                 temp[i] = buf[i];
 
 
@@ -185,7 +191,14 @@ namespace catos {
 
         ///  Returns the obj for the given index.
         T& operator[](int i) {
+            if (i > size && i < maxSize)
+                size = i;
+
            return buf[i];
+        }
+
+        void setLength(int length) {
+            size = length;
         }
 
 

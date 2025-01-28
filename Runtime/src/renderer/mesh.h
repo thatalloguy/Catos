@@ -9,6 +9,7 @@
 #include "shader.h"
 #include "spdlog/spdlog.h"
 #include "texture.h"
+#include "stl/vector.h"
 
 namespace catos {
 
@@ -78,7 +79,7 @@ namespace catos {
 
         }
 
-        void draw(Shader& shader)
+        virtual void draw(Shader& shader)
         {
             glBindVertexArray(VAO);
             shader.setTransform("transform", transform);
@@ -86,11 +87,13 @@ namespace catos {
 
         }
 
-        void destroy() {
+        virtual void destroy() {
             glDeleteVertexArrays(1, &VAO);
             glDeleteBuffers(1, &VBO);
         }
     };
+
+
 
 }
 

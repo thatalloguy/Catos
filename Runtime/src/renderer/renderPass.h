@@ -9,6 +9,7 @@
 #include "math/matrix4.h"
 #include "mesh.h"
 #include "stl/string.h"
+#include "loaders.h"
 
 using namespace catos::math;
 
@@ -48,8 +49,8 @@ namespace catos {
         virtual void onPassEnd(RenderPass& pass) {};
 
 
-        virtual void onMeshPrepare(RenderPass& pass, Mesh& mesh) {};
-        virtual void onMeshEnd(RenderPass& pass, Mesh& mesh) {};
+        virtual void onMeshPrepare(RenderPass& pass, LoadedMesh& mesh) {};
+        virtual void onMeshEnd(RenderPass& pass, LoadedMesh& mesh) {};
 
     };
 

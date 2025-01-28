@@ -88,25 +88,36 @@ void catos::Shader::bind() {
 
 void catos::Shader::setInt(const char *name, int val) {
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
+
+    if (loc > 100)
+        return;
     glUniform1i(loc, val);
 }
 
 void catos::Shader::setTransform(const char* name, float* val) {
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    if (loc > 100)
+        return;
     glUniformMatrix4fv(loc, 1, GL_FALSE, val);
 }
 
 void catos::Shader::setVector3(const char* name, math::Vector3& vec){
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    if (loc > 100)
+        return;
     glUniform3fv(loc, 1, vec.value_ptr());
 }
 
 void catos::Shader::setFloat(const char *name, float val) {
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    if (loc > 100)
+        return;
     glUniform1f(loc, val);
 }
 
 void catos::Shader::setVector3GLM(const char *name, float *ptr) {
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    if (loc > 100)
+        return;
     glUniform3fv(loc, 1, ptr);
 }
