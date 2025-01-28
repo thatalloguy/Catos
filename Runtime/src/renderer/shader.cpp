@@ -89,8 +89,6 @@ void catos::Shader::bind() {
 void catos::Shader::setInt(const char *name, int val) {
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
 
-    if (loc > 100)
-        return;
     glUniform1i(loc, val);
 }
 

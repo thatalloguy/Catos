@@ -61,9 +61,9 @@ void catos::RenderPipeline::draw(Matrix4& cameraMat) {
                 glBindTexture(previous->getImageType(), previous->getPassTexture());
             }
 
-            if (mesh->_texture != nullptr) {
+/*            if (mesh->_texture != nullptr) {
                 mesh->_texture->bind();
-            }
+            }*/
 
 
             if (renderLogic != nullptr){

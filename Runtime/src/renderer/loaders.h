@@ -31,6 +31,8 @@ namespace catos {
 
 
         Texture* _texture = nullptr;
+
+        Texture* tex;
         float* transform;
 
         catos::vector<RawMesh> meshes;
@@ -38,7 +40,9 @@ namespace catos {
         void draw(Shader& shader) {
             shader.bind();
             shader.setTransform("transform", transform);
+            shader.setInt("albedo", 1);
 
+            tex->bind();
 
             for (auto mesh: meshes) {
 
@@ -69,6 +73,7 @@ namespace catos {
     };
 
     namespace loaders {
+
 
         bool loadGLTF(std::filesystem::path filePath, LoadedMesh* out);
     }

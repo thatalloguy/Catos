@@ -11,6 +11,12 @@ using namespace catos::math;
 
 namespace catos {
 
+    struct TextureSource {
+        const char* path = nullptr;
+        const unsigned char* buffer = nullptr;
+        size_t buf_len = 0;
+    };
+
     enum class TextureWrapType {
         REPEAT = GL_REPEAT,
         REPEAT_MIRRORED = GL_MIRRORED_REPEAT,
@@ -36,7 +42,8 @@ namespace catos {
     };
 
     struct TextureCreationInfo {
-        const char* path;
+        TextureSource source{};
+
         bool flip_vertically = true;
 
         TextureWrapType wrapX = TextureWrapType::REPEAT; // s
@@ -55,7 +62,7 @@ namespace catos {
     class Texture {
 
     public:
-        Texture() = default;
+        Texture() {};
         ~Texture();
 
         void init(TextureCreationInfo& creationInfo);
@@ -67,9 +74,9 @@ namespace catos {
 
 
     private:
-        unsigned int textureGPUId;
+        unsigned int textureGPUId = -1;
 
-        int width, height, nrChannels;
+        int width, height, nrChannels = 0;
         TextureType _type;
 
     };

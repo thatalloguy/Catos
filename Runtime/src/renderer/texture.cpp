@@ -28,7 +28,16 @@ void catos::Texture::init(catos::TextureCreationInfo &creationInfo) {
 
     _type = creationInfo.type;
 
-    unsigned char* data = stbi_load(creationInfo.path, &width, &height, &nrChannels, 0);
+    unsigned char* data = nullptr;
+
+    if (creationInfo.source.path != nullptr) {
+        data = stbi_load(creationInfo.source.path, &width, &height, &nrChannels, 0);
+    } else if (creationInfo.source.buffer != nullptr) {
+        data = stbi_load_from_memory(creationInfo.source.buffer, creationInfo.source.buf_len,
+                                     &width, &height, &nrChannels, 0);
+    } else {
+        spdlog::warn("Invalid texture source");
+    }
     if (data) {
 
         glTexImage2D((GLenum) creationInfo.type, 0, (GLint) creationInfo.color, width, height, 0, (GLenum) creationInfo.color, GL_UNSIGNED_BYTE, data);
@@ -36,12 +45,13 @@ void catos::Texture::init(catos::TextureCreationInfo &creationInfo) {
 
     } else {
         // uh oh
-        spdlog::error("Could not load Texture: {}", creationInfo.path);
+        spdlog::error("Could not load Texture: {}", creationInfo.source.path);
         glDeleteTextures(1, &textureGPUId);
     }
 
     stbi_image_free(data);
 
+    spdlog::info("TEX: {}", textureGPUId);
 }
 
 void catos::Texture::bind(int slot) {

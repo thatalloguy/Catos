@@ -77,15 +77,19 @@ int main() {
 
     ImGui::GetIO().IniFilename = nullptr;
 
-    TextureCreationInfo texinfo {
-        .path = "../../../Assets/Logo.jpeg"
-    };
 
     LoadedMesh triangle{};
 
-    loaders::loadGLTF("../../../Assets/Models/helmet/DamagedHelmet.gltf", &triangle);
+    loaders::loadGLTF("../../../Assets/Models/helmet/DamagedHelmet.glb", &triangle);
     Texture tex{};
 
+    TextureCreationInfo info{
+        .source = {
+                .path = "../../../Assets/texture.png"
+        }
+    };
+
+    tex.init(info);
 
     Vector3 cameraPos{-21, 12, -4};
     Vector3 cameraFront{0.0f, 0.0f, -1.0f};
@@ -97,9 +101,7 @@ int main() {
 
     mat.translate({0.2, 2, -2});
     mat.rotate(math::toRadians(30.0f), {0, 1, 0});
-    tex.init(texinfo);
 
-    triangle._texture = &tex;
     triangle.transform = mat.value_ptr();
 
     // Shaders.

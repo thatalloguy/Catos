@@ -10,6 +10,7 @@
 #include <fastgltf/core.hpp>
 #include <fastgltf/util.hpp>
 
+
 namespace fastgltf {
 
 
@@ -125,6 +126,49 @@ static bool loadMesh(fastgltf::Asset& asset, fastgltf::Mesh& mesh, catos::Loaded
 }
 */
 
+static catos::Texture* loadTexture(fastgltf::Asset& gltf, fastgltf::Image& image) {
+
+    catos::Texture* out = new catos::Texture{};
+
+    catos::TextureCreationInfo out_create{};
+
+    std::visit(fastgltf::visitor {
+            [](auto& arg) { spdlog::warn("Unknown image prod."); },
+            [&](fastgltf::sources::URI& filePath) {
+                assert(filePath.fileByteOffset == 0);
+                assert(filePath.uri.isLocalPath());
+
+                std::string path(filePath.uri.path().begin(), filePath.uri.path().end());
+
+                out_create.source.path = path.c_str();
+                out->init(out_create);
+            },
+            [&](fastgltf::sources::Array& vector) {
+
+                out_create.source.buffer = vector.bytes.data();
+                out_create.source.buf_len = vector.bytes.size();
+
+                out->init(out_create);
+            },
+            [&](fastgltf::sources::BufferView& view) {
+                auto& bufferView = gltf.bufferViews[view.bufferViewIndex];
+                auto& buffer = gltf.buffers[bufferView.bufferIndex];
+                std::visit(fastgltf::visitor {
+                        [](auto& arg) { spdlog::warn("Unknown image prod."); },
+                        [&](fastgltf::sources::Array& vector) {
+
+                            out_create.source.buffer = vector.bytes.data() + bufferView.byteOffset;
+                            out_create.source.buf_len = (int) bufferView.byteLength;
+
+                            out->init(out_create);
+                        }
+                }, buffer.data);
+            },
+    }, image.data);
+
+    return out;
+}
+
 bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh* out_mesh) {
 
     if (!exists(filePath)) {
@@ -180,6 +224,22 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
     }
 
     out_mesh->meshes.reserve(gltf.meshes.size() + 2);
+    for (auto& image: gltf.images) {
+
+        Texture* tex  = loadTexture(gltf, gltf.images.front());
+
+        if (tex->getSize().getX() <= 0) {
+            spdlog::warn("Invalid texture");
+        }
+
+        if (out_mesh->tex != nullptr) {
+            delete out_mesh->tex;
+        }
+
+
+        out_mesh->tex = tex;
+
+    }
 
 
     for (auto mesh: gltf.meshes) {
@@ -201,7 +261,6 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
             auto& index_accessor = gltf.accessors[primitive.indicesAccessor.value()];
             indices.reserve(index_accessor.count);
 
-            spdlog::info("index_accessor.count {}", index_accessor.count);
 
             fastgltf::iterateAccessor<uint32_t>(gltf, index_accessor, [&](uint32_t id){
                     indices.push_back(id);
@@ -283,6 +342,6 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
 
         out_mesh->meshes.push_back(out);
     }
-    spdlog::info("LOADED MESH :D");
+    spdlog::debug("LOADED MESH :D");
     return true;
 }
