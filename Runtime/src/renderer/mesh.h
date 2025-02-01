@@ -16,7 +16,7 @@ namespace catos {
     struct Vertex {
         Vector3i position;
         Vector3i normal;
-        float uv_x, uv_y;
+        Vector2i uv;
     };
 
     struct MeshCreationInfo {

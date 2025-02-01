@@ -44,7 +44,7 @@ namespace catos {
     struct TextureCreationInfo {
         TextureSource source{};
 
-        bool flip_vertically = true;
+        bool flip_vertically = false;
 
         TextureWrapType wrapX = TextureWrapType::REPEAT; // s
         TextureWrapType wrapY = TextureWrapType::REPEAT; // t

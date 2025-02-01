@@ -68,5 +68,5 @@ void main()
     float shadow = shadowCalc(shadowFragPos);
 
     vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular)) * objectColor;
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(texture(albedo, TexCoord).rgb, 1.0);
 }

@@ -80,7 +80,7 @@ int main() {
 
     LoadedMesh triangle{};
 
-    loaders::loadGLTF("../../../Assets/Models/helmet/DamagedHelmet.glb", &triangle);
+    loaders::loadGLTF("../../../Assets/Models/helmet/DamagedHelmet.gltf", &triangle);
     Texture tex{};
 
     TextureCreationInfo info{
@@ -100,7 +100,7 @@ int main() {
     Matrix4 mat{};
 
     mat.translate({0.2, 2, -2});
-    mat.rotate(math::toRadians(30.0f), {0, 1, 0});
+    //mat.rotate(math::toRadians(30.0f), {0, 1, 0});
 
     triangle.transform = mat.value_ptr();
 

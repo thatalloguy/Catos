@@ -126,7 +126,7 @@ static bool loadMesh(fastgltf::Asset& asset, fastgltf::Mesh& mesh, catos::Loaded
 }
 */
 
-static catos::Texture* loadTexture(fastgltf::Asset& gltf, fastgltf::Image& image) {
+static catos::Texture* loadTexture(fastgltf::Asset& gltf, fastgltf::Image& image, std::filesystem::path full_path ) {
 
     catos::Texture* out = new catos::Texture{};
 
@@ -138,9 +138,14 @@ static catos::Texture* loadTexture(fastgltf::Asset& gltf, fastgltf::Image& image
                 assert(filePath.fileByteOffset == 0);
                 assert(filePath.uri.isLocalPath());
 
+
                 std::string path(filePath.uri.path().begin(), filePath.uri.path().end());
 
-                out_create.source.path = path.c_str();
+                auto rel_path = full_path.string() + "/" + path;
+
+                spdlog::info("TEX: {}", rel_path.c_str());
+
+                out_create.source.path = rel_path.c_str();
                 out->init(out_create);
             },
             [&](fastgltf::sources::Array& vector) {
@@ -183,15 +188,12 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
             fastgltf::Extensions::KHR_texture_transform |
             fastgltf::Extensions::KHR_materials_variants;
 
-    fastgltf::Parser parser(supportedExtensions);
+    fastgltf::Parser parser{};
 
-    constexpr auto gltfOptions =
-            fastgltf::Options::DontRequireValidAssetMember |
+    constexpr auto gltfOptions = fastgltf::Options::DontRequireValidAssetMember |
             fastgltf::Options::AllowDouble |
             fastgltf::Options::LoadGLBBuffers |
-            fastgltf::Options::LoadExternalBuffers |
-            fastgltf::Options::LoadExternalImages |
-            fastgltf::Options::GenerateMeshIndices;
+            fastgltf::Options::LoadExternalBuffers;
 
     fastgltf::GltfDataBuffer data;
     data.loadFromFile(filePath);
@@ -226,7 +228,7 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
     out_mesh->meshes.reserve(gltf.meshes.size() + 2);
     for (auto& image: gltf.images) {
 
-        Texture* tex  = loadTexture(gltf, gltf.images.front());
+        Texture* tex  = loadTexture(gltf, gltf.images.front(), filePath.parent_path());
 
         if (tex->getSize().getX() <= 0) {
             spdlog::warn("Invalid texture");
@@ -278,8 +280,7 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
 
                 new_vtx.normal = { 0.0f, 1.0f, 0.0f};
 
-                new_vtx.uv_x = 0.0f;
-                new_vtx.uv_y = 0.0f;
+                new_vtx.uv = {0.0f, 0.0f};
 
                 vertices[index] = new_vtx;
             });
@@ -295,8 +296,8 @@ bool catos::loaders::loadGLTF(std::filesystem::path filePath, catos::LoadedMesh*
             if (uv_accessor != primitive.attributes.end()) {
 
                 fastgltf::iterateAccessorWithIndex<Vector2i>(gltf, gltf.accessors[(*uv_accessor).second], [&](Vector2i uv, size_t index) {
-                    vertices[index].uv_x = uv.x;
-                    vertices[index].uv_y = uv.y;
+                    vertices[index].uv = uv;
+                    spdlog::info("UV {} | {} {}", index, vertices[index].uv.x, vertices[index].uv.y);
                 });
 
             }
