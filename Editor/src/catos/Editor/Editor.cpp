@@ -50,6 +50,8 @@ void catos::Editor::init() {
     _window = new Window(windowCreationInfo);
 
 
+    ImGui::Initialize();
+
     init_tabs();
 
 
