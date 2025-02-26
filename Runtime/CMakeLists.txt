@@ -60,6 +60,7 @@ target_link_libraries(catos-runtime-static PUBLIC spdlog)
 target_link_libraries(catos-runtime-static PUBLIC fastgltf)
 target_link_libraries(catos-runtime-static PUBLIC pocketpy)
 target_link_libraries(catos-runtime-static PUBLIC glfw)
+target_link_libraries(catos-runtime-static PUBLIC ryml)
 
 
 
