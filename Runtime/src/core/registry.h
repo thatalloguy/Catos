@@ -530,6 +530,9 @@ namespace catos {
             }
         }
 
+        const std::unordered_map<size_t, TypeInfo>& entries() {
+            return _register;
+        }
 
 
 
