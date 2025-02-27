@@ -5,15 +5,21 @@
 
 #include <ryml.hpp>
 
+template<int T>
+struct RawString {
+    char str[T];
+};
 
 struct SubFoo {
     const char* msg = "Hello";
     double b = 1;
 };
 
+
+
 struct Foo {
     float a = 0;
-    const char* msg = "Hello";
+    catos::string msg = "Hello";
 };
 
 struct Object {
@@ -25,8 +31,7 @@ const size_t float_hash = 12638226781420530164;
 const size_t int_hash = 12638232278978672507;
 const size_t uint_hash = 12638231179467044040;
 const size_t double_hash = 12638230079955414429;
-const size_t cstr_hash = 17648624087129316105;
-
+const size_t string_hash = 1292088526669925081;
 
 void write_property_to_string(Property* property, Registry& registry, Object& object, std::string& out) {
 
@@ -57,9 +62,10 @@ void write_property_to_string(Property* property, Registry& registry, Object& ob
                 out += std::to_string(*static_cast<double*>(property->get_value(object.data)));
                 break;
 
-            case cstr_hash:
-                spdlog::info("CSTR: {}", *reinterpret_cast<const char*>(property->get_value(object.data)));
-                //out += ;
+            case string_hash:
+                out += R"(")";
+                out += static_cast<catos::string*>(property->get_value(object.data))->c_str();
+                out += R"(")";
                 break;
 
             default:

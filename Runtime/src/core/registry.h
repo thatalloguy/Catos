@@ -35,15 +35,19 @@ namespace catos {
 
         virtual ~Property() {};
 
-        //virtual void* get_value(const void* obj_ptr) = 0;
-        virtual int to_int(const void* obj_ptr) = 0;
-        virtual int to_float(const void* obj_ptr) = 0;
-        virtual int to_double(const void* obj_ptr) = 0;
+        virtual void* get_value(const void* obj_ptr) = 0;
+//        virtual int to_int(const void* obj_ptr) = 0;
+//        virtual int to_float(const void* obj_ptr) = 0;
+//        virtual int to_double(const void* obj_ptr) = 0;
+//        virtual int to_cstr(const void* obj_ptr) = 0;
+//
+
 
 
         virtual const char* get_name() = 0;
         virtual const char* get_type_name() = 0;
         virtual size_t& get_type_hash() = 0;
+        virtual size_t get_type_size() =0;
 
         virtual void set_name(const char* name) = 0;
 
@@ -81,12 +85,34 @@ namespace catos {
 
 
 
+        virtual size_t get_type_size() {
+            return sizeof_type;
+        };
+
 
         /// Use Get value (which can be cased to the desired type) to return an value of an instance.
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
         }
+
+//
+//        virtual int to_int(const void* obj_ptr) {
+//
+//        };
+//
+//        virtual int to_float(const void* obj_ptr) {
+//
+//        };
+//
+//        virtual int to_double(const void* obj_ptr) {
+//
+//        };
+//
+//        virtual int to_cstr(const void* obj_ptr) {
+//
+//        };
+
 
 
         /// Get the name of the property
