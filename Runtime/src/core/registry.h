@@ -23,6 +23,8 @@ using namespace catos;
 
 namespace catos {
 
+
+
     // Properties :)
     /// See PropertyImpl for details.
     class Property {
@@ -33,7 +35,12 @@ namespace catos {
 
         virtual ~Property() {};
 
-        virtual void* get_value(const void* obj_ptr) = 0;
+        //virtual void* get_value(const void* obj_ptr) = 0;
+        virtual int to_int(const void* obj_ptr) = 0;
+        virtual int to_float(const void* obj_ptr) = 0;
+        virtual int to_double(const void* obj_ptr) = 0;
+
+
         virtual const char* get_name() = 0;
         virtual const char* get_type_name() = 0;
         virtual size_t& get_type_hash() = 0;
@@ -54,6 +61,8 @@ namespace catos {
         U T::* memberPtr;
         const char* name;
 
+        size_t sizeof_type;
+
 
         std::string type_name;
         size_t type_hash;
@@ -62,6 +71,7 @@ namespace catos {
         PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {
             type_name = type_utils::get_type_name<U>();
             type_hash = type_utils::get_type_hash<U>();
+            sizeof_type = sizeof(U);
         };
 
         /// Set the name of the property
@@ -538,6 +548,14 @@ namespace catos {
             return _register;
         }
 
+        template<typename T>
+        bool is_type_registered() {
+            return is_type_registered(type_utils::get_type_hash<T>());
+        }
+
+        bool is_type_registered(size_t type_hash) {
+            return _register.contains(type_hash);
+        }
 
 
     private:

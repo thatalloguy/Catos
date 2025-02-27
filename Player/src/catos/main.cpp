@@ -6,14 +6,74 @@
 #include <ryml.hpp>
 
 
+struct SubFoo {
+    const char* msg = "Hello";
+    double b = 1;
+};
+
 struct Foo {
-    int a = 0;
+    float a = 0;
+    const char* msg = "Hello";
 };
 
 struct Object {
     size_t  hash;
     void* data;
 };
+
+const size_t float_hash = 12638226781420530164;
+const size_t int_hash = 12638232278978672507;
+const size_t uint_hash = 12638231179467044040;
+const size_t double_hash = 12638230079955414429;
+const size_t cstr_hash = 17648624087129316105;
+
+
+void write_property_to_string(Property* property, Registry& registry, Object& object, std::string& out) {
+
+    out += "  ";
+    out += property->get_name();
+    out += ": ";
+
+    if (registry.is_type_registered(property->get_type_hash())) {
+        out += "instance\n";
+        // Write that object info to the file.
+    } else {
+
+        switch (property->get_type_hash()) {
+
+            case float_hash:
+                out += std::to_string(*static_cast<float*>(property->get_value(object.data)));
+                break;
+
+            case int_hash:
+                out += std::to_string(*static_cast<int*>(property->get_value(object.data)));
+                break;
+
+            case uint_hash:
+                out += std::to_string(*static_cast<unsigned int*>(property->get_value(object.data)));
+                break;
+
+            case double_hash:
+                out += std::to_string(*static_cast<double*>(property->get_value(object.data)));
+                break;
+
+            case cstr_hash:
+                spdlog::info("CSTR: {}", *reinterpret_cast<const char*>(property->get_value(object.data)));
+                //out += ;
+                break;
+
+            default:
+                spdlog::warn("Unknown Propertype HASH of name: {}", property->get_type_name());
+                break;
+        }
+
+
+        out += "\n";
+    }
+
+
+
+}
 
 int main() {
 
@@ -26,7 +86,8 @@ int main() {
     Registry registry{};
 
     registry.register_class<Foo>()
-            .property("a", &Foo::a, "a variable");
+            .property("a", &Foo::a, "a variable")
+            .property("msg", &Foo::msg, "a variable");
 
     std::string out_yaml;
 
@@ -43,15 +104,12 @@ int main() {
 
             auto property = property_entry.second;
 
-            out_yaml += "  ";
-            out_yaml += property->get_name();
-            out_yaml += ": ";
-            out_yaml += std::to_string(*reinterpret_cast<int*>(property->get_value(object.data)));
-            out_yaml += "\n";
+            write_property_to_string(property, registry, object, out_yaml);
+
         }
 
     }
-
+//
     FILE* file = fopen("../../../test.yaml", "w");
 
     ryml::csubstr yml = R"(
@@ -63,5 +121,6 @@ int main() {
     ryml::emit_yaml(tree, tree.root_id(), file);
 
     fclose(file);
+
 }
 
