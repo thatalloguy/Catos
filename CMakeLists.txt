@@ -11,6 +11,7 @@ find_package(Vulkan REQUIRED)
 add_subdirectory(Thirdparty/doctest)
 
 add_subdirectory("Thirdparty/spdlog")
+add_subdirectory("Thirdparty/rapidyaml")
 add_subdirectory("Thirdparty/fastgltf")
 add_subdirectory("Thirdparty/glfw")
 add_subdirectory("Thirdparty/pocketpy")
