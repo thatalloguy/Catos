@@ -97,6 +97,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - doctest
 ###  - fastgltf [ V0.7.2 ]
 ###  - glfw
+###  - rapidyml
 ###  - imgui
 ###  - [imgui dock](https://github.com/BentleyBlanks/imguiDock)
 ###  - pocketpy / gsoc24 (Experimental)
