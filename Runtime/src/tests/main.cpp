@@ -45,7 +45,7 @@ namespace catos::tests {
 
         foo.data = 4;
 
-        auto& field = registry.register_class<Foo>().property("data", &Foo::data, "dummy");
+        auto& field = registry.register_class<Foo>("Foo").property("data", &Foo::data, "dummy");
 
 
         Property* test = field.get_property("data");
@@ -67,7 +67,7 @@ namespace catos::tests {
 
         foo.data = 4;
 
-        auto& field = registry.register_class<Foo>()
+        auto& field = registry.register_class<Foo>("Foo")
                 .property("data", &Foo::data, "dummy variable")
                 .method("get_data", &Foo::get_data, "Returns the data of Foo");
 

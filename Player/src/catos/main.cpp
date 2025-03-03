@@ -23,7 +23,7 @@ struct Foo {
 };
 
 struct Object {
-    size_t  hash;
+    std::string name;
     void* data;
 };
 
@@ -39,7 +39,7 @@ void write_property_to_string(Property* property, Registry& registry, Object& ob
     out += property->get_name();
     out += ": ";
 
-    if (registry.is_type_registered(property->get_type_hash())) {
+    if (registry.is_type_registered(property->get_type_name())) {
         out += "instance\n";
         // Write that object info to the file.
     } else {
@@ -87,11 +87,11 @@ int main() {
 
     Foo foo{2};
 
-    instances.push_back({type_utils::get_type_hash<Foo>(), &foo});
+    instances.push_back({"Foo", &foo});
 
     Registry registry{};
 
-    registry.register_class<Foo>()
+    registry.register_class<Foo>("Foo")
             .property("a", &Foo::a, "a variable")
             .property("msg", &Foo::msg, "a variable");
 
@@ -100,10 +100,10 @@ int main() {
 
     for (auto object: instances) {
 
-        TypeInfo type = registry.get_type(object.hash);
+        TypeInfo type = registry.get_type(object.name);
 
         out_yaml += "- class: ";
-        out_yaml += std::to_string(type.type_hash);
+        out_yaml += type.name;
         out_yaml += "\n";
 
         for (auto property_entry : type.properties) {

@@ -32,7 +32,6 @@ void catos::App::init_registry() {
 
 
 
-    registry.gen_cs_bindings_file();
 }
 
 
