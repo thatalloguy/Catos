@@ -11,7 +11,7 @@ struct RawString {
 };
 
 struct SubFoo {
-    const char* msg = "Hello";
+    catos::string msg = "Hello3";
     double b = 1;
 };
 
@@ -20,6 +20,7 @@ struct SubFoo {
 struct Foo {
     float a = 0;
     catos::string msg = "Hello";
+    SubFoo sub;
 };
 
 struct Object {
@@ -27,6 +28,7 @@ struct Object {
     void* data;
 };
 
+//todo use names or something instead of hashes of classes
 const size_t float_hash = 12638226781420530164;
 const size_t int_hash = 12638232278978672507;
 const size_t uint_hash = 12638231179467044040;
@@ -39,8 +41,21 @@ void write_property_to_string(Property* property, Registry& registry, Object& ob
     out += property->get_name();
     out += ": ";
 
-    if (registry.is_type_registered(property->get_type_name())) {
-        out += "instance\n";
+    if (registry.is_type_registered(property->get_type_hash())) {
+        auto& instance_property = registry.get_type(property->get_type_hash());
+
+        out += "instance: ";
+        out += instance_property.name + "\n";
+
+        for (auto properties: instance_property.properties) {
+            //out += " ";
+            Object instance_object{
+                .name = instance_property.name,
+                .data = property->get_value(object.data)
+            };
+            write_property_to_string(properties.second, registry, instance_object, out);
+        }
+
         // Write that object info to the file.
     } else {
 
@@ -93,7 +108,12 @@ int main() {
 
     registry.register_class<Foo>("Foo")
             .property("a", &Foo::a, "a variable")
-            .property("msg", &Foo::msg, "a variable");
+            .property("msg", &Foo::msg, "a variable")
+            .property("sub", &Foo::sub, "a");
+
+    registry.register_class<SubFoo>("SubFoo")
+            .property("msg", &SubFoo::msg, "...")
+            .property("b", &SubFoo::b, "...");
 
     std::string out_yaml;
 

@@ -398,6 +398,7 @@ namespace catos {
             // This means the user is trying to register a new type!
             if (_register.find(class_name) == _register.end()) {
                 _register.insert(std::pair<std::string, TypeInfo>(class_name, TypeInfo{.type_hash = type_utils::get_type_hash<A>(), .name=  class_name  }));
+                _hash_register.insert(std::pair<size_t, TypeInfo*>(type_utils::get_type_hash<A>(), &_register.at(class_name)));
             }
 
 
@@ -460,6 +461,10 @@ namespace catos {
             return (_register[type_utils::get_type_hash<A>()]);
         }
 
+        TypeInfo& get_type(size_t hash) {
+            return *_hash_register[hash];
+        }
+
         //TODO Dummy function!!!
         /// Prints out the items in the Registry
         void print_current_register() {
@@ -488,6 +493,10 @@ namespace catos {
             return is_type_registered(type_utils::get_type_hash<T>());
         }
 
+        bool is_type_registered(size_t hash) {
+            return _hash_register.contains(hash);
+        }
+
         bool is_type_registered(const std::string& type_name) {
             return _register.contains(type_name);
         }
@@ -495,6 +504,7 @@ namespace catos {
 
     private:
         std::unordered_map<std::string, TypeInfo> _register;
+        std::unordered_map<size_t, TypeInfo*> _hash_register;
         std::unordered_map<size_t, const void* > _instance_register;
     };
 }
