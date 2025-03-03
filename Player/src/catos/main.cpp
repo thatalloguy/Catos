@@ -5,14 +5,24 @@
 
 #include <ryml.hpp>
 
+
+/// Todo's before loading:
+/// - Writing classes to files that inherit from a base class.
+
 template<int T>
 struct RawString {
     char str[T];
 };
 
+struct Extra {
+    float c = 2.2f;
+};
+
+
 struct SubFoo {
     catos::string msg = "Hello3";
     double b = 1;
+    Extra extra;
 };
 
 
@@ -47,12 +57,13 @@ void write_property_to_string(Property* property, Registry& registry, Object& ob
         out += "instance: ";
         out += instance_property.name + "\n";
 
-        for (auto properties: instance_property.properties) {
-            //out += " ";
-            Object instance_object{
+        Object instance_object{
                 .name = instance_property.name,
                 .data = property->get_value(object.data)
-            };
+        };
+
+        for (auto properties: instance_property.properties) {
+            //out += " ";
             write_property_to_string(properties.second, registry, instance_object, out);
         }
 
@@ -101,8 +112,10 @@ int main() {
     vector<Object> instances;
 
     Foo foo{2};
+    Extra tes{0.4f};
 
     instances.push_back({"Foo", &foo});
+    instances.push_back({"Extra", &tes});
 
     Registry registry{};
 
@@ -113,7 +126,10 @@ int main() {
 
     registry.register_class<SubFoo>("SubFoo")
             .property("msg", &SubFoo::msg, "...")
-            .property("b", &SubFoo::b, "...");
+            .property("b", &SubFoo::b, "...")
+            .property("extra", &SubFoo::extra, "...");
+
+    registry.register_class<Extra>("Extra").property("c", &Extra::c, "...");
 
     std::string out_yaml;
 
