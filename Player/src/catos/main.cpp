@@ -1,265 +1,152 @@
 // engine includes
 #pragma once
-
-#include <glad/glad.h>
-#include <core/window.h>
-
-#include "renderer/mesh.h"
+#include <core/registry.h>
 #include "spdlog/spdlog.h"
-#include "renderer/shader.h"
-#include "renderer/renderPass.h"
-#include "renderer/renderer.h"
-#include "renderer/renderPipeline.h"
 
-#include <fstream>
+#include <ryml.hpp>
 
-#include "renderer/passes/MainPass.h"
-#include "math/matrix4.h"
-#include "renderer/passes/ShadowPass.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
-#include "renderer/loaders.h"
+template<int T>
+struct RawString {
+    char str[T];
+};
 
-using namespace catos;
+struct SubFoo {
+    catos::string msg = "Hello3";
+    double b = 1;
+};
 
 
-std::string vertexShaderSource;
-std::string fragmentShaderSource;
+
+struct Foo {
+    float a = 0;
+    catos::string msg = "Hello";
+    SubFoo sub;
+};
+
+struct Object {
+    std::string name;
+    void* data;
+};
+
+//todo use names or something instead of hashes of classes
+const size_t float_hash = 12638226781420530164;
+const size_t int_hash = 12638232278978672507;
+const size_t uint_hash = 12638231179467044040;
+const size_t double_hash = 12638230079955414429;
+const size_t string_hash = 1292088526669925081;
+
+void write_property_to_string(Property* property, Registry& registry, Object& object, std::string& out) {
+
+    out += "  ";
+    out += property->get_name();
+    out += ": ";
+
+    if (registry.is_type_registered(property->get_type_hash())) {
+        auto& instance_property = registry.get_type(property->get_type_hash());
+
+        out += "instance: ";
+        out += instance_property.name + "\n";
+
+        for (auto properties: instance_property.properties) {
+            //out += " ";
+            Object instance_object{
+                .name = instance_property.name,
+                .data = property->get_value(object.data)
+            };
+            write_property_to_string(properties.second, registry, instance_object, out);
+        }
+
+        // Write that object info to the file.
+    } else {
+
+        switch (property->get_type_hash()) {
+
+            case float_hash:
+                out += std::to_string(*static_cast<float*>(property->get_value(object.data)));
+                break;
+
+            case int_hash:
+                out += std::to_string(*static_cast<int*>(property->get_value(object.data)));
+                break;
+
+            case uint_hash:
+                out += std::to_string(*static_cast<unsigned int*>(property->get_value(object.data)));
+                break;
+
+            case double_hash:
+                out += std::to_string(*static_cast<double*>(property->get_value(object.data)));
+                break;
+
+            case string_hash:
+                out += R"(")";
+                out += static_cast<catos::string*>(property->get_value(object.data))->c_str();
+                out += R"(")";
+                break;
+
+            default:
+                spdlog::warn("Unknown Propertype HASH of name: {}", property->get_type_name());
+                break;
+        }
 
 
-std::string shadowVertex;
-std::string shadowFragment;
-std::string shadowGeometry;
-
-std::string loadTxtFromFile(const char* path){
-    std::ifstream in(path, std::ios::binary);
-    if (in)
-    {
-        std::string contents;
-        in.seekg(0, std::ios::end);
-        contents.resize(in.tellg());
-
-        in.seekg(0, std::ios::beg);
-        in.read(&contents[0], contents.length());
-        in.close();
-        return contents;
+        out += "\n";
     }
-    spdlog::error("Couldn't load: ", path);
-    throw(errno);
+
+
+
 }
 
 int main() {
 
-    vertexShaderSource   = loadTxtFromFile("../../../Assets/Shaders/default.vert");
-    fragmentShaderSource = loadTxtFromFile("../../../Assets/Shaders/default.frag");
-    shadowVertex         = loadTxtFromFile("../../../Assets/Shaders/shadow.vert");
-    shadowFragment       = loadTxtFromFile("../../../Assets/Shaders/shadow.frag");
-    shadowGeometry       = loadTxtFromFile("../../../Assets/Shaders/shadow.geom");
+    vector<Object> instances;
+
+    Foo foo{2};
+
+    instances.push_back({"Foo", &foo});
+
+    Registry registry{};
+
+    registry.register_class<Foo>("Foo")
+            .property("a", &Foo::a, "a variable")
+            .property("msg", &Foo::msg, "a variable")
+            .property("sub", &Foo::sub, "a");
+
+    registry.register_class<SubFoo>("SubFoo")
+            .property("msg", &SubFoo::msg, "...")
+            .property("b", &SubFoo::b, "...");
+
+    std::string out_yaml;
 
 
+    for (auto object: instances) {
 
-    WindowCreationInfo windowCreationInfo{};
+        TypeInfo type = registry.get_type(object.name);
 
-    Window window(windowCreationInfo);
+        out_yaml += "- class: ";
+        out_yaml += type.name;
+        out_yaml += "\n";
 
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        spdlog::error("Could not load GLAD");
-        return -1;
+        for (auto property_entry : type.properties) {
+
+            auto property = property_entry.second;
+
+            write_property_to_string(property, registry, object, out_yaml);
+
+        }
+
     }
+//
+    FILE* file = fopen("../../../test.yaml", "w");
 
-    IMGUI_CHECKVERSION();
+    ryml::csubstr yml = R"(
+                - a: "hello"
+    )";
 
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
+    auto tree = ryml::parse_in_arena(out_yaml.c_str());
 
-    ImGui_ImplGlfw_InitForOpenGL(window.get_glfw_window(), true);
-    ImGui_ImplOpenGL3_Init("#version 420");
+    ryml::emit_yaml(tree, tree.root_id(), file);
 
-    ImGui::GetIO().IniFilename = nullptr;
+    fclose(file);
 
-
-    LoadedMesh triangle{};
-
-    loaders::loadGLTF("../../../Assets/Models/helmet/DamagedHelmet.gltf", &triangle);
-    Texture tex{};
-
-    TextureCreationInfo info{
-        .source = {
-                .path = "../../../Assets/texture.png"
-        }
-    };
-
-    tex.init(info);
-
-    Vector3 cameraPos{-21, 12, -4};
-    Vector3 cameraFront{0.0f, 0.0f, -1.0f};
-    Vector3 cameraRight{1.0f, 0.0f, 0.0f};
-    Vector3 cameraUp{0.0f, 1.0f, 0.0f};
-
-
-    Matrix4 mat{};
-
-    mat.translate({0.2, 2, -2});
-    //mat.rotate(math::toRadians(30.0f), {0, 1, 0});
-
-    triangle.transform = mat.value_ptr();
-
-    // Shaders.
-    ShaderCreateInfo shaderInfo {
-        vertexShaderSource.c_str(),
-        fragmentShaderSource.c_str()
-    };
-
-    ShaderCreateInfo shadowShaderInfo {
-        shadowVertex.c_str(),
-        shadowFragment.c_str()
-    };
-
-
-    auto* lightLogic = new renderPasses::MainRenderPassLogic;
-
-    lightLogic->cameraPos = &cameraPos;
-
-    RenderPassCreationInfo colorPassInfo {
-            .willBeVisible = true,
-            .size = {800, 600},
-            .resizeToRenderSize = true,
-
-            .passLogic = lightLogic
-    };
-
-
-
-    RendererCreateInfo rendererInfo {};
-
-    Shader triangleShader;
-    Shader shadowShader;
-
-    triangleShader.init(shaderInfo);
-    shadowShader.init(shadowShaderInfo);
-
-    RenderPass defaultPass{colorPassInfo, triangleShader};
-
-    renderPasses::ShadowPassLogic* shadowPassLogic = new renderPasses::ShadowPassLogic{};
-    shadowPassLogic->setDirection({0.6, 1.0f, 0.0f});
-
-    RenderPassCreationInfo shadowPassInfo {
-            .willBeVisible = false,
-            .size = {1024, 1024},
-            .passType =  PassType::DEPTH,
-            .colorType = ColorType::DEPTH_IMG,
-            .imageType = ImageType::IMG_2D,
-            .next = &defaultPass,
-            .name = "shadowPass",
-            .passLogic = shadowPassLogic
-    };
-
-
-
-    RenderPass shadowPass{shadowPassInfo, shadowShader};
-
-    Renderer& renderer = Renderer::getInstance();
-    renderer.init(rendererInfo);
-
-    RenderPipeline defaultPipeline{};
-
-    defaultPipeline.setBeginPass(shadowPass);
-
-    defaultPipeline.addMesh(triangle);
-
-
-    //calc camera
-
-    Matrix4 proj{};
-    Matrix4 view{};
-    Matrix4 cam{};
-
-    float pitch = 0.0f;
-    float yaw = 0.0f;
-    float roll = 0.0f;
-
-    float distance = 20.0f;
-
-    shadowPassLogic->setDirection({0.7f, 1.0f, 0});
-    shadowPassLogic->setDistance(20.0f);
-    shadowPassLogic->setOrigin({0, 0, 0});
-
-    while (!window.should_window_close()) {
-        window.update();
-
-        auto winSize = window.getSize();
-
-        proj = math::perspective(math::toRadians(90.0f), winSize.x / winSize.y, 0.01f, 100000.0f);
-
-
-        Matrix4 rot{};
-        rot.rotate(toRadians(pitch), {1.0f, 0.0f, 0.0f});
-        rot.rotate(toRadians(yaw),  {0.0f, 1.0f, 0.0f});
-        rot.rotate(toRadians(roll), {0.0f, 0.0f, 1.0f});
-
-        cameraFront.x = cos(toRadians(yaw)) * cos(toRadians(pitch));
-        cameraFront.y = sin(toRadians(pitch));
-        cameraFront.z = sin(toRadians(yaw)) * cos(toRadians(pitch));
-
-        cameraFront = normalize(cameraFront);
-
-        cameraRight = normalize(cross(cameraFront, {0, 1, 0}));
-        cameraUp = normalize(cross(cameraRight, cameraFront));
-
-
-        view = math::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-
-        view = view * rot;
-
-        cam = proj * view;
-
-
-        defaultPipeline.draw(cam);
-
-        if (window.is_resized()) {
-            defaultPipeline.resize(winSize.x, winSize.y);
-            window.set_resized();
-        }
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-
-        if (ImGui::Begin("Debug Info")) {
-
-            ImGui::DragFloat3("Camera Pos", cameraPos.value_ptr());
-
-            cameraPos.x = cameraPos._[0];
-            cameraPos.y = cameraPos._[1];
-            cameraPos.z = cameraPos._[2];
-
-            ImGui::DragFloat("Size", &distance);
-
-            shadowPassLogic->setDistance(distance);
-            shadowPassLogic->setOrigin(cameraPos);
-
-            if (ImGui::TreeNode("ShadowMap")) {
-
-                ImGui::Image(reinterpret_cast<ImTextureID>(shadowPass.getPassTexture()), {250, 250});
-
-
-                ImGui::TreePop();
-            }
-
-
-        }
-
-        ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    }
-
-
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 }
 

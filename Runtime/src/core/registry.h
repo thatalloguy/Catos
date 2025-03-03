@@ -23,6 +23,8 @@ using namespace catos;
 
 namespace catos {
 
+
+
     // Properties :)
     /// See PropertyImpl for details.
     class Property {
@@ -34,9 +36,18 @@ namespace catos {
         virtual ~Property() {};
 
         virtual void* get_value(const void* obj_ptr) = 0;
+//        virtual int to_int(const void* obj_ptr) = 0;
+//        virtual int to_float(const void* obj_ptr) = 0;
+//        virtual int to_double(const void* obj_ptr) = 0;
+//        virtual int to_cstr(const void* obj_ptr) = 0;
+//
+
+
+
         virtual const char* get_name() = 0;
         virtual const char* get_type_name() = 0;
         virtual size_t& get_type_hash() = 0;
+        virtual size_t get_type_size() =0;
 
         virtual void set_name(const char* name) = 0;
 
@@ -54,6 +65,8 @@ namespace catos {
         U T::* memberPtr;
         const char* name;
 
+        size_t sizeof_type;
+
 
         std::string type_name;
         size_t type_hash;
@@ -62,6 +75,7 @@ namespace catos {
         PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {
             type_name = type_utils::get_type_name<U>();
             type_hash = type_utils::get_type_hash<U>();
+            sizeof_type = sizeof(U);
         };
 
         /// Set the name of the property
@@ -71,12 +85,34 @@ namespace catos {
 
 
 
+        virtual size_t get_type_size() {
+            return sizeof_type;
+        };
+
 
         /// Use Get value (which can be cased to the desired type) to return an value of an instance.
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
         }
+
+//
+//        virtual int to_int(const void* obj_ptr) {
+//
+//        };
+//
+//        virtual int to_float(const void* obj_ptr) {
+//
+//        };
+//
+//        virtual int to_double(const void* obj_ptr) {
+//
+//        };
+//
+//        virtual int to_cstr(const void* obj_ptr) {
+//
+//        };
+
 
 
         /// Get the name of the property
@@ -356,17 +392,17 @@ namespace catos {
 
         template<typename A>
         /// With this function you register a class to the Registry
-        TypeInfo& register_class() {
+        TypeInfo& register_class(const std::string& class_name) {
 
-            size_t hash = type_utils::get_type_hash<A>();
 
             // This means the user is trying to register a new type!
-            if (_register.find(hash) == _register.end()) {
-                _register.insert(std::pair<size_t, TypeInfo>(hash, TypeInfo{.type_hash = hash, .name=  type_utils::get_type_name<A>()  }));
+            if (_register.find(class_name) == _register.end()) {
+                _register.insert(std::pair<std::string, TypeInfo>(class_name, TypeInfo{.type_hash = type_utils::get_type_hash<A>(), .name=  class_name  }));
+                _hash_register.insert(std::pair<size_t, TypeInfo*>(type_utils::get_type_hash<A>(), &_register.at(class_name)));
             }
 
 
-            return _register[hash];
+            return _register[class_name];
         };
 
 
@@ -419,100 +455,14 @@ namespace catos {
         }
 
 
-        ///TODO this shit is so ugly ;-;
-        void gen_cs_bindings_file() {
-            std::ofstream out("../../script_test.py");
-
-            out << "///Catos Lib (auto generated)\n";
-            out << "namespace catos {\n \n";
-            for (auto& type : _register) {
-
-                auto namespacePos = type.second.name.find("::");
-                auto structPos = type.second.name.find("struct");
-
-
-
-                if (namespacePos != std::string::npos) {
-                    out << "struct " << type.second.name.substr(namespacePos + 2) << " {\n";
-                } else {
-                    out << "struct " << type.second.name.substr(structPos + 7) <<  " {\n";
-                }
-
-                for (auto& prop : type.second.properties) {
-                    out << "      /*" << prop.second->desc <<  "*/\n";
-                    out << "      public " << prop.second->get_type_name() << " " <<  prop.second->get_name() << ";\n" ;
-                }
-
-                for (auto meth : type.second.methods) {
-
-                    auto nPos = meth.second->returnName.find("::");
-                    auto sPos = meth.second->returnName.find("struct");
-
-                    if (nPos != std::string::npos || sPos != std::string::npos) {
-                        out << "      public void " << meth.first << "(" << meth.second->parameters << ") {\n";
-                        out << "            LibNative." << meth.first << "_native(ref this " << meth.second->parameterNames << ");\n";
-                        out << "      }\n";
-                    } else {
-                        out << "      public " << meth.second->returnName << " " << meth.first << "() {\n";
-                        out << "            LibNative." << meth.first << "_native(ref this);\n";
-                        out << "      }\n";
-                    }
-
-
-                }
-
-                out << "}\n \n";
-            }
-
-            out << "class LibNative {\n\n";
-
-            for (auto& type : _register) {
-
-                auto namespacePos = type.second.name.find("::");
-                auto structPos = type.second.name.find("struct");
-
-
-                std::string finalName;
-
-                if (namespacePos != std::string::npos) {
-                    finalName = type.second.name.substr(namespacePos + 2);
-                } else {
-                    finalName = type.second.name.substr(structPos + 7);
-                }
-
-                out << "      //BEGIN DEF For " << finalName.c_str() << "\n";
-
-                for (auto meth : type.second.methods) {
-
-                    auto nPos = meth.second->returnName.find("::");
-                    auto sPos = meth.second->returnName.find("struct");
-
-                    if (nPos != std::string::npos || sPos != std::string::npos) {
-                        out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";
-                        out << "      public static extern void " << meth.first << "_native(ref " << finalName   << " instance" << ", " << meth.second->parameters << ");\n \n";
-
-                    } else {
-                        out << "      [MethodImplAttribute(MethodImplOptions.InternalCall)]\n";
-                        out << "      public static extern " << meth.second->returnName << " " << meth.first << "_native(ref " << finalName << " instance);\n \n";
-
-                    }
-
-                    }
-
-                out << "      //END DEF For " << finalName.c_str() << "\n \n \n";
-            }
-
-            out << "}\n";
-
-
-            out << "}///NAMESPACE CATOS \n";
-            out.close();
-        }
-
         /// Returns the registered Type
         template<typename A>
         TypeInfo& get_type() {
             return (_register[type_utils::get_type_hash<A>()]);
+        }
+
+        TypeInfo& get_type(size_t hash) {
+            return *_hash_register[hash];
         }
 
         //TODO Dummy function!!!
@@ -530,11 +480,31 @@ namespace catos {
             }
         }
 
+        const TypeInfo& get_type(const std::string& name) {
+            return (_register[name]);
+        }
 
+        const std::unordered_map<std::string, TypeInfo>& entries() {
+            return _register;
+        }
+
+        template<typename T>
+        bool is_type_registered() {
+            return is_type_registered(type_utils::get_type_hash<T>());
+        }
+
+        bool is_type_registered(size_t hash) {
+            return _hash_register.contains(hash);
+        }
+
+        bool is_type_registered(const std::string& type_name) {
+            return _register.contains(type_name);
+        }
 
 
     private:
-        std::unordered_map<size_t, TypeInfo> _register;
+        std::unordered_map<std::string, TypeInfo> _register;
+        std::unordered_map<size_t, TypeInfo*> _hash_register;
         std::unordered_map<size_t, const void* > _instance_register;
     };
 }

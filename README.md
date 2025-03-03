@@ -4,7 +4,6 @@
 
 ![image](https://github.com/user-attachments/assets/bac6a8e8-cb13-4629-87ea-2bb2ab6255e8)
 
-
 ###### modern lightweight cpp game engine
 
 Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.html)
@@ -39,16 +38,16 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Ability to bind objects to pipelines / passes.
 - - [x] More general control over the entire render pipeline.
 ---
+- [ ] Solid Serialization System.
+- - [ ] Saving most objects to json or binary.
+- - [ ] Loading most objects from json or binary.
+- - [ ] Support for (custom) STL objects (string, vector, hashmap)
+---
 - [ ] Renderer (High level):
 - - [x] Shadows.
 - - [ ] GLTF loader.
 - - [ ] PBR render pipeline.
 - - [ ] (Skeleton) Animations.
----
-- [ ] Solid Serialization System.
-- - [ ] Saving most objects to json or binary.
-- - [ ] Loading most objects from json or binary.
-- - [ ] Support for (custom) STL objects (string, vector, hashmap)
 ---
 - [ ] Resource manager
 - - [ ] Finding files only by Name not a path.
@@ -98,6 +97,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - doctest
 ###  - fastgltf [ V0.7.2 ]
 ###  - glfw
+###  - rapidyml
 ###  - imgui
 ###  - [imgui dock](https://github.com/BentleyBlanks/imguiDock)
 ###  - pocketpy / gsoc24 (Experimental)
