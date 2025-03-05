@@ -5,22 +5,18 @@
 
 #include <ryml.hpp>
 
-template<int T>
-struct RawString {
-    char str[T];
+
+/// Todo's before loading:
+/// - Writing classes to files that inherit from a base class.
+
+
+struct BaseNode {
+    int baseNodeID = 0;
 };
 
-struct SubFoo {
-    catos::string msg = "Hello3";
-    double b = 1;
-};
 
-
-
-struct Foo {
-    float a = 0;
-    catos::string msg = "Hello";
-    SubFoo sub;
+struct DummyNode: public BaseNode {
+    float data = 2.3f;
 };
 
 struct Object {
@@ -47,12 +43,13 @@ void write_property_to_string(Property* property, Registry& registry, Object& ob
         out += "instance: ";
         out += instance_property.name + "\n";
 
-        for (auto properties: instance_property.properties) {
-            //out += " ";
-            Object instance_object{
+        Object instance_object{
                 .name = instance_property.name,
                 .data = property->get_value(object.data)
-            };
+        };
+
+        for (auto properties: instance_property.properties) {
+            //out += " ";
             write_property_to_string(properties.second, registry, instance_object, out);
         }
 
@@ -100,20 +97,21 @@ int main() {
 
     vector<Object> instances;
 
-    Foo foo{2};
+    DummyNode foo{};
 
-    instances.push_back({"Foo", &foo});
+
+    instances.push_back({"DummyNode", &foo});
 
     Registry registry{};
 
-    registry.register_class<Foo>("Foo")
-            .property("a", &Foo::a, "a variable")
-            .property("msg", &Foo::msg, "a variable")
-            .property("sub", &Foo::sub, "a");
+    registry.init();
 
-    registry.register_class<SubFoo>("SubFoo")
-            .property("msg", &SubFoo::msg, "...")
-            .property("b", &SubFoo::b, "...");
+    registry.register_class<BaseNode>("BaseNode")
+            .property("baseNodeId", &BaseNode::baseNodeID, "...");
+
+    registry.register_class<DummyNode>("DummyNode")
+            .inherits("BaseNode")
+            .property("data", &DummyNode::data, "...");
 
     std::string out_yaml;
 

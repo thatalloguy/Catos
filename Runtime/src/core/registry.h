@@ -300,7 +300,6 @@ namespace catos {
         size_t type_hash;
         std::string name;
 
-
         template<typename T, typename U>
         /// Registers a property with a name and a member pointer (Returns itself).
         TypeInfo& property(const char*  property_name, U T::* member, cstr description) {
@@ -316,6 +315,8 @@ namespace catos {
             // Return itself so that we can keep adding properties without having to write the instance again.
             return *this;
         }
+
+        TypeInfo& inherits(const std::string& class_name);
 
         /// Registers a method with a name and a member function pointer (returns the Type object again).
         template<typename ClassT, typename ReturnV, typename... Args>
@@ -378,8 +379,10 @@ namespace catos {
         static bool is_valid(Property* ptr) { return ptr != nullptr; };
         static bool is_valid(Method*   ptr) { return ptr != nullptr; };
 
+
         std::unordered_map<std::string , Property* > properties;
         std::unordered_map<std::string , Method* > methods;
+
     };
 
     //Core system :)_
@@ -388,7 +391,9 @@ namespace catos {
 
     public:
 
+        static Registry& get();
 
+        void init();
 
         template<typename A>
         /// With this function you register a class to the Registry
