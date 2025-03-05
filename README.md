@@ -4,7 +4,7 @@
 
 ![image](https://github.com/user-attachments/assets/bac6a8e8-cb13-4629-87ea-2bb2ab6255e8)
 
-###### modern lightweight cpp game engine
+###### my personal game engine
 
 Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.html)
 
