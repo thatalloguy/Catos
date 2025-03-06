@@ -6,9 +6,6 @@
 #include <ryml.hpp>
 
 
-/// Todo's before loading:
-/// - Writing classes to files that inherit from a base class.
-
 
 struct BaseNode {
     int baseNodeID = 0;
@@ -17,6 +14,8 @@ struct BaseNode {
 
 struct DummyNode: public BaseNode {
     float data = 2.3f;
+
+    catos::vector<float> vector{};
 };
 
 struct Object {
@@ -82,6 +81,7 @@ void write_property_to_string(Property* property, Registry& registry, Object& ob
 
             default:
                 spdlog::warn("Unknown Propertype HASH of name: {}", property->get_type_name());
+                out += "UNKNOWN\n";
                 break;
         }
 
@@ -111,7 +111,8 @@ int main() {
 
     registry.register_class<DummyNode>("DummyNode")
             .inherits("BaseNode")
-            .property("data", &DummyNode::data, "...");
+            .property("data", &DummyNode::data, "...")
+            .property("vector", &DummyNode::vector, "...");
 
     std::string out_yaml;
 
