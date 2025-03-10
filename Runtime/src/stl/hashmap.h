@@ -5,9 +5,11 @@
 #ifndef CATOS_HASHMAP_H
 #define CATOS_HASHMAP_H
 #include "string.h"
+#include "pair.h"
+#include "vector.h"
 
 
-namespace catos{
+namespace catos {
 
     //std::exception kiss my ass >:(
     struct no_item_found {
@@ -264,6 +266,48 @@ namespace catos{
         hashnode<K, V>* getNode(int pos) {
             return buf[pos];
         }
+
+        //forgive me (TEMP!)
+        catos::vector<Pair<K, V>> all() {
+
+            catos::vector<Pair<K, V>> elements;
+            elements.reserve(size);
+
+            for (int i=0; i<maxSize; i++) {
+                auto oldEntry = buf[i];
+
+                // Check if this object is empty, if so we have to rehash the object and its buckets.
+                while (oldEntry != nullptr) {
+
+                    auto newEntry = oldEntry->getNext();
+
+                    // If the new location is empty create a new one.
+                    if (!newEntry) {
+                       elements.push_back({oldEntry->getKey(), oldEntry->getValue()});
+                    } else {
+                        //if the new location isnt empty search for an empty bucket.
+                        auto prev = newEntry->getNext();
+
+                        // get the last bucket
+                        while (prev != nullptr) {
+                            prev = prev->getNext();
+                        }
+
+                        // put our entry in that bucket
+                        elements.push_back({oldEntry->getKey(), oldEntry->getValue()});
+
+                    }
+
+                    // Get the next one to loop through all child buckets.
+                    oldEntry = oldEntry->getNext();
+                }
+            }
+
+            return elements;
+        }
+
+
+
     private:
 
         void cleanup() {
@@ -300,11 +344,16 @@ namespace catos{
         int size = 0;
         // NOTE everytime the maxSize changes we have REHASH EVERYTHING!!
         int maxSize = 0;
-
     };
 
 
+
+
+
+
 }
+
+
 
 
 

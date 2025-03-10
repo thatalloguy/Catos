@@ -33,6 +33,12 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
         src/stl/*.h
         src/stl/*.cpp
 
+        src/io/*.h
+        src/io/*.cpp
+
+        src/io/handlers/*.h
+        src/io/handlers/*.cpp
+
 )
 add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS} "../Thirdparty/GLAD/src/glad.c" )
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)

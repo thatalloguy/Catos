@@ -21,5 +21,6 @@ Registry &Registry::get() {
 }
 
 void Registry::init() {
-    registry = this;
+    if (registry == nullptr)
+        registry = this;
 }

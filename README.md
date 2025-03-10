@@ -39,7 +39,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] More general control over the entire render pipeline.
 ---
 - [ ] Solid Serialization System.
-- - [ ] Saving most objects to json or binary.
+- - [ ] Saving most objects to ~~json~~ yaml or binary.
 - - [ ] Loading most objects from json or binary.
 - - [ ] Support for (custom) STL objects (string, vector, hashmap)
 ---

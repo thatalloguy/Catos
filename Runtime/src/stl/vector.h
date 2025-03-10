@@ -45,21 +45,14 @@ namespace catos {
 
         }
 
-        /// Initializes and calls push_back for all elements given.
-        template<typename ... Args>
-        vector(Args&& ...args): buf(nullptr), size(0) {
 
-            reserve((unsigned int) sizeof...(Args));
-
-            (push_back(args), ...);
-        }
 
         ~vector() {
             delete[] buf;
         }
 
         /// Copies the obj.
-        vector& operator=(vector& obj) {
+        vector& operator=(const vector& obj)  {
             //if (*this == obj) return *this; // no self asignment.
 
             if (obj.size >= maxSize)
