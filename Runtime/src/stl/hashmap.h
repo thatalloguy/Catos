@@ -266,8 +266,10 @@ namespace catos {
         hashnode<K, V>* getNode(int pos) {
             return buf[pos];
         }
-  
-        const catos::vector<Pair<K, V>> all() {
+
+        //forgive me (TEMP!)
+        catos::vector<Pair<K, V>> all() {
+
             catos::vector<Pair<K, V>> elements;
             elements.reserve(size);
 
