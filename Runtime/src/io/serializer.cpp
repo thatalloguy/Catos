@@ -4,7 +4,6 @@
 
 #include "serializer.h"
 #include "spdlog/spdlog.h"
-#include "handlers.h"
 
 const size_t float_hash = 12638226781420530164;
 const size_t int_hash = 12638232278978672507;
@@ -13,7 +12,6 @@ const size_t double_hash = 12638230079955414429;
 const size_t string_hash = 1292088526669925081;
 
 Serializer::Serializer(): _registry(Registry::get()) {
-    registerHandler("vector", catos::handlers::saveVectorToFile);
 }
 
 Serializer::~Serializer() {}
@@ -59,43 +57,12 @@ void catos::Serializer::write_property_to_string(Property* property, Registry& r
         };
 
         for (auto properties: instance_property.properties) {
-            //out += " ";
             write_property_to_string(properties.second, registry, instance_object, out);
         }
 
         // Write that object info to the file.
     } else {
-
-        switch (property->get_type_hash()) {
-
-            case float_hash:
-                out += std::to_string(*static_cast<float*>(property->get_value(object.data)));
-                break;
-
-            case int_hash:
-                out += std::to_string(*static_cast<int*>(property->get_value(object.data)));
-                break;
-
-            case uint_hash:
-                out += std::to_string(*static_cast<unsigned int*>(property->get_value(object.data)));
-                break;
-
-            case double_hash:
-                out += std::to_string(*static_cast<double*>(property->get_value(object.data)));
-                break;
-
-            case string_hash:
-                out += R"(")";
-                out += static_cast<catos::string*>(property->get_value(object.data))->c_str();
-                out += R"(")";
-                break;
-
-            default:
-                check_handlers(property, out);
-                break;
-        }
-
-
+        property->to_string(object.data, out);
         out += "\n";
     }
 
@@ -103,20 +70,34 @@ void catos::Serializer::write_property_to_string(Property* property, Registry& r
 
 }
 
-void Serializer::registerHandler(const std::string &type_name, void (*handler)(Property *, std::string &)) {
-    _handlers.insert({type_name, handler});
-}
+void Serializer::write_type_to_string(void *value, size_t hash, std::string& out) {
 
-void Serializer::check_handlers(Property *property, std::string &out) {
+    switch (hash) {
 
+        case float_hash:
+            out += std::to_string(*static_cast<float*>(value));
+            break;
 
-    std::string prop_name = property->get_type_name();
+        case int_hash:
+            out += std::to_string(*static_cast<int*>(value));
+            break;
 
-    for (auto handler : _handlers) {
-        if (prop_name.find(handler.first) != std::string::npos) {
-            handler.second(property, out);
-            return;
-        }
+        case uint_hash:
+            out += std::to_string(*static_cast<unsigned int*>(value));
+            break;
+
+        case double_hash:
+            out += std::to_string(*static_cast<double*>(value));
+            break;
+
+        case string_hash:
+            out += R"(")";
+            out += static_cast<catos::string*>(value)->c_str();
+            out += R"(")";
+            break;
+
+        default:
+            spdlog::warn("Unknown type");
+            break;
     }
-
 }

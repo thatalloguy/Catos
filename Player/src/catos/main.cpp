@@ -9,26 +9,36 @@
 
 
 struct BaseNode {
+public:
     int baseNodeID = 0;
+};
+
+struct Foo {
+    float i = 0;
 };
 
 
 struct DummyNode: public BaseNode {
+public:
     float data = 2.3f;
 
-    catos::vector<float> vector{};
+    catos::vector<float> vector;
 };
 
 
-//todo use names or something instead of hashes of classes
+//todo:
+/// - custom any class.
 
 
 int main() {
 
- /*   vector<Object> instances;
+    vector<Object> instances;
 
     DummyNode foo{};
 
+    foo.vector.push_back(1.0f);
+    foo.vector.push_back(1.2f);
+    foo.vector.push_back(1.3f);
 
     instances.push_back({"DummyNode", &foo});
 
@@ -39,10 +49,12 @@ int main() {
     registry.register_class<BaseNode>("BaseNode")
             .property("baseNodeId", &BaseNode::baseNodeID, "...");
 
-    registry.register_class<DummyNode>("DummyNode")
+    auto info = registry.register_class<DummyNode>("DummyNode")
             .inherits("BaseNode")
             .property("data", &DummyNode::data, "...")
             .property("vector", &DummyNode::vector, "...");
+
+
 
     std::string out_yaml;
 
@@ -50,30 +62,14 @@ int main() {
 
     serializer.serializeInstances(instances, out_yaml);
 
-//
     FILE* file = fopen("../../../test.yaml", "w");
-
-    ryml::csubstr yml = R"(
-                - a: "hello"
-    )";
 
     auto tree = ryml::parse_in_arena(out_yaml.c_str());
 
     ryml::emit_yaml(tree, tree.root_id(), file);
 
-    fclose(file);*/
+    fclose(file);
 
 
-    hashmap<int, float> map;
-
-    map.put(0, 2.0f);
-    map.put(4, 2.0f);
-    map.put(2, 2.6f);
-    map.put(6, 2.1f);
-    map.put(1, 2.2f);
-
-    for (auto pair: map.all()) {
-        spdlog::info("pair {} {}", pair.first, pair.second);
-    }
 }
 
