@@ -32,20 +32,17 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Loading python scripting.
 - - [x] exposing cpp api to python.
 ---
-- [ ] Renderer (Low level).
-- - [x] Ability to create new RenderPasses.
-- - [x] Ability to create new pipelines.
-- - [x] Ability to bind objects to pipelines / passes.
-- - [x] More general control over the entire render pipeline.
----
 - [ ] Solid Serialization System.
 - - [ ] Saving most objects to ~~json~~ yaml or binary.
 - - [ ] Loading most objects from json or binary.
 - - [ ] Support for (custom) STL objects (string, vector, hashmap)
 ---
+- [ ] Renderer.
+- - [ ] Migrate to SDL_GPU
+---
 - [ ] Renderer (High level):
 - - [x] Shadows.
-- - [ ] GLTF loader.
+- - [x] GLTF loader.
 - - [ ] PBR render pipeline.
 - - [ ] (Skeleton) Animations.
 ---
@@ -103,4 +100,8 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - pocketpy / gsoc24 (Experimental)
 ###  - spdlog
 ###  - stb_image
-###  - GLAD (gl 4.2)
+###  - GLAD (gl 4.2) 
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=thatalloguy/catos&type=Date)](https://www.star-history.com/#thatalloguy/catos&Date)
