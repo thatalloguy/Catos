@@ -18,6 +18,11 @@ struct out_of_range {
 namespace catos {
 
 
+    struct RawVector {
+        int size;
+        void* buffer;
+    };
+
     template<typename T>
     class vector {
 
@@ -32,9 +37,12 @@ namespace catos {
             if (maxSize >= obj.size)
                 reserve(obj.size);
 
-
             for (int i=0; i<obj.size; i++)
                 buf[i] = obj.buf[i];
+        }
+
+        vector(T args...) {
+            push_back(args);
         }
 
         /// Move Constructor
@@ -167,8 +175,11 @@ namespace catos {
         /// gives the internal buffer
         T* data() { return buf; };
 
+
+        const T* data() const { return buf; };
+
         /// returns the amount of objects in the internal buffer.
-        unsigned int length() {
+        unsigned int length() const {
             return size;
         }
 
