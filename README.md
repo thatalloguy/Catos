@@ -90,6 +90,10 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 #
 
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=thatalloguy/catos&type=Date)](https://www.star-history.com/#thatalloguy/catos&Date)
+
 ## Dependencies
 ###  - doctest
 ###  - fastgltf [ V0.7.2 ]
@@ -100,8 +104,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - pocketpy / gsoc24 (Experimental)
 ###  - spdlog
 ###  - stb_image
-###  - GLAD (gl 4.2) 
 
-## Star History
+## Notes:
+### in order to load python bindings you must do '#define CATOS_SCRIPTING_ENABLED'
 
-[![Star History Chart](https://api.star-history.com/svg?repos=thatalloguy/catos&type=Date)](https://www.star-history.com/#thatalloguy/catos&Date)

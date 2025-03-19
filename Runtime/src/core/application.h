@@ -4,11 +4,10 @@
 
 
 #pragma once
+
 #include "types.h"
-#include "type_utils.h"
-
 #include <unordered_map>
-
+#include <typeinfo>
 
 namespace catos {
 
@@ -39,13 +38,13 @@ namespace catos {
         /// Used to bind an instance to an type
         template<typename A>
         void bind(const void* instance) {
-            _instance_register[type_utils::get_type_hash<A>()] = instance;
+            _instance_register[typeid(A).hash_code()] = instance;
         };
 
         /// Returns the registered instance
         template<typename A>
         A* get() {
-            return  (A*) (_instance_register[type_utils::get_type_hash<A>()]);
+            return  (A*) (_instance_register[typeid(A).hash_code()]);
         }
 
 

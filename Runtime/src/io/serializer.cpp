@@ -4,6 +4,7 @@
 
 #include "serializer.h"
 #include "spdlog/spdlog.h"
+#include "stl/string.h"
 
 const size_t float_hash = 12638226781420530164;
 const size_t int_hash = 12638232278978672507;
