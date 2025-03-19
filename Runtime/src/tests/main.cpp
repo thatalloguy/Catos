@@ -2,7 +2,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "../doctest/doctest/doctest.h"
 
-#include "core/type_utils.h"
 
 #include "core/registry.h"
 #include "core/application.h"
@@ -32,9 +31,6 @@ struct ComponentTest {
 
 namespace catos::tests {
 
-    TEST_CASE("REGISTRY::GET_TYPE_NAME") {
-        CHECK((std::string) "int" == catos::type_utils::get_type_name<int>());
-    }
 
     TEST_CASE("REGISTRY::FIELDS") {
 

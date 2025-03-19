@@ -104,3 +104,6 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ###  - spdlog
 ###  - stb_image
 ###  - GLAD (gl 4.2)
+
+## Notes:
+### in order to load python script you must do '#define CATOS_SCRIPTING_ENABLED'
