@@ -42,14 +42,19 @@ namespace catos {
 
         template<typename U, class T>
         TypeInfo& property(const char* property_name, catos::vector<U> T::* member, cstr description) {
-
-
-
             properties[property_name] = new VectorProperty<T, U>(member);
             properties[property_name]->set_name(property_name);
             properties[property_name]->desc = description;
 
 
+            return *this;
+        }
+
+        template<typename K, typename V, class T>
+        TypeInfo& property(const char* property_name, std::unordered_map<K, V> T::* member, cstr description) {
+            properties[property_name] = new HashMapProperty<T, K, V>(member);
+            properties[property_name]->set_name(property_name);
+            properties[property_name]->desc = description;
 
 
             return *this;
