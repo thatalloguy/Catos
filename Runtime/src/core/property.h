@@ -4,8 +4,10 @@
 #pragma once
 
 #include <iostream>
+#include <unordered_map>
 #include "types.h"
 #include "stl/vector.h"
+#include "stl/pair.h"
 
 
 #ifdef CATOS_SCRIPTING_ENABLED
@@ -221,6 +223,105 @@ namespace catos {
                 out += std::to_string(vec->at(i));
             }
             out += "]";
+        }
+    };
+
+
+    template<typename T, typename K, typename V>
+    class HashMapProperty : public Property {
+
+
+    public:
+        std::unordered_map<K, V> T::* memberPtr;
+        const char* name;
+
+        size_t sizeof_type;
+
+
+        std::string type_name;
+        size_t type_hash;
+
+        ///PropertyImpl exist in order to avoid having to deal with templates at the user-side.
+        HashMapProperty(std::unordered_map<K, V> T::* memPtr) : memberPtr(memPtr) {
+            type_name = typeid(catos::Pair<K, V>).name();
+            type_hash = typeid(catos::Pair<K, V>).hash_code();
+            sizeof_type = sizeof(catos::Pair<K, V>);
+        };
+
+        /// Set the name of the property
+        void set_name(const char* new_name) override {
+            name = new_name;
+        }
+
+
+        PropertyType get_type() override {
+            return PropertyType::VECTOR;
+        }
+
+
+
+        /// Use Get value (which can be cased to the desired type) to return an value of an instance.
+        void* get_value(const void* objPtr) override {
+            const T* obj = static_cast<const T*>(objPtr);
+
+            return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
+        }
+
+        int get_length(const void* objPtr) {
+            const T* obj = static_cast<const T*>(objPtr);
+            return (obj->*memberPtr).size();
+        }
+        /// Get the name of the property
+        const char* get_name() override{
+            return name;
+        }
+
+        /// Returns the name of the fields type.
+        const char* get_type_name() override {
+            return type_name.c_str();
+        };
+
+        /// Returns (a reference of) the type's hash
+        size_t& get_type_hash() override {
+            return type_hash;
+        };
+
+        void registerToPy() override {
+
+#ifdef CATOS_SCRIPTING_ENABLED
+            auto& inst = catos::ScriptingEngine::getInstance();
+
+            inst.registerProperty<T, catos::vector<U>>(name, memberPtr);
+#endif
+        }
+
+        bool is_class() override {
+            return std::is_class<K>::value;
+        }
+
+        void to_string(void* instance, std::string& out) override {
+            //todo missing support for vectors that holds non fudemental types (AKA types that dont have a std::to_string)
+            std::unordered_map<K, V> map = *(std::unordered_map<K, V>*) this->get_value(instance);
+
+            out += "{";
+            int i = 0;
+            for (auto pair: map) {
+                if (i > 0) {
+                    out += ", ";
+                }
+
+
+                out += std::to_string(pair.first);
+                out += ": ";
+                // todo add better way
+                if constexpr (std::is_fundamental<V>()) {
+                    out += std::to_string(pair.second);
+                } else {
+                    out += pair.second;
+                }
+                i++;
+            }
+            out += "}";
         }
     };
 }

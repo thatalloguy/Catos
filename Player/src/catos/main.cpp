@@ -22,23 +22,22 @@ struct DummyNode: public BaseNode {
 public:
     float data = 2.3f;
 
-    catos::vector<float> vector;
+    std::unordered_map<int, const char*> vector;
 };
 
 
 //todo:
-/// - custom any class.
+/// - Better way to convert an object to a string.
 
 
 int main() {
-
     vector<Object> instances;
 
     DummyNode foo{};
 
-    foo.vector.push_back(1.0f);
-    foo.vector.push_back(1.2f);
-    foo.vector.push_back(1.3f);
+    foo.vector.insert({1, "Hello"});
+    foo.vector.insert({2, "world"});
+    foo.vector.insert({3, "catos"});
 
     instances.push_back({"DummyNode", &foo});
 
@@ -53,8 +52,6 @@ int main() {
             .inherits("BaseNode")
             .property("data", &DummyNode::data, "...")
             .property("vector", &DummyNode::vector, "...");
-
-
 
     std::string out_yaml;
 
