@@ -130,7 +130,9 @@ namespace catos {
         }
 
         void to_string(void* instance, std::string& out) override {
-            if constexpr (std::is_fundamental<U>::value) {
+            if (is_type_registered(typeid(U).hash_code())) {
+                type_instance_to_string(get_type_info(typeid(U).hash_code()), instance, out);
+            } else if constexpr (std::is_fundamental<U>()) {
                 out += std::to_string(*(U*) this->get_value(instance));
             }
         }
@@ -220,7 +222,11 @@ namespace catos {
                 }
 
 
-                out += std::to_string(vec->at(i));
+                if (is_type_registered(typeid(U).hash_code())) {
+                    type_instance_to_string(get_type_info(typeid(U).hash_code()), &vec->at(i), out);
+                } else if constexpr(std::is_fundamental<U>()) {
+                    out += std::to_string(vec->at(i));
+                }
             }
             out += "]";
         }
@@ -311,13 +317,16 @@ namespace catos {
                 }
 
 
+
                 out += std::to_string(pair.first);
                 out += ": ";
+
+
                 // todo add better way
-                if constexpr (std::is_fundamental<V>()) {
+                if (is_type_registered(typeid(V).hash_code())) {
+                    type_instance_to_string(get_type_info(typeid(V).hash_code()), &pair.second, out);
+                } else if constexpr (std::is_fundamental<V>()){
                     out += std::to_string(pair.second);
-                } else {
-                    out += pair.second;
                 }
                 i++;
             }
