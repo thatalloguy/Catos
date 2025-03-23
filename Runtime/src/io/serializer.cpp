@@ -46,7 +46,7 @@ void catos::Serializer::write_property_to_string(Property* property, Registry& r
     out += property->get_name();
     out += ": ";
 
-    if (registry.is_type_registered(property->get_type_hash())) {
+    if (registry.is_type_registered(property->get_type_hash()) && property->get_type() != PropertyType::VECTOR) {
         auto& instance_property = registry.get_type(property->get_type_hash());
 
         out += "instance: ";

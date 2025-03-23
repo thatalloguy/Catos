@@ -15,6 +15,7 @@ public:
 
 struct Foo {
     float i = 0;
+    double z = 2.0;
 };
 
 
@@ -22,7 +23,8 @@ struct DummyNode: public BaseNode {
 public:
     float data = 2.3f;
 
-    std::unordered_map<int, const char*> vector;
+    catos::vector<Foo> vector{};
+
 };
 
 
@@ -35,9 +37,9 @@ int main() {
 
     DummyNode foo{};
 
-    foo.vector.insert({1, "Hello"});
-    foo.vector.insert({2, "world"});
-    foo.vector.insert({3, "catos"});
+    foo.vector.push_back(Foo{2, 3});
+    foo.vector.push_back(Foo{2, 5});
+    foo.vector.push_back(Foo{2, 6});
 
     instances.push_back({"DummyNode", &foo});
 
@@ -48,10 +50,16 @@ int main() {
     registry.register_class<BaseNode>("BaseNode")
             .property("baseNodeId", &BaseNode::baseNodeID, "...");
 
+
+    registry.register_class<Foo>("Foo")
+            .property("i", &Foo::i, "...")
+            .property("z", &Foo::z, "...");
+
     auto info = registry.register_class<DummyNode>("DummyNode")
             .inherits("BaseNode")
             .property("data", &DummyNode::data, "...")
             .property("vector", &DummyNode::vector, "...");
+
 
     std::string out_yaml;
 
