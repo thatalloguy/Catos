@@ -89,6 +89,30 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] Copy/paste
 #
 
+## Current Features:
+
+### reflection system
+Catos uses/depents allot on its own custom reflection system. The system is written across: registry.h, typeinfo.h, property.h, method.h
+The reflection system support any fundemental type and some special types, such as `catos::vector` and `std::unordered_map` .
+
+### Automatic python binding.
+Powered by its reflection system, Catos can automatically bind cpp class with properties and functions to python.
+
+### Serialization system.
+Powered by the reflection system, Catos can write most cpp classes to both yaml and binary(WIP). 
+It can also later read them back from yaml and binary. Yaml is meant to be used for the editor so that any errors/corrupted files can be easily read and fixed.
+Binary is for exported games and meant for loading objects fast.
+
+### Modern renderer.
+Catos's renderer is meant to be customizable at heart. The current renderer is written ontop of opengl and allows the user to easily create their own `Pipelines` and `RenderPasses` .
+However the plan is to migrate from opengl to SDL_GPU, which is a relatively thin layer ontop of both DirectX12, Vulkan and Metal. This will recuire me to rewrite the entire render structure.
+This is because SDL_GPU already has `RenderPasses` and `Pipelines` out of the box. The implementation will be focused on ease of customization with the help of nodes, which is meant to function as a framegraph.
+Allowing the user to specify what shaders, pipelines, buffers, textures and passes should be used and how. With the introduction of SDL_GPU it also means that we can't use GLSL but only HLSL, I intend to write a small validation layer (if needed) and then use SDL_Shadercross to compile them.
+
+### Window management.
+The current windowing library is GLFW-3, however with the introduction of SDL_GPU I see no reason to stay with GLFW and therefor I will migrate to SDL 3.
+
+
 
 ## Star History
 
