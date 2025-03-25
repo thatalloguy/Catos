@@ -5,7 +5,6 @@
 
 #include "renderer/renderPass.h"
 
-#include <glm/mat4x4.hpp>
 
 namespace catos::renderPasses {
 
