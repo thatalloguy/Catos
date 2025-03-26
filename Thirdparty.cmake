@@ -67,7 +67,7 @@ if (NOT TARGET fastgltf)
             GIT_TAG v0.7.2
     )
 
-    ## FetchContent_MakeAvailable(fastgltf_content)
+    FetchContent_MakeAvailable(fastgltf_content)
 endif()
 
 if (NOT TARGET glfw)
