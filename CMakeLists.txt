@@ -14,7 +14,6 @@ endif()
 
 include(Thirdparty.cmake)
 
-add_subdirectory(${fastgltf_content_SOURCE_DIR})
 
 add_library(catos-headers INTERFACE)
 
