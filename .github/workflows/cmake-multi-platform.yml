@@ -38,8 +38,8 @@ jobs:
             cpp_compiler: clang++
             
           - os: macos-latest
-            c_compiler: clang
-            cpp_compiler: clang++
+            c_compiler: cl
+            cpp_compiler: cl
         exclude:
           - os: windows-latest
             c_compiler: gcc
