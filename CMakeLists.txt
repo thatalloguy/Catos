@@ -12,6 +12,7 @@ if(EMSCRIPTEN)
 endif()
 
 
+set(GLFW_BUILD_WAYLAND OFF)
 include(Thirdparty.cmake)
 
 
