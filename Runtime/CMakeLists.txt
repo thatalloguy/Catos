@@ -2,13 +2,6 @@ add_library(catos-runtime INTERFACE)
 target_include_directories(catos-runtime INTERFACE include)
 
 
-#static-lib
-file(GLOB_RECURSE FASTGLTF_DEPS
-        Thirdparty/fastgltf/deps/simdjson/simdjson.h
-        Thirdparty/fastgltf/deps/simdjson/simdjson.cpp
-
-        Thirdparty/stb/stb_image.h
-)
 file(GLOB_RECURSE CATOS_RUNTIME_SRC
 
         src/core/*.cpp
@@ -40,35 +33,27 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
         src/io/handlers/*.cpp
 
 )
-add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC}  ${IMGUI_SOURCE} ${FASTGLTF_DEPS} "../Thirdparty/GLAD/src/glad.c" )
+add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC} )
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
 
 
 
-
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/imgui")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/stb")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pocketpy")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/pocketpy/include/pybind11/")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glfw/include")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glad/include/")
-target_include_directories(catos-runtime-static PUBLIC "Thirdparty/glm")
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c src/tests/*.cpp)
-add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST})
+add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST} "../Thirdparty/stb/stb_image.h")
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 target_link_libraries(catos-runtime-static PUBLIC dwmapi)
 
 
 target_link_libraries(catos-runtime-static PUBLIC spdlog)
+target_link_libraries(catos-runtime-static PUBLIC glfw)
 target_link_libraries(catos-runtime-static PUBLIC fastgltf)
 target_link_libraries(catos-runtime-static PUBLIC pocketpy)
-target_link_libraries(catos-runtime-static PUBLIC glfw)
-target_link_libraries(catos-runtime-static PUBLIC ryml)
 
 
+target_include_directories(catos-runtime-static PUBLIC ${GLAD_SRC})
 
 
 add_test(NAME catos-runtime-tests COMMAND catos-runtime-tests)

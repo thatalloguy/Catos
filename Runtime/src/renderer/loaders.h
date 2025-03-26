@@ -5,7 +5,21 @@
 
 #include <filesystem>
 #include "mesh.h"
-
+//
+//#include <fastgltf/tools.hpp>
+//
+//
+//namespace fastgltf {
+//
+//
+//    template<>
+//    struct fastgltf::ElementTraits<Vector3i> : ElementTraitsBase<Vector3i, AccessorType::Vec3, float> {};
+//
+//    template<>
+//    struct fastgltf::ElementTraits<Vector2i> : ElementTraitsBase<Vector2i, AccessorType::Vec2, float> {};
+//
+//
+//}
 namespace catos {
 
 
@@ -75,7 +89,7 @@ namespace catos {
     namespace loaders {
 
 
-        bool loadGLTF(std::filesystem::path filePath, LoadedMesh* out);
+        bool loadGLTF(std::filesystem::path filePath, LoadedMesh* out) { return false; };
     }
 };
 
