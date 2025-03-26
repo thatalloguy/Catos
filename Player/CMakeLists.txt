@@ -1,6 +1,4 @@
 
-find_package(Vulkan REQUIRED)
-
 add_executable(catos-player
         src/catos/main.cpp
 )
