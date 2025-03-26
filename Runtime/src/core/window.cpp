@@ -2,8 +2,9 @@
 // Created by allos on 5/16/2024.
 //
 
-#ifdef _WIN32
 #include "window.h"
+
+#ifdef _WIN32
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
