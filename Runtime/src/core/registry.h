@@ -143,11 +143,11 @@ namespace catos {
         }
 
         bool is_type_registered(size_t hash) {
-            return _hash_register.contains(hash);
+            return _hash_register.find(hash) != _hash_register.end();
         }
 
         bool is_type_registered(const std::string& type_name) {
-            return _register.contains(type_name);
+            return _register.find(type_name) != _register.end();
         }
 
 
