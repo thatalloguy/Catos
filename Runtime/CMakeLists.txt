@@ -33,6 +33,15 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
         src/io/handlers/*.cpp
 
 )
+
+
+file(GLOB_RECURSE FASTGLTF_DEPS
+        ${fastgltf_content_SOURCE_DIR}/deps/simdjson/simdjson.h
+        ${fastgltf_content_SOURCE_DIR}deps/simdjson/simdjson.cpp
+
+        ../Thirdparty/stb/stb_image.h
+)
+
 add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC} )
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
@@ -54,6 +63,7 @@ target_link_libraries(catos-runtime-static PUBLIC pocketpy)
 
 
 target_include_directories(catos-runtime-static PUBLIC ${GLAD_SRC})
+target_include_directories(catos-runtime-static PUBLIC "../Thirdparty/stb/")
 
 
 add_test(NAME catos-runtime-tests COMMAND catos-runtime-tests)
