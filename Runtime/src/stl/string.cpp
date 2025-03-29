@@ -3,7 +3,7 @@
 //
 
 #include <stl/string.h>
-#include <string.h>
+#include <cstring>
 
 catos::string::~string() {
 
