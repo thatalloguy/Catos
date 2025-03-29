@@ -2,9 +2,8 @@
 // Created by allos on 8/22/2024.
 //
 
-#include <cstring>
-#include <cstdio>
-#include "string.h"
+#include <stl/string.h>
+#include <string.h>
 
 catos::string::~string() {
 
