@@ -59,17 +59,6 @@ if (NOT TARGET pocketpy)
 endif()
 
 
-if (NOT TARGET fastgltf)
-
-    FetchContent_Declare(
-            fastgltf_content
-            GIT_REPOSITORY https://github.com/spnda/fastgltf.git
-            GIT_TAG v0.7.2
-    )
-
-    FetchContent_MakeAvailable(fastgltf_content)
-endif()
-
 if (NOT TARGET glfw)
 
     FetchContent_Declare(
@@ -114,8 +103,8 @@ if (NOT TARGET imgui)
     )
 
     set(IMGUI_SOURCE_BACKEND
-            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_sdl3.h
-            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
+            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_glfw.h
+            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
             ${imgui_content_SOURCE_DIR}/backends/imgui_impl_opengl3.h
             ${imgui_content_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
     )

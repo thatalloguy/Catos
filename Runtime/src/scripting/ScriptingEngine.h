@@ -9,8 +9,9 @@
 
 
 #include "stl/hashmap.h"
-#include <pocketpy/pocketpy.h>
-#include <pybind11.h>
+#include <pocketpy.h>
+#include <pybind11/pybind11.h>
+
 #include <any>
 
 namespace py = pybind11;

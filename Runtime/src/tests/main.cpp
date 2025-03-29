@@ -1,6 +1,7 @@
 #pragma once
 #define DOCTEST_CONFIG_IMPLEMENT
-#include "../doctest/doctest/doctest.h"
+#include <doctest/doctest.h>
+
 
 
 #include "core/registry.h"

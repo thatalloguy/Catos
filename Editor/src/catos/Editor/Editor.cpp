@@ -175,7 +175,6 @@ void catos::Editor::init_style() {
     style.GrabRounding = 3.299999952316284f;
     style.TabRounding = 1.600000023841858f;
     style.TabBorderSize = 0.0f;
-    style.TabMinWidthForCloseButton = 0.0f;
     style.ColorButtonPosition = ImGuiDir_Right;
     style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
     style.SelectableTextAlign = ImVec2(0.009999999776482582f, 0.0f);
