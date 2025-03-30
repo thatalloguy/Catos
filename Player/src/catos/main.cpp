@@ -8,23 +8,13 @@
 
 
 
-struct BaseNode {
-public:
-    int baseNodeID = 0;
-};
-
 struct Foo {
-    float i = 0;
-    double z = 2.0;
+    float z = 0.2f;
 };
 
-
-struct DummyNode: public BaseNode {
-public:
-    float data = 2.3f;
-
-    catos::vector<Foo> vector{};
-
+struct Moo {
+    float a = 0.1f;
+    Foo* foo = nullptr;
 };
 
 
@@ -35,31 +25,32 @@ public:
 int main() {
     vector<Object> instances;
 
-    DummyNode foo{};
+    Foo foo{};
 
-    foo.vector.push_back(Foo{2, 3});
-    foo.vector.push_back(Foo{2, 5});
-    foo.vector.push_back(Foo{2, 6});
+    Moo moo{
+        0.1f,
+        &foo
+    };
 
-    instances.push_back({"DummyNode", &foo});
+    Moo moo2{
+            1.2f,
+            &foo
+    };
+
+
+    instances.push_back({"Moo", &moo});
+    instances.push_back({"Moo", &moo2});
 
     Registry registry{};
 
     registry.init();
 
-    registry.register_class<BaseNode>("BaseNode")
-            .property("baseNodeId", &BaseNode::baseNodeID, "...");
-
-
     registry.register_class<Foo>("Foo")
-            .property("i", &Foo::i, "...")
             .property("z", &Foo::z, "...");
 
-    auto info = registry.register_class<DummyNode>("DummyNode")
-            .inherits("BaseNode")
-            .property("data", &DummyNode::data, "...")
-            .property("vector", &DummyNode::vector, "...");
-
+    registry.register_class<Moo>("Moo")
+            .property("a", &Moo::a, "...")
+            .property("foo", &Moo::foo, "...");
 
     std::string out_yaml;
 
@@ -74,7 +65,6 @@ int main() {
     ryml::emit_yaml(tree, tree.root_id(), file);
 
     fclose(file);
-
 
 }
 

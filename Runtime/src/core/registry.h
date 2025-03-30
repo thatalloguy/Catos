@@ -20,15 +20,7 @@ using namespace catos;
 namespace catos {
 
 
-
-    //Method ;-; | I DID IT RAHHHHHHH
-
-
-
-
-
-    //Type
-
+    typedef unsigned long long Ref;
 
     //Core system :)_
     /// The registry is the core system and provides reflection to the rest of the engine
@@ -150,10 +142,29 @@ namespace catos {
             return _register.find(type_name) != _register.end();
         }
 
+        Ref getRef(void* ptr) {
+            if (_ptr_register.find(ptr) != _ptr_register.end()) {
+                return _ptr_register.at(ptr);
+            }
+
+
+            lastId++;
+            _ptr_register.insert({ptr, lastId});
+
+            return lastId;
+        };
+
+
+        const std::unordered_map<void*, Ref>& ptrs() {
+            return _ptr_register;
+        }
+
 
     private:
+        Ref lastId = 0;
+
         std::unordered_map<std::string, TypeInfo> _register;
         std::unordered_map<size_t, TypeInfo*> _hash_register;
-        std::unordered_map<size_t, const void* > _instance_register;
+        std::unordered_map<void*, Ref> _ptr_register;
     };
 }

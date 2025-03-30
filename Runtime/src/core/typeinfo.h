@@ -22,6 +22,9 @@ namespace catos {
 
     public:
 
+        ~TypeInfo() {
+        }
+
         size_t type_hash;
         std::string name;
 
@@ -29,16 +32,19 @@ namespace catos {
         /// Registers a property with a name and a member pointer (Returns itself).
         TypeInfo& property(const char*  property_name, U T::* member, cstr description) {
 
+            if constexpr(!std::is_pointer<U>()) {
+                properties[property_name] = new PropertyImpl<T, U>(member);
+            } else {
+                properties[property_name] = new PointerProperty<T, U>(member);
+            }
 
-            properties[property_name] = new PropertyImpl<T, U>(member);
             properties[property_name]->set_name(property_name);
             properties[property_name]->desc = description;
-
-
 
             // Return itself so that we can keep adding properties without having to write the instance again.
             return *this;
         }
+
 
         template<typename U, class T>
         TypeInfo& property(const char* property_name, catos::vector<U> T::* member, cstr description) {

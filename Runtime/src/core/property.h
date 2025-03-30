@@ -16,11 +16,17 @@
 
 namespace catos {
 
+    namespace _property_utils {
+        unsigned long getRef(void* ptr);
+
+    }
+
     enum class PropertyType {
-        BASIC = 0,
-        VECTOR = 1,
-        HASHMAP = 2,
-        CUSTOM = 1
+        BASIC =     1,
+        VECTOR =    2,
+        HASHMAP =   3,
+        POINTER =   4,
+        CUSTOM =    0,
     };
 
     // Properties :)
@@ -333,4 +339,86 @@ namespace catos {
             out += "}";
         }
     };
+
+    template<typename T, typename U>
+    class PointerProperty : public Property {
+
+
+    public:
+        U T::* memberPtr;
+        const char* name;
+
+        size_t sizeof_type;
+
+        std::string type_name;
+        size_t type_hash;
+
+
+
+        ///PropertyImpl exist in order to avoid having to deal with templates at the user-side.
+        PointerProperty(U T::* memPtr) : memberPtr(memPtr) {
+            type_name = typeid(U).name();
+            type_hash = typeid(U).hash_code();
+            sizeof_type = sizeof(U);
+        };
+
+        /// Set the name of the property
+        void set_name(const char* new_name) override {
+            name = new_name;
+        }
+
+        PropertyType get_type() const {
+            return PropertyType::BASIC;
+        }
+
+        virtual size_t get_type_size() {
+            return sizeof_type;
+        };
+
+
+        /// Use Get value (which can be cased to the desired type) to return an value of an instance.
+        void* get_value(const void* objPtr) override {
+            const T* obj = static_cast<const T*>(objPtr);
+
+            return (void*) (obj->*memberPtr);
+        }
+
+        int get_length(const void* obj_ptr) {
+            return 0;
+        }
+
+        /// Get the name of the property
+        const char* get_name() override{
+            return name;
+        }
+
+        /// Returns the name of the fields type.
+        const char* get_type_name() override {
+            return type_name.c_str();
+        };
+
+        /// Returns (a reference of) the type's hash
+        size_t& get_type_hash() override {
+            return type_hash;
+        };
+
+        void registerToPy() override {
+
+#ifdef CATOS_SCRIPTING_ENABLED
+            auto& inst = catos::ScriptingEngine::getInstance();
+
+            inst.registerProperty<T, U>(name, memberPtr);
+#endif
+        }
+
+        bool is_class() override {
+            return std::is_class<U>::value;
+        }
+
+        void to_string(void* instance, std::string& out) override {
+            out += std::to_string(catos::_property_utils::getRef(get_value(instance)));
+        }
+
+    };
+
 }
