@@ -25,6 +25,12 @@ void Serializer::serializeInstances(const vector<Object> &instances, std::string
 
         out += "- class: ";
         out += type.name;
+
+        if (_registry.is_ref_registered(object.data)) {
+            out += " !!ptr ";
+            out += std::to_string(_registry.get_ref(object.data));
+        }
+
         out += "\n";
 
         for (auto property_entry : type.properties) {

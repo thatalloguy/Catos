@@ -17,7 +17,7 @@
 namespace catos {
 
     namespace _property_utils {
-        unsigned long getRef(void* ptr);
+        unsigned long get_ref(void* ptr);
 
     }
 
@@ -416,7 +416,7 @@ namespace catos {
         }
 
         void to_string(void* instance, std::string& out) override {
-            out += std::to_string(catos::_property_utils::getRef(get_value(instance)));
+            out += std::to_string(catos::_property_utils::get_ref(get_value(instance)));
         }
 
     };

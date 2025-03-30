@@ -142,7 +142,7 @@ namespace catos {
             return _register.find(type_name) != _register.end();
         }
 
-        Ref getRef(void* ptr) {
+        Ref get_ref(void* ptr) {
             if (_ptr_register.find(ptr) != _ptr_register.end()) {
                 return _ptr_register.at(ptr);
             }
@@ -154,9 +154,8 @@ namespace catos {
             return lastId;
         };
 
-
-        const std::unordered_map<void*, Ref>& ptrs() {
-            return _ptr_register;
+        bool is_ref_registered(void* ptr) {
+            return _ptr_register.find(ptr) != _ptr_register.end();
         }
 
 

@@ -40,6 +40,7 @@ int main() {
 
     instances.push_back({"Moo", &moo});
     instances.push_back({"Moo", &moo2});
+    instances.push_back({"Foo", &foo});
 
     Registry registry{};
 
