@@ -4,10 +4,14 @@
 
 ![image](https://github.com/user-attachments/assets/bac6a8e8-cb13-4629-87ea-2bb2ab6255e8)
 
-###### my personal game engine
+###### my personal cross-platform game engine
 
 Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.html)
 
+### Compiles on:
+- [x] Macos with Clang
+- [x] Windows with visual studio and cl
+- [ ] Ubuntu with Clang
 ️
 #
 #
