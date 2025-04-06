@@ -59,8 +59,10 @@ file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c
 add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST}  "../Thirdparty/stb/stb_image.h")
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
-target_link_libraries(catos-runtime-static PUBLIC dwmapi)
 
+if(WIN32)
+        target_link_libraries(catos-runtime-static PUBLIC dwmapi)
+endif()
 
 target_link_libraries(catos-runtime-static PUBLIC spdlog)
 target_link_libraries(catos-runtime-static PUBLIC glfw)

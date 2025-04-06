@@ -3,7 +3,8 @@
 //
 
 #include <stl/string.h>
-#include <cstring>
+
+#include <string>
 
 catos::string::~string() {
 
@@ -19,21 +20,21 @@ catos::string::string(int new_size) {
 catos::string::string(const char *buffer) {
     size = strlen(buffer);
     buf = new char[size + 1];
-    strncpy_s(buf, size + 1, buffer, size);
+    std::strncpy(buf, buffer, size + 1);
 
 }
 
 catos::string::string(const catos::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
-    strncpy_s(buf, size + 1, obj.buf, size);
+    std::strncpy(buf, obj.buf, size + 1);
 }
 
 
 catos::string &catos::string::operator=(const catos::string &obj) {
     size = obj.size;
     buf = new char[size + 1];
-    strncpy_s(buf, size + 1, obj.buf, size);
+    std::strncpy(buf, obj.buf, size + 1);
     return *this;
 }
 
@@ -74,8 +75,8 @@ catos::string catos::string::operator+(const catos::string &obj) {
 
     s.size = this->size + obj.size;
     s.buf = new char[s.size + 1];
-    strncpy_s(s.buf, this->size + 1, this->buf, this->size); // first copy our str
-    strncpy_s(s.buf + this->size, obj.size + 1, obj.buf, obj.size); // Then the other obj.
+    std::strncpy(s.buf, this->buf, this->size + 1); // first copy our str
+    std::strncpy(s.buf + this->size, obj.buf, obj.size + 1); // Then the other obj.
 
     return s;
 }
