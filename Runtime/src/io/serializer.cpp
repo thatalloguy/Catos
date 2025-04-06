@@ -52,26 +52,31 @@ void catos::Serializer::write_property_to_string(Property* property, Registry& r
     out += property->get_name();
     out += ": ";
 
-    if (registry.is_type_registered(property->get_type_hash()) && property->get_type() != PropertyType::VECTOR) {
-        auto& instance_property = registry.get_type(property->get_type_hash());
+    if (registry.is_type_registered(property->get_type_hash())) {
+        if (property->get_type() != PropertyType::VECTOR) {
+            auto &instance_property = registry.get_type(property->get_type_hash());
 
-        out += "instance: ";
-        out += instance_property.name + "\n";
+            out += "instance: ";
+            out += instance_property.name + "\n";
 
-        Object instance_object{
-                .name = instance_property.name,
-                .data = property->get_value(object.data)
-        };
+            Object instance_object{
+                    .name = instance_property.name,
+                    .data = property->get_value(object.data)
+            };
 
-        for (auto properties: instance_property.properties) {
-            write_property_to_string(properties.second, registry, instance_object, out);
+            for (auto properties: instance_property.properties) {
+                write_property_to_string(properties.second, registry, instance_object, out);
+            }
+
+            // Write that object info to the file.
+        } else {
+            property->to_string(object.data, out);
+            out += "\n";
         }
-
-        // Write that object info to the file.
     } else {
-        property->to_string(object.data, out);
-        out += "\n";
+        write_type_to_string(property->get_value(object.data), property->get_type_hash(), out);
     }
+
 
 
 
@@ -79,32 +84,34 @@ void catos::Serializer::write_property_to_string(Property* property, Registry& r
 
 void Serializer::write_type_to_string(void *value, size_t hash, std::string& out) {
 
-    switch (hash) {
+    if (hash == typeid(catos::string).hash_code()) {
+        out += R"(")";
+        out += static_cast<catos::string*>(value)->c_str();
+        out += R"(")";
+    } else {
+        switch (hash) {
 
-        case float_hash:
-            out += std::to_string(*static_cast<float*>(value));
-            break;
+            case float_hash:
+                out += std::to_string(*static_cast<float*>(value));
+                break;
 
-        case int_hash:
-            out += std::to_string(*static_cast<int*>(value));
-            break;
+            case int_hash:
+                out += std::to_string(*static_cast<int*>(value));
+                break;
 
-        case uint_hash:
-            out += std::to_string(*static_cast<unsigned int*>(value));
-            break;
+            case uint_hash:
+                out += std::to_string(*static_cast<unsigned int*>(value));
+                break;
 
-        case double_hash:
-            out += std::to_string(*static_cast<double*>(value));
-            break;
+            case double_hash:
+                out += std::to_string(*static_cast<double*>(value));
+                break;
 
-        case string_hash:
-            out += R"(")";
-            out += static_cast<catos::string*>(value)->c_str();
-            out += R"(")";
-            break;
-
-        default:
-            spdlog::warn("Unknown type");
-            break;
+            default:
+                spdlog::warn("Unknown type");
+                break;
+        }
     }
+
+    out += "\n";
 }
