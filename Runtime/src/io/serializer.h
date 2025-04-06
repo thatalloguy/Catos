@@ -33,8 +33,9 @@ namespace catos {
         catos::Registry& _registry;
 
 
-        void write_object(const Object& object, Registry& registry);
-        void write_property(Property* property, Registry& registry, const Object& object);
+        void writeObject(const Object& object, Registry& registry);
+        void writeSubobject(const Object& object, size_t hash, Registry& registry);
+        void writeProperty(Property* property, Registry& registry, const Object& object);
 
         void write_type_to_string(void* value, size_t hash, std::string& out);
 

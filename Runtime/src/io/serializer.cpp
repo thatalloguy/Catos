@@ -38,7 +38,7 @@ void Serializer::serializeInstances(const vector<Object> &instances, OutputMode 
     writer->begin();
 
     for (const auto& object : instances) {
-        write_object(object, _registry);
+        writeObject(object, _registry);
     }
 
 
@@ -55,7 +55,7 @@ void Serializer::write_type_to_string(void *value, size_t hash, std::string& out
     out += "\n";
 }
 
-void Serializer::write_object(const Object &object, Registry &registry) {
+void Serializer::writeObject(const Object &object, Registry &registry) {
 
 
     TypeInfo type = _registry.get_type(object.name);
@@ -69,18 +69,49 @@ void Serializer::write_object(const Object &object, Registry &registry) {
     }
 
     for (auto entry : type.properties) {
-        write_property(entry.second, registry, object);
+        writeProperty(entry.second, registry, object);
     }
 
 
     writer->endMap();
 }
 
-void Serializer::write_property(Property *property, Registry &registry,const Object &object) {
+
+void Serializer::writeSubobject(const Object& object, size_t hash, Registry &registry) {
+
+
+    TypeInfo type = _registry.get_type(hash);
+
+    writer->beginMap(object.name.c_str());
+
+    if (_registry.is_ref_registered(object.data)) {
+        writer->writeBool("is_ptr", true);
+    } else {
+        writer->writeBool("is_ptr", false);
+    }
+
+    for (auto entry : type.properties) {
+        writeProperty(entry.second, registry, object);
+    }
+
+
+    writer->endMap();
+}
+
+
+void Serializer::writeProperty(Property *property, Registry &registry, const Object &object) {
 
     size_t hash = property->get_type_hash();
+    if (registry.is_type_registered(hash)) {
+        Object sub_object = Object{
+            property->get_name(),
+            property->get_value(object.data)
+        };
 
-    if (hash == typeid(catos::string).hash_code()) {
+        writeSubobject(sub_object, hash, registry);
+
+
+    } else if (hash == typeid(catos::string).hash_code()) {
         catos::string* value = (catos::string*) property->get_value(object.data);
         writer->writeString(property->get_name(), value->c_str());
     } else {

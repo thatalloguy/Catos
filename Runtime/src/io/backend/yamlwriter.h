@@ -20,11 +20,9 @@ namespace catos {
 
         void writeString(const string &name, const char *value) override;
 
-        void beginMap() override;
         void beginMap(const string &name) override;
         void endMap() override;
 
-        void beginArray() override;
         void beginArray(const string &name) override;
         void endArray() override;
 
@@ -41,6 +39,8 @@ namespace catos {
 
         int arrays_openend = 0;
         int arrays_closed = 0;
+
+        void format();
     };
 
 }

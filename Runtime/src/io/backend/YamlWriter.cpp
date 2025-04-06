@@ -6,55 +6,67 @@
 #include "YamlWriter.h"
 #include "spdlog/spdlog.h"
 #include <ryml.hpp>
+#include <iostream>
 
 namespace {
     std::string out_string = "";
 }
 
 void catos::YamlWriter::writeBool(const catos::string &name, bool value) {
-    spdlog::info("bool: {} | {}", name.c_str(), value);
+   format();
+   out_string += name.c_str();
+   out_string += ": ";
+   out_string += std::to_string(value);
+   out_string += "\n";
 }
 
 void catos::YamlWriter::writeInt(const catos::string &name, int value) {
-    spdlog::info("int: {} | {}", name.c_str(), value);
+    format();
+    out_string += name.c_str();
+    out_string += ": ";
+    out_string += std::to_string(value);
+    out_string += "\n";
 }
 
 void catos::YamlWriter::writeFloat(const catos::string &name, float value) {
-    spdlog::info("float: {} | {}", name.c_str(), value);
+    format();
+    out_string += name.c_str();
+    out_string += ": ";
+    out_string += std::to_string(value);
+    out_string += "\n";
 }
 
 void catos::YamlWriter::writeString(const catos::string &name, const char *value) {
-    spdlog::info("string: {} | {}", name.c_str(), value);
-}
-
-void catos::YamlWriter::beginMap() {
-    maps_opened++;
-    spdlog::info("beginning map");
+    format();
+    out_string += name.c_str();
+    out_string += R"(: ")";
+    out_string += value;
+    out_string += R"(")";
+    out_string += "\n";
 }
 
 void catos::YamlWriter::beginMap(const catos::string &name) {
+    format();
     maps_opened++;
-    spdlog::info("beginning map {}", name.c_str());
+    out_string += name.c_str();
+    out_string += ":\n";
 }
 
 void catos::YamlWriter::endMap() {
     maps_closed++;
-    spdlog::info("ended map");
 }
 
-void catos::YamlWriter::beginArray() {
-    arrays_openend++;
-    spdlog::info("beginning array");
-}
 
 void catos::YamlWriter::beginArray(const catos::string &name) {
+    format();
     arrays_openend++;
-    spdlog::info("beginning array {}", name.c_str());
+    out_string += "- ";
+    out_string += name.c_str();
+    out_string += ":\n";
 }
 
 void catos::YamlWriter::endArray() {
     arrays_closed++;
-    spdlog::info("ended array");
 }
 
 void catos::YamlWriter::begin() {
@@ -68,14 +80,26 @@ void catos::YamlWriter::close() {
         return;
     }
 
-//    FILE* file = fopen("../../../test.yaml", "w");
-//
-//    auto tree = ryml::parse_in_arena(out_string.c_str());
-//
-//    ryml::emit_yaml(tree, tree.root_id(), file);
-//
-//    fclose(file);
 
+    FILE* file = fopen("../../../test.yaml", "w");
+
+    auto tree = ryml::parse_in_arena(out_string.c_str());
+
+    ryml::emit_yaml(tree, tree.root_id(), file);
+
+    fclose(file);
+
+}
+
+
+void catos::YamlWriter::format() {
+    for (int i=0; i<maps_opened; i++) {
+        out_string += "  ";
+    }
+
+    if (arrays_openend > arrays_closed) {
+        out_string += "- ";
+    }
 }
 
 bool catos::YamlWriter::validate() {
