@@ -52,8 +52,6 @@ namespace catos {
         virtual size_t& get_type_hash() = 0;
 
         virtual bool is_class() = 0;
-        virtual void to_string(void* instance, std::string& out) = 0;
-
 
 
         virtual void set_name(const char* name) = 0;
@@ -135,13 +133,6 @@ namespace catos {
             return std::is_class<U>::value;
         }
 
-        void to_string(void* instance, std::string& out) override {
-            if (is_type_registered(typeid(U).hash_code())) {
-                type_instance_to_string(get_type_info(typeid(U).hash_code()), instance, out);
-            } else if constexpr (std::is_fundamental<U>()) {
-                out += std::to_string(*(U*) this->get_value(instance));
-            }
-        }
 
     };
 
@@ -217,25 +208,6 @@ namespace catos {
             return std::is_class<U>::value;
         }
 
-        void to_string(void* instance, std::string& out) override {
-            //todo missing support for vectors that holds non fudemental types (AKA types that dont have a std::to_string)
-            catos::vector<U>* vec = (catos::vector<U>*) this->get_value(instance);
-
-            out += "[";
-            for (int i=0; i<vec->length(); i++) {
-                if (i > 0) {
-                    out += ", ";
-                }
-
-
-                if (is_type_registered(typeid(U).hash_code())) {
-                    type_instance_to_string(get_type_info(typeid(U).hash_code()), &vec->at(i), out);
-                } else if constexpr(std::is_fundamental<U>()) {
-                    out += std::to_string(vec->at(i));
-                }
-            }
-            out += "]";
-        }
     };
 
 
@@ -311,33 +283,6 @@ namespace catos {
             return std::is_class<K>::value;
         }
 
-        void to_string(void* instance, std::string& out) override {
-            //todo missing support for vectors that holds non fudemental types (AKA types that dont have a std::to_string)
-            std::unordered_map<K, V> map = *(std::unordered_map<K, V>*) this->get_value(instance);
-
-            out += "{";
-            int i = 0;
-            for (auto pair: map) {
-                if (i > 0) {
-                    out += ", ";
-                }
-
-
-
-                out += std::to_string(pair.first);
-                out += ": ";
-
-
-                // todo add better way
-                if (is_type_registered(typeid(V).hash_code())) {
-                    type_instance_to_string(get_type_info(typeid(V).hash_code()), &pair.second, out);
-                } else if constexpr (std::is_fundamental<V>()){
-                    out += std::to_string(pair.second);
-                }
-                i++;
-            }
-            out += "}";
-        }
     };
 
     template<typename T, typename U>
@@ -415,9 +360,6 @@ namespace catos {
             return std::is_class<U>::value;
         }
 
-        void to_string(void* instance, std::string& out) override {
-            out += std::to_string(catos::_property_utils::get_ref(get_value(instance)));
-        }
 
     };
 

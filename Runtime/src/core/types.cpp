@@ -15,10 +15,3 @@ void* get_type_info(size_t hash) {
 bool is_type_registered(size_t hash) {
     return catos::Registry::get().is_type_registered(hash);
 }
-
-void type_instance_to_string(void *type_info, void* instance, std::string&  out) {
-    TypeInfo* info = (TypeInfo*) type_info;
-
-    info->to_string(instance, out);
-}
-

@@ -104,23 +104,6 @@ namespace catos {
             return nullptr;
         };
 
-        void to_string(void* instance, std::string& out) {
-            out += "[";
-
-            int i = 0;
-            for (auto pair : properties) {
-                if (i > 0) {
-                    out += ", ";
-                }
-
-                pair.second->to_string(instance, out);
-
-                i++;
-            }
-
-
-            out += "]";
-        }
 
         template<typename T>
         void registerToPython() {
