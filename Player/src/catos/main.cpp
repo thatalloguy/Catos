@@ -14,7 +14,9 @@ struct Person {
 
 
 //todo:
-/// - Better way to convert an object to a string.
+/// - custom types
+/// - hashmaps
+/// - vectors
 
 
 int main() {
@@ -32,11 +34,9 @@ int main() {
             .property("age", &Person::age, "...");
 
 
-    std::string out_yaml;
-
     Serializer serializer{};
 
-    serializer.serializeInstances(instances, out_yaml);
+    serializer.serializeInstances(instances);
 
 
 
