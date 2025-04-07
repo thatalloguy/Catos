@@ -83,9 +83,7 @@ void catos::YamlWriter::close() {
 
     FILE* file = fopen("../../../test.yaml", "w");
 
-    auto tree = ryml::parse_in_arena(out_string.c_str());
-
-    ryml::emit_yaml(tree, tree.root_id(), file);
+    fprintf(file, out_string.c_str());
 
     fclose(file);
 
