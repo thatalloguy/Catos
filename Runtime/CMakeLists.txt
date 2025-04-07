@@ -60,7 +60,7 @@ add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST}  "../Thirdparty/stb/stb
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 
-if(WIN32)
+if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
         target_link_libraries(catos-runtime-static PUBLIC dwmapi)
 endif()
 
