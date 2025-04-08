@@ -6,6 +6,7 @@
 #define CATOS_VECTOR_H
 
 #include <cstring>
+#include <typeinfo>
 
 struct out_of_range {
 
@@ -18,10 +19,7 @@ struct out_of_range {
 namespace catos {
 
 
-    struct RawVector {
-        int size;
-        void* buffer;
-    };
+
 
     template<typename T>
     class vector {
@@ -41,8 +39,9 @@ namespace catos {
                 buf[i] = obj.buf[i];
         }
 
-        vector(T args...) {
-            push_back(args);
+        template<typename ...Args>
+        vector(Args ... args) {
+            (push_back(args), ...);
         }
 
         /// Move Constructor
@@ -317,8 +316,6 @@ namespace catos {
     inline typename vector<T>::iterator vector<T>::cend() const {
         return vector<T>::iterator(&buf[size]);
     }
-
-
 
 }
 
