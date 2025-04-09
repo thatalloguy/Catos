@@ -6,7 +6,9 @@
 #include "stl/string.h"
 #include "stl/rawvector.h"
 
-struct Personality {
+class Personality {
+public:
+
     float weight = 0.5f;
     catos::string type = "happy";
 };
@@ -59,6 +61,7 @@ int main() {
         std::cout << "VAL:  " << val  << "\n";
     }
 
+    registry.clean_up();
 
     return 0;
 }

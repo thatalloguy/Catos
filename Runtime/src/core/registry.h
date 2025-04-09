@@ -31,6 +31,7 @@ namespace catos {
         static Registry& get();
 
         void init();
+        void clean_up();
 
         template<typename A>
         /// With this function you register a class to the Registry

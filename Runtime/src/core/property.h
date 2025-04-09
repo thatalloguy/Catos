@@ -37,7 +37,7 @@ namespace catos {
         ///Stores an member pointer to a field of an type.
         /// NOTE see the PropertyImpl for further documentation
 
-        virtual ~Property() {};
+        virtual ~Property() = default;
 
         virtual void* get_value(const void* obj_ptr) = 0;
         virtual int get_length(const void* obj_ptr) = 0;

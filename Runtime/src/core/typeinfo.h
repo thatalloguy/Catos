@@ -22,7 +22,15 @@ namespace catos {
 
     public:
 
-        ~TypeInfo() {
+        void destroy() {
+            for (auto& pair: properties) {
+                delete pair.second;
+            }
+
+            for (auto& pair : methods) {
+                delete pair.second;
+            }
+
         }
 
         size_t type_hash;
