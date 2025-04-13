@@ -45,7 +45,7 @@ void catos::YamlReader::close() {
 }
 
 catos::SerializedType catos::YamlReader::getNextEntryType() {
-
+    return SerializedType::MAP;
 }
 
 bool catos::YamlReader::validate() {

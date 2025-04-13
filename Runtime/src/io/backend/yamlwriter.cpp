@@ -6,8 +6,6 @@
 #include "yamlwriter.h"
 #include "spdlog/spdlog.h"
 #include <ryml.hpp>
-#include <iostream>
-
 namespace {
     std::string out_string = "";
 }
@@ -60,7 +58,6 @@ void catos::YamlWriter::endMap() {
 void catos::YamlWriter::beginArray(const catos::string &name) {
     format();
     arrays_openend++;
-    out_string += "- ";
     out_string += name.c_str();
     out_string += ":\n";
 }
@@ -91,11 +88,11 @@ void catos::YamlWriter::close() {
 
 
 void catos::YamlWriter::format() {
-    for (int i=0; i<maps_opened; i++) {
+    for (int i=0; i<maps_opened - maps_closed; i++) {
         out_string += "  ";
     }
 
-    if (arrays_openend > arrays_closed) {
+    if (arrays_openend != arrays_closed && maps_opened == maps_closed + 1) {
         out_string += "- ";
     }
 }

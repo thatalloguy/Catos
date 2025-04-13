@@ -15,7 +15,7 @@ namespace catos {
     };
 
     struct Object {
-        std::string name;
+        const char* name;
         void* data;
     };
 
@@ -37,8 +37,7 @@ namespace catos {
         void writeSubobject(const Object& object, size_t hash, Registry& registry);
         void writeProperty(Property* property, Registry& registry, const Object& object);
 
-        void write_type_to_string(void* value, size_t hash, std::string& out);
-
+        void writeValue(const char* name, void* value, size_t hash);
 
     };
 

@@ -6,6 +6,11 @@
 #include "stl/string.h"
 #include "stl/rawvector.h"
 
+struct Foo {
+    catos::string a = "hello";
+    int b = 4;
+};
+
 class Personality {
 public:
 
@@ -18,7 +23,7 @@ struct Person {
     int age = 20;
     Personality personality;
 
-    catos::vector<float> list{1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    catos::vector<Foo> list{Foo{}, Foo{}, Foo{}};
 };
 
 
@@ -41,6 +46,10 @@ int main() {
             .property("weight", &Personality::weight, "...")
             .property("type", &Personality::type, "...");
 
+    registry.register_class<Foo>("Foo")
+            .property("a", &Foo::a, "...")
+            .property("b", &Foo::b, "...");
+
     registry.register_class<Person>("Person")
             .property("name", &Person::name, "...")
             .property("age", &Person::age, "...")
@@ -48,18 +57,11 @@ int main() {
             .property("list", &Person::list, "...");
 
 
+
     Serializer serializer{};
 
     serializer.serializeInstances(instances);
 
-
-    raw_vector rawVector{&robert.list};
-
-    for (void* ptr : rawVector) {
-
-        float val = *(float*) ptr;
-        std::cout << "VAL:  " << val  << "\n";
-    }
 
     registry.clean_up();
 

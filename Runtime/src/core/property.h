@@ -8,6 +8,7 @@
 #include "types.h"
 #include "stl/vector.h"
 #include "stl/pair.h"
+#include "stl/rawvector.h"
 
 
 #ifdef CATOS_SCRIPTING_ENABLED
@@ -142,6 +143,8 @@ namespace catos {
 
     public:
         catos::vector<U> T::* memberPtr;
+        catos::raw_vector* vec = nullptr;
+
         const char* name;
 
         size_t sizeof_type;
@@ -156,6 +159,10 @@ namespace catos {
             type_hash = typeid(U).hash_code();
             sizeof_type = sizeof(U);
         };
+
+        ~VectorProperty() {
+            delete vec;
+        }
 
         /// Set the name of the property
         void set_name(const char* new_name) override {
@@ -173,7 +180,10 @@ namespace catos {
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
 
-            return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
+            delete vec;
+            vec = new raw_vector((catos::vector<U>*) &(obj->*memberPtr));
+
+            return vec;
         }
 
         int get_length(const void* objPtr) override {

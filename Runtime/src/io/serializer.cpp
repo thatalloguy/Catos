@@ -47,14 +47,6 @@ void Serializer::serializeInstances(const vector<Object> &instances, OutputMode 
     delete writer;
 }
 
-
-void Serializer::write_type_to_string(void *value, size_t hash, std::string& out) {
-
-
-
-    out += "\n";
-}
-
 void Serializer::writeObject(const Object &object, Registry &registry) {
 
 
@@ -82,7 +74,7 @@ void Serializer::writeSubobject(const Object& object, size_t hash, Registry &reg
 
     TypeInfo type = _registry.get_type(hash);
 
-    writer->beginMap(object.name.c_str());
+    writer->beginMap(object.name);
 
     if (_registry.is_ref_registered(object.data)) {
         writer->writeBool("is_ptr", true);
@@ -102,7 +94,31 @@ void Serializer::writeSubobject(const Object& object, size_t hash, Registry &reg
 void Serializer::writeProperty(Property *property, Registry &registry, const Object &object) {
 
     size_t hash = property->get_type_hash();
-    if (registry.is_type_registered(hash)) {
+
+    if (property->get_type() == PropertyType::VECTOR) {
+
+        writer->beginArray(property->get_name());
+
+        catos::raw_vector* vec = (catos::raw_vector*) property->get_value(object.data);
+
+        int i = 0;
+        for (void* ptr: *vec) {
+
+            auto name = std::to_string(i);
+
+            if (_registry.is_type_registered(vec->hash_of_type())) {
+                writeSubobject({name.c_str(), ptr}, vec->hash_of_type(), registry);
+            } else {
+                writeValue(name.c_str(), ptr, vec->hash_of_type());
+            }
+
+            i++;
+        }
+
+        writer->endArray();
+
+
+    } else if (registry.is_type_registered(hash)) {
         Object sub_object = Object{
             property->get_name(),
             property->get_value(object.data)
@@ -112,30 +128,34 @@ void Serializer::writeProperty(Property *property, Registry &registry, const Obj
 
 
     } else if (hash == typeid(catos::string).hash_code()) {
-        catos::string* value = (catos::string*) property->get_value(object.data);
-        writer->writeString(property->get_name(), value->c_str());
+            catos::string* value = (catos::string*) property->get_value(object.data);
+            writer->writeString(property->get_name(), value->c_str());
     } else {
-        switch (hash) {
+        writeValue(property->get_name(), property->get_value(object.data), property->get_type_hash());
+    }
+}
 
-            case float_hash:
-                writer->writeFloat(property->get_name(), *(float*) property->get_value(object.data));
-                break;
+void Serializer::writeValue(const char *name, void *value, size_t hash) {
+    switch (hash) {
 
-            case int_hash:
-                writer->writeInt(property->get_name(), *(int*) property->get_value(object.data));
-                break;
+        case float_hash:
+            writer->writeFloat(name, *(float*)value);
+            break;
 
-            case uint_hash:
-                writer->writeInt(property->get_name(), *(unsigned int*) property->get_value(object.data));
-                break;
+        case int_hash:
+            writer->writeInt(name, *(int*) value);
+            break;
 
-            case bool_hash:
-                writer->writeBool(property->get_name(), *(bool*) property->get_value(object.data));
-                break;
+        case uint_hash:
+            writer->writeInt(name, *(unsigned int*) value);
+            break;
 
-            default:
-                spdlog::warn("Unknown type");
-                break;
-        }
+        case bool_hash:
+            writer->writeBool(name, *(bool*) value);
+            break;
+
+        default:
+            spdlog::warn("Unknown type");
+            break;
     }
 }
