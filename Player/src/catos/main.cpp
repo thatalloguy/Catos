@@ -6,6 +6,8 @@
 #include "stl/string.h"
 #include "stl/rawvector.h"
 
+#include <ryml.hpp>
+
 struct Foo {
     catos::string a = "hello";
     int b = 4;
@@ -33,37 +35,62 @@ struct Person {
 
 
 int main() {
-    vector<Object> instances;
+//    vector<Object> instances;
+//
+//    Person robert;
+//
+//    instances.push_back({"Person", &robert});
+//    Registry registry{};
+//
+//    registry.init();
+//
+//    registry.register_class<Personality>("Personality")
+//            .property("weight", &Personality::weight, "...")
+//            .property("type", &Personality::type, "...");
+//
+//    registry.register_class<Foo>("Foo")
+//            .property("a", &Foo::a, "...")
+//            .property("b", &Foo::b, "...");
+//
+//    registry.register_class<Person>("Person")
+//            .property("name", &Person::name, "...")
+//            .property("age", &Person::age, "...")
+//            .property("personality", &Person::personality, "...")
+//            .property("list", &Person::list, "...");
+//
+//
+//
+//    Serializer serializer{};
+//
+//    //serializer.serializeInstances(instances);
+//
+//
+//    registry.clean_up();
+//
+//    std::ifstream f("../../../test.yaml");
+//
+//    if (!f.is_open()) {
+//        std::cerr << "Error opening the file!";
+//        return 1;
+//    }
+//
+//    std::string temp;
+//    catos::string final;
+//
+//    while (std::getline(f, temp)) {
+//        final += temp.c_str();
+//        final += "\n";
+//    }
+//
+//
+//    // Close the file
+//    f.close();
 
-    Person robert;
+    catos::string s = "hello ";
+    s += "world!";
 
-    instances.push_back({"Person", &robert});
-    Registry registry{};
+    spdlog::info("OUT: {}", s.c_str());
 
-    registry.init();
-
-    registry.register_class<Personality>("Personality")
-            .property("weight", &Personality::weight, "...")
-            .property("type", &Personality::type, "...");
-
-    registry.register_class<Foo>("Foo")
-            .property("a", &Foo::a, "...")
-            .property("b", &Foo::b, "...");
-
-    registry.register_class<Person>("Person")
-            .property("name", &Person::name, "...")
-            .property("age", &Person::age, "...")
-            .property("personality", &Person::personality, "...")
-            .property("list", &Person::list, "...");
-
-
-
-    Serializer serializer{};
-
-    serializer.serializeInstances(instances);
-
-
-    registry.clean_up();
 
     return 0;
 }

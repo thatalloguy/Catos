@@ -36,7 +36,7 @@ void catos::YamlReader::endArray() {
 
 }
 
-void catos::YamlReader::begin() {
+void catos::YamlReader::begin(const catos::string& source) {
 
 }
 

@@ -20,7 +20,7 @@ namespace catos {
     class Reader {
 
     public:
-        
+
         virtual ~Reader() = default;
 
 
@@ -38,7 +38,7 @@ namespace catos {
         virtual void beginArray(const catos::string& name) = 0;
         virtual void endArray() = 0;
 
-        virtual void begin() = 0;
+        virtual void begin(const catos::string& source) = 0;
         virtual void close() = 0;
 
         virtual SerializedType getNextEntryType() = 0;

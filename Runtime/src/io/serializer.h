@@ -6,10 +6,11 @@
 #include <string>
 #include "stl/vector.h"
 #include "core/registry.h"
+#include "stl/string.h"
 
 namespace catos {
 
-    enum class OutputMode {
+    enum class Mode {
         YAML = 0,
         BINARY = 1,
     };
@@ -26,8 +27,8 @@ namespace catos {
         Serializer();
         ~Serializer();
 
-        void serializeInstances(const catos::vector<Object>& instances, OutputMode mode = OutputMode::YAML);
-
+        void serializeInstances(const catos::vector<Object>& instances, Mode mode = Mode::YAML);
+        void deserializeInstances(const catos::string& file_path, Mode mode = Mode::YAML);
 
     private:
         catos::Registry& _registry;

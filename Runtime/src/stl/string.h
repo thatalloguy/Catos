@@ -35,6 +35,9 @@ namespace catos {
         /// Adds a string to itself.
         string operator+(const string& obj);
 
+        // copy
+        void operator+=(const string& obj);
+
         /// returns if the strings are not the same
         bool operator==(const string& obj) const;
 

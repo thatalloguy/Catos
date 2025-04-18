@@ -3,10 +3,16 @@
 //
 
 #include "serializer.h"
-#include "spdlog/spdlog.h"
-#include "stl/string.h"
-#include "writer.h"
-#include "io/backend/yamlwriter.h"
+
+
+#include <spdlog/spdlog.h>
+#include <stl/string.h>
+
+#include <io/writer.h>
+#include <io/reader.h>
+//
+#include <io/backend/yamlReader.h>
+#include <io/backend/yamlwriter.h>
 
 const size_t float_hash = 12638226781420530164;
 const size_t int_hash = 12638232278978672507;
@@ -15,20 +21,23 @@ const size_t double_hash = 12638230079955414429;
 const size_t bool_hash = 10838281452030117757;
 
 static Writer* writer = nullptr;
+static Reader* reader = nullptr;
 
 Serializer::Serializer(): _registry(Registry::get()) {
 
 }
 
 Serializer::~Serializer() {
+    delete writer;
+    delete reader;
 }
 
 
 
-void Serializer::serializeInstances(const vector<Object> &instances, OutputMode mode) {
+void Serializer::serializeInstances(const vector<Object> &instances, Mode mode) {
     delete writer;
 
-    if (mode == OutputMode::YAML) {
+    if (mode == Mode::YAML) {
         writer = new YamlWriter{};
     } else {
         writer = new YamlWriter{};
@@ -158,4 +167,24 @@ void Serializer::writeValue(const char *name, void *value, size_t hash) {
             spdlog::warn("Unknown type");
             break;
     }
+}
+
+void Serializer::deserializeInstances(const string &file_path, Mode mode) {
+    delete reader;
+
+
+    if (mode == Mode::YAML) {
+        reader = new YamlReader{};
+    } else {
+        reader = new YamlReader{};
+    }
+
+
+    reader->begin(file_path);
+
+
+    reader->close();
+
+
+    delete reader;
 }

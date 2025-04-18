@@ -98,3 +98,15 @@ bool catos::string::operator!=(const string& obj) const {
 
     return result;
 }
+
+void catos::string::operator+=(const catos::string &obj) {
+    char* t_buf = new char[size + obj.size + 1];
+    std::strncpy(t_buf, this->buf, this->size + 1); // first copy our str
+    std::strncpy(t_buf + this->size, obj.buf, obj.size + 1); // Then the other obj.
+
+
+    delete[] buf;
+    this->size += obj.size;
+
+    buf = t_buf;
+}
