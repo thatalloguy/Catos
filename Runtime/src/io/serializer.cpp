@@ -23,13 +23,34 @@ const size_t bool_hash = 10838281452030117757;
 static Writer* writer = nullptr;
 static Reader* reader = nullptr;
 
+static std::string getContents(const catos::string& path) {
+
+    std::ifstream f("../../../test.yaml");
+
+    if (!f.is_open()) {
+        std::cerr << "Error opening the file!";
+    }
+
+    std::string temp;
+    std::string final;
+
+    while (std::getline(f, temp)) {
+        final += temp.c_str();
+        final += "\n";
+    }
+
+
+    // Close the file
+    f.close();
+
+    return final;
+}
+
 Serializer::Serializer(): _registry(Registry::get()) {
 
 }
 
 Serializer::~Serializer() {
-    delete writer;
-    delete reader;
 }
 
 
@@ -180,7 +201,7 @@ void Serializer::deserializeInstances(const string &file_path, Mode mode) {
     }
 
 
-    reader->begin(file_path);
+    reader->begin(getContents(file_path).c_str());
 
 
     reader->close();
