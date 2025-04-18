@@ -32,17 +32,17 @@ int main() {
 
     registry.init();
 
-    registry.register_class<Personality>("Personality")
+    auto type_info = registry.register_class<Personality>("Personality")
             .property("weight", &Personality::weight, "...")
             .property("type", &Personality::type, "...");
 
-
-
-    Serializer serializer{};
-
-    serializer.serializeInstances(instances);
-    serializer.deserializeInstances("../../../test.yaml");
-
+//
+//
+//    Serializer serializer{};
+//
+//    serializer.serializeInstances(instances);
+//    serializer.deserializeInstances("../../../test.yaml");
+//
 
     registry.clean_up();
 
