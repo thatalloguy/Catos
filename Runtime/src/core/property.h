@@ -12,6 +12,7 @@
 #include <stl/vector.h>
 #include <stl/pair.h>
 #include <stl/rawvector.h>
+#include <any>
 
 
 #ifdef CATOS_SCRIPTING_ENABLED
@@ -46,7 +47,7 @@ namespace catos {
         virtual void* get_value(const void* obj_ptr) = 0;
         virtual int get_length(const void* obj_ptr) = 0;
 
-        virtual void set_value(Variant val) = 0;
+        virtual void set_value(const void* instance,  std::any val) = 0;
 
 
         virtual PropertyType get_type() {
@@ -105,6 +106,13 @@ namespace catos {
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
+        }
+
+        void set_value(const void* instance, std::any val) override {
+
+            T* obj = (T*) instance;
+
+            obj->*memberPtr = any_cast<U>(val);
         }
 
         int get_length(const void* obj_ptr) {
