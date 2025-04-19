@@ -6,7 +6,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "types.h"
-#include "varaint.h"
+#include "stl/any.h"
 
 
 #include <stl/vector.h>
@@ -47,7 +47,7 @@ namespace catos {
         virtual void* get_value(const void* obj_ptr) = 0;
         virtual int get_length(const void* obj_ptr) = 0;
 
-        virtual void set_value(const void* instance,  std::any val) = 0;
+        virtual void set_value(const void* instance,  catos::any val) = 0;
 
 
         virtual PropertyType get_type() {
@@ -108,11 +108,11 @@ namespace catos {
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
         }
 
-        void set_value(const void* instance, std::any val) override {
+        void set_value(const void* instance, catos::any val) override {
 
             T* obj = (T*) instance;
 
-            obj->*memberPtr = any_cast<U>(val);
+            obj->*memberPtr = val.get<U>();
         }
 
         int get_length(const void* obj_ptr) {
@@ -201,11 +201,11 @@ namespace catos {
         }
 
 
-        void set_value(const void* instance, std::any val) override {
+        void set_value(const void* instance, catos::any val) override {
 
             T* obj = (T*) instance;
 
-            obj->*memberPtr = any_cast<catos::vector<U>>(val);
+            obj->*memberPtr = val.get<catos::vector<U>>();
         }
 
 
@@ -284,11 +284,11 @@ namespace catos {
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
         }
 
-        void set_value(const void* instance, std::any val) override {
+        void set_value(const void* instance, catos::any val) override {
 
             T* obj = (T*) instance;
 
-            obj->*memberPtr = any_cast<std::unordered_map<K, V>>(val);
+            obj->*memberPtr = val.get<std::unordered_map<K, V>>();
         }
 
         int get_length(const void* objPtr) {
