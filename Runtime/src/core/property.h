@@ -200,6 +200,15 @@ namespace catos {
             return vec;
         }
 
+
+        void set_value(const void* instance, std::any val) override {
+
+            T* obj = (T*) instance;
+
+            obj->*memberPtr = any_cast<catos::vector<U>>(val);
+        }
+
+
         int get_length(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
             return (obj->*memberPtr).length();
@@ -273,6 +282,13 @@ namespace catos {
             const T* obj = static_cast<const T*>(objPtr);
 
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
+        }
+
+        void set_value(const void* instance, std::any val) override {
+
+            T* obj = (T*) instance;
+
+            obj->*memberPtr = any_cast<std::unordered_map<K, V>>(val);
         }
 
         int get_length(const void* objPtr) {
