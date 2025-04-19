@@ -6,9 +6,12 @@
 #include <iostream>
 #include <unordered_map>
 #include "types.h"
-#include "stl/vector.h"
-#include "stl/pair.h"
-#include "stl/rawvector.h"
+#include "varaint.h"
+
+
+#include <stl/vector.h>
+#include <stl/pair.h>
+#include <stl/rawvector.h>
 
 
 #ifdef CATOS_SCRIPTING_ENABLED
@@ -42,6 +45,8 @@ namespace catos {
 
         virtual void* get_value(const void* obj_ptr) = 0;
         virtual int get_length(const void* obj_ptr) = 0;
+
+        virtual void set_value(Variant val) = 0;
 
 
         virtual PropertyType get_type() {
@@ -133,6 +138,7 @@ namespace catos {
         bool is_class() override {
             return std::is_class<U>::value;
         }
+
 
 
     };
