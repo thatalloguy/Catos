@@ -36,6 +36,16 @@ int main() {
             .property("weight", &Personality::weight, "...")
             .property("type", &Personality::type, "...");
 
+
+    auto property = type_info.get_property("weight");
+
+    spdlog::info("Current val: {}", *(float*) property->get_value(&robert));
+
+    property->set_value(&robert, 1.6f);
+
+    spdlog::info("Current val: {}", *(float*) property->get_value(&robert));
+
+
 //
 //
 //    Serializer serializer{};
