@@ -22,6 +22,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Methods
 - - [x] Properties
 - - [x] Automatic pkpy binding generation.
+- - [x] Constructors
 ---
 - [x] Custom STL (standard Library)
 - - [x] String
