@@ -1,20 +1,20 @@
 
 #include "core/registry.h"
 
-Registry* registry = nullptr;
+catos::Registry* registry = nullptr;
 
 
 
-Registry &Registry::get() {
+catos::Registry &catos::Registry::get() {
     return *registry;
 }
 
-void Registry::init() {
+void catos::Registry::init() {
     if (registry == nullptr)
         registry = this;
 }
 
-void Registry::clean_up() {
+void catos::Registry::clean_up() {
     for (auto pair : _register) {
         pair.second.destroy();
     }

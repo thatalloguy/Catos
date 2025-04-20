@@ -20,8 +20,8 @@ const size_t uint_hash = 12638231179467044040;
 const size_t double_hash = 12638230079955414429;
 const size_t bool_hash = 10838281452030117757;
 
-static Writer* writer = nullptr;
-static Reader* reader = nullptr;
+static catos::Writer* writer = nullptr;
+static catos::Reader* reader = nullptr;
 
 static std::string getContents(const catos::string& path) {
 
@@ -46,16 +46,16 @@ static std::string getContents(const catos::string& path) {
     return final;
 }
 
-Serializer::Serializer(): _registry(Registry::get()) {
+catos::Serializer::Serializer(): _registry(Registry::get()) {
 
 }
 
-Serializer::~Serializer() {
+catos::Serializer::~Serializer() {
 }
 
 
 
-void Serializer::serializeInstances(const vector<Object> &instances, Mode mode) {
+void catos::Serializer::serializeInstances(const catos::vector<Object> &instances, Mode mode) {
     delete writer;
 
     if (mode == Mode::YAML) {
@@ -77,7 +77,7 @@ void Serializer::serializeInstances(const vector<Object> &instances, Mode mode) 
     delete writer;
 }
 
-void Serializer::writeObject(const Object &object, Registry &registry) {
+void catos::Serializer::writeObject(const Object &object, Registry &registry) {
 
 
     TypeInfo type = _registry.get_type(object.name);
@@ -99,7 +99,7 @@ void Serializer::writeObject(const Object &object, Registry &registry) {
 }
 
 
-void Serializer::writeSubobject(const Object& object, size_t hash, Registry &registry) {
+void catos::Serializer::writeSubobject(const Object& object, size_t hash, Registry &registry) {
 
 
     TypeInfo type = _registry.get_type(hash);
@@ -121,7 +121,7 @@ void Serializer::writeSubobject(const Object& object, size_t hash, Registry &reg
 }
 
 
-void Serializer::writeProperty(Property *property, Registry &registry, const Object &object) {
+void catos::Serializer::writeProperty(Property *property, Registry &registry, const Object &object) {
 
     size_t hash = property->get_type_hash();
 
@@ -165,7 +165,7 @@ void Serializer::writeProperty(Property *property, Registry &registry, const Obj
     }
 }
 
-void Serializer::writeValue(const char *name, void *value, size_t hash) {
+void catos::Serializer::writeValue(const char *name, void *value, size_t hash) {
     switch (hash) {
 
         case float_hash:
@@ -190,7 +190,7 @@ void Serializer::writeValue(const char *name, void *value, size_t hash) {
     }
 }
 
-void Serializer::deserializeInstances(const string &file_path, Mode mode) {
+void catos::Serializer::deserializeInstances(const catos::string &file_path, Mode mode) {
     delete reader;
 
 

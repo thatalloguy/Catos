@@ -7,7 +7,7 @@
 void* get_type_info(size_t hash) {
     catos::Registry& registry = catos::Registry::get();
 
-    TypeInfo* info =  &registry.get_type(hash);
+    catos::TypeInfo* info =  &registry.get_type(hash);
 
     return info;
 }

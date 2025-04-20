@@ -40,12 +40,12 @@ public:
 
 
 int main() {
-    vector<Object> instances;
+    catos::vector<catos::Object> instances;
 
     Personality robert;
 
     instances.push_back({"Personality", &robert});
-    Registry registry{};
+    catos::Registry registry{};
 
     registry.init();
 
@@ -65,23 +65,18 @@ int main() {
 
 
     type_info.get_method("hello")->invoke_function(&robert);
-//
+
 //
 //    Serializer serializer{};
 //
 //    serializer.serializeInstances(instances);
 //    serializer.deserializeInstances("../../../test.yaml");
-//
 
+    Personality* pers = instance_cast<Personality>(type_info.get_constructor().construct());
 
-    catos::Constructor constructor;
-    constructor.initialize<Foo, int>("Foo", typeid(Foo).hash_code());
+    spdlog::info("{} | {}", pers->weight, pers->type.c_str());
 
-    Foo* foo = instance_cast<Foo>(constructor.construct(12));
-
-    spdlog::info("foo {}", foo->t);
-
-    delete foo;
+    delete pers;
 
     registry.clean_up();
 

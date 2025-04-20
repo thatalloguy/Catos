@@ -9,6 +9,7 @@
 #include "types.h"
 #include "method.h"
 #include "property.h"
+#include "constructor.h"
 
 #ifdef CATOS_SCRIPTING_ENABLED
 #include "scripting/ScriptingEngine.h"
@@ -74,6 +75,11 @@ namespace catos {
             return *this;
         }
 
+        template<class T, typename... Args>
+        void constructor() {
+            _constructor.initialize<T, Args...>(name.c_str(), type_hash);
+        }
+
         TypeInfo& inherits(const std::string& class_name);
 
         /// Registers a method with a name and a member function pointer (returns the Type object again).
@@ -112,6 +118,10 @@ namespace catos {
             return nullptr;
         };
 
+        Constructor& get_constructor() {
+            return _constructor;
+        }
+
 
         template<typename T>
         void registerToPython() {
@@ -141,6 +151,7 @@ namespace catos {
         static bool is_valid(Method*   ptr) { return ptr != nullptr; };
 
 
+        catos::Constructor _constructor;
         std::unordered_map<std::string , Property*> properties;
         std::unordered_map<std::string , Method* > methods;
 

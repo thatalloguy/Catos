@@ -65,9 +65,11 @@ namespace catos {
 
     public:
 
+        Constructor() = default;
+
         template<typename ClassType, typename ... Args>
-        void initialize(catos::string name, size_t hash) {
-            _name = std::move(name);
+        void initialize(const catos::string& name, size_t hash) {
+            _name = name;
             type_hash = hash;
             ptr = &ConstructorInvoker<ClassType, Args...>::construct;
         };
@@ -94,7 +96,7 @@ namespace catos {
     private:
 
         std::any ptr;
-        catos::string _name;
+        catos::string _name = "";
         size_t type_hash = 0;
     };
 

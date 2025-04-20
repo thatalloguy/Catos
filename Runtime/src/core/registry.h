@@ -12,10 +12,6 @@
 
 
 
-using namespace catos;
-
-
-
 
 namespace catos {
 
@@ -42,6 +38,7 @@ namespace catos {
             if (_register.find(class_name) == _register.end()) {
                 _register.insert(std::pair<std::string, TypeInfo>(class_name, TypeInfo{.type_hash = typeid(A).hash_code(), .name=  class_name  }));
                 _hash_register.insert(std::pair<size_t, TypeInfo*>(typeid(A).hash_code(), &_register.at(class_name)));
+                _register.at(class_name)._constructor.initialize<A>(class_name.c_str(), typeid(A).hash_code());
             }
 
 
