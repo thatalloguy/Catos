@@ -31,6 +31,20 @@ namespace catos {
             any_value<Tp>::contruct(&data, std::forward<Tp>(val));
         }
 
+        any() = default;
+
+        template <typename Td, typename Tp = std::decay_t<Td>>
+        void operator=(Td&& val) {
+
+            if (data != nullptr) {
+                deconstructor(data);
+                data = nullptr;
+            }
+
+            deconstructor = any_value<Tp>::deconstruct;
+            any_value<Tp>::contruct(&data, std::forward<Tp>(val));
+        }
+
         ~any() {
             deconstructor(data);
             data = nullptr;
@@ -43,8 +57,8 @@ namespace catos {
 
 
     private:
-        void* data;
-        void (* deconstructor)(void* data);
+        void* data = nullptr;
+        void (* deconstructor)(void* data) = nullptr;
 
     };
 
