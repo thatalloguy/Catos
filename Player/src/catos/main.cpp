@@ -54,29 +54,12 @@ int main() {
             .property("type", &Personality::type, "...")
             .method("hello", &Personality::hello, "...");
 
+    catos::Serializer serializer{};
 
-    auto property = type_info.get_property("weight");
-
-    spdlog::info("Current val: {}", *(float*) property->get_value(&robert));
-
-    property->set_value(&robert, 1.6f);
-
-    spdlog::info("Current val: {}", *(float*) property->get_value(&robert));
+    serializer.serializeInstances(instances);
+    serializer.deserializeInstances("../../../test.yaml");
 
 
-    type_info.get_method("hello")->invoke_function(&robert);
-
-//
-//    Serializer serializer{};
-//
-//    serializer.serializeInstances(instances);
-//    serializer.deserializeInstances("../../../test.yaml");
-
-    Personality* pers = instance_cast<Personality>(type_info.get_constructor().construct());
-
-    spdlog::info("{} | {}", pers->weight, pers->type.c_str());
-
-    delete pers;
 
     registry.clean_up();
 

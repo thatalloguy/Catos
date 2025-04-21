@@ -26,6 +26,33 @@ namespace {
     ryml::Tree tree;
     ryml::ConstNodeRef root;
     catos::vector<Node> nodes;
+
+
+    void parseNode(Node* parent, ryml::ConstNodeRef& node) {
+
+
+        nodes.push_back({
+            node.key(),
+            node.has_val() ? node.val() : ryml::csubstr{},
+            node.has_val(),
+            node.is_seq(),
+            node.is_map()
+        });
+
+        if (parent == nullptr) {
+            parent = &nodes.back();
+        }
+
+        if (node.is_map() && cursor <= 0) {
+            cursor++;
+
+            for (auto child : node.children()) {
+                parseNode(parent, child);
+            }
+
+            cursor--;
+        }
+    }
 }
 
 
@@ -68,33 +95,8 @@ void catos::YamlReader::begin(const catos::string& source) {
 
     nodes.reserve(root.num_children());
 
-    for (auto n: root.children()) {
-        nodes.push_back(Node{
-            n.key(),
-            n.has_val() ? n.val() : ryml::csubstr{},
-            n.has_val(),
-            n.is_seq(),
-            n.is_map()
-        });
-
-
-
-        if (n.is_map() && cursor <= 0) {
-            for (auto child : n.children()) {
-
-                cursor++;
-
-                nodes.back().children.push_back(Node{
-                        child.key(),
-                        child.has_val() ? child.val() : ryml::csubstr{},
-                        child.has_val(),
-                        child.is_seq(),
-                        child.is_map()
-                });
-
-                cursor--;
-            }
-        }
+    for (ryml::ConstNodeRef n: root.children()) {
+        parseNode(nullptr, n);
     }
 
 
