@@ -14,10 +14,10 @@ namespace catos {
 
         //Fundamentals
 
-        virtual bool readBool(const catos::string& name, bool value) override;
-        virtual int readInt(const catos::string& name, int value) override;
-        virtual float readFloat(const catos::string& name, float value) override;
-        virtual catos::string readString(const catos::string& name, const char* value) override;
+        virtual bool readBool(const catos::string& name) override;
+        virtual int readInt(const catos::string& name) override;
+        virtual float readFloat(const catos::string& name) override;
+        virtual catos::string readString(const catos::string& name) override;
         //virtual void readBuffer(const catos::string& name, void* data, size_t size) override;
 
         virtual void beginMap(const catos::string& name) override;

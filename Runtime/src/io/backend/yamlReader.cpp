@@ -30,7 +30,6 @@ namespace {
 
     void parseNode(Node* parent, ryml::ConstNodeRef& node) {
 
-
         nodes.push_back({
             node.key(),
             node.has_val() ? node.val() : ryml::csubstr{},
@@ -56,19 +55,19 @@ namespace {
 }
 
 
-bool catos::YamlReader::readBool(const catos::string &name, bool value) {
+bool catos::YamlReader::readBool(const catos::string &name) {
     return false;
 }
 
-int catos::YamlReader::readInt(const catos::string &name, int value) {
+int catos::YamlReader::readInt(const catos::string &name) {
     return 0;
 }
 
-float catos::YamlReader::readFloat(const catos::string &name, float value) {
+float catos::YamlReader::readFloat(const catos::string &name) {
     return 0;
 }
 
-catos::string catos::YamlReader::readString(const catos::string &name, const char *value) {
+catos::string catos::YamlReader::readString(const catos::string &name) {
     return {};
 }
 
@@ -99,6 +98,11 @@ void catos::YamlReader::begin(const catos::string& source) {
         parseNode(nullptr, n);
     }
 
+
+    // start creating our nodes
+    for (Node node : nodes) {
+
+    }
 
 }
 

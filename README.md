@@ -38,8 +38,10 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] exposing cpp api to python.
 ---
 - [ ] Solid Serialization System.
-- - [x] Saving most objects to ~~json~~ yaml or binary.
-- - [ ] Loading most objects from json or binary.
+- - [x] Saving most objects to yaml.
+- - [ ] Loading most objects from yaml.
+- - [ ] Saving most objects to binary.
+- - [ ] Loading most objects from binary.
 - - [x] Support for (custom) STL objects (string, vector, hashmap)
 ---
 - [ ] Renderer.

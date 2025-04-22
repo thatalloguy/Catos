@@ -26,10 +26,10 @@ namespace catos {
 
         //Fundamentals
 
-        virtual bool readBool(const catos::string& name, bool value) = 0;
-        virtual int readInt(const catos::string& name, int value) = 0;
-        virtual float readFloat(const catos::string& name, float value) = 0;
-        virtual catos::string readString(const catos::string& name, const char* value) = 0;
+        virtual bool readBool(const catos::string& name) = 0;
+        virtual int readInt(const catos::string& name) = 0;
+        virtual float readFloat(const catos::string& name) = 0;
+        virtual catos::string readString(const catos::string& name) = 0;
         //virtual void readBuffer(const catos::string& name, void* data, size_t size) = 0;
 
         virtual void beginMap(const catos::string& name) = 0;
