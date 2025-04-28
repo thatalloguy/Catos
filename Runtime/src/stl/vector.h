@@ -35,7 +35,7 @@ namespace catos {
             if (maxSize >= obj.size)
                 reserve(obj.size);
 
-            for (int i=0; i<obj.size; i++)
+            for (int i=0; i<size; i++)
                 buf[i] = obj.buf[i];
         }
 

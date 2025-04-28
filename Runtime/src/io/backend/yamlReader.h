@@ -26,8 +26,7 @@ namespace catos {
         virtual void beginArray(const catos::string& name) override;
         virtual void endArray() override;
 
-        virtual void begin(const catos::string& source) override;
-        virtual void close() override;
+        virtual void read(const catos::string& source, catos::vector<catos::Instance*>& out) override;
 
         virtual SerializedType getNextEntryType() override;
 

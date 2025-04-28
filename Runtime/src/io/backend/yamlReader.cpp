@@ -13,13 +13,13 @@ namespace {
     int cursor = 0;
 
     struct Node {
-        ryml::csubstr key;
-        ryml::csubstr val;
+        catos::string key;
+        catos::string val;
         bool has_val;
         bool is_array;
         bool is_map;
 
-        catos::vector<Node> children;
+        catos::vector<Node> children{};
     };
 
 
@@ -27,22 +27,44 @@ namespace {
     ryml::ConstNodeRef root;
     catos::vector<Node> nodes;
 
+    catos::string to_string(const ryml::csubstr& str) {
+        std::string out{""};
+        for(int i=0; i<str.size(); i++) {
+            out += str.data()[i];
+        }
+        return catos::string{out.data()};
+    }
+
 
     void parseNode(Node* parent, ryml::ConstNodeRef& node) {
 
-        nodes.push_back({
-            node.key(),
-            node.has_val() ? node.val() : ryml::csubstr{},
-            node.has_val(),
-            node.is_seq(),
-            node.is_map()
-        });
 
         if (parent == nullptr) {
+
+
+
+
+            nodes.push_back({
+                                    to_string(node.key()),
+                                    node.has_val() ? to_string(node.val()) : catos::string{""},
+                                    node.has_val(),
+                                    node.is_seq(),
+                                    node.is_map()
+                            });
             parent = &nodes.back();
+
+        } else {
+            parent->children.push_back({
+                                    to_string(node.key()),
+                                    node.has_val() ? to_string(node.val()) : catos::string{},
+                                    node.has_val(),
+                                    node.is_seq(),
+                                    node.is_map()
+                            });
+
         }
 
-        if (node.is_map() && cursor <= 0) {
+        if (node.is_map() && cursor == 0) {
             cursor++;
 
             for (auto child : node.children()) {
@@ -87,7 +109,7 @@ void catos::YamlReader::endArray() {
 
 }
 
-void catos::YamlReader::begin(const catos::string& source) {
+void catos::YamlReader::read(const catos::string& source, catos::vector<catos::Instance*>& out) {
 
     tree = ryml::parse_in_arena(source.c_str());
     root = tree.crootref();
@@ -99,35 +121,29 @@ void catos::YamlReader::begin(const catos::string& source) {
     }
 
 
-    // start creating our nodes
-    for (Node node : nodes) {
-
-    }
-
-}
-
-void catos::YamlReader::close() {
 
     for (const auto& node : nodes) {
-        std::cout << "KEY: " << node.key << " "
-                  << "VAL: " << node.val << "\n- "
+        std::cout << "KEY: " << node.key.c_str() << " \n"
+                  << "VAL: " << node.val.c_str() << "\n- "
                   << "HAS_VAL: " << node.has_val << "\n- "
                   << "IS_MAP: " << node.is_map << "\n- "
-                  << "IS_SEQ: " << node.is_array << " "
+                  << "IS_SEQ: " << node.is_array << "\n- "
+                  << "IS_PARENT" << node.children.length() << " "
                   << "\n";
 
         if (node.children.length() > 0) {
             for (const auto& child : node.children) {
-                std::cout << "KEY: " << child.key << " "
-                          << "VAL: " << child.val << "\n- "
-                          << "HAS_VAL: " << child.has_val << "\n- "
-                          << "IS_MAP: " << child.is_map << "\n- "
-                          << "IS_SEQ: " << child.is_array << " "
+                std::cout << "-KEY: " << child.key.c_str() << "\n "
+                          << "-VAL: " << child.val.c_str() << "\n- "
+                          << "-HAS_VAL: " << child.has_val << "\n- "
+                          << "-IS_MAP: " << child.is_map << "\n- "
+                          << "-IS_SEQ: " << child.is_array << " "
                           << "\n";
             }
         }
     }
 }
+
 
 catos::SerializedType catos::YamlReader::getNextEntryType() {
     return SerializedType::MAP;

@@ -5,6 +5,8 @@
 
 #pragma once
 #include "stl/string.h"
+#include "stl/vector.h"
+#include "core/constructor.h"
 
 namespace catos {
 
@@ -38,8 +40,7 @@ namespace catos {
         virtual void beginArray(const catos::string& name) = 0;
         virtual void endArray() = 0;
 
-        virtual void begin(const catos::string& source) = 0;
-        virtual void close() = 0;
+        virtual void read(const catos::string& source, catos::vector<catos::Instance*>& out) = 0;
 
         virtual SerializedType getNextEntryType() = 0;
 

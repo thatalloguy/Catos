@@ -57,7 +57,10 @@ int main() {
     catos::Serializer serializer{};
 
     serializer.serializeInstances(instances);
-    serializer.deserializeInstances("../../../test.yaml");
+
+    catos::vector<catos::Instance*> instances_in;
+
+    serializer.deserializeInstances("../../../test.yaml", catos::Mode::YAML, instances_in);
 
 
 

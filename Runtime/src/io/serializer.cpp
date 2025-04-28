@@ -190,7 +190,7 @@ void catos::Serializer::writeValue(const char *name, void *value, size_t hash) {
     }
 }
 
-void catos::Serializer::deserializeInstances(const catos::string &file_path, Mode mode) {
+void catos::Serializer::deserializeInstances(const catos::string &file_path, Mode mode, catos::vector<Instance*>& instances) {
     delete reader;
 
 
@@ -201,10 +201,8 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
     }
 
 
-    reader->begin(getContents(file_path).c_str());
+    reader->read(getContents(file_path).c_str(), instances);
 
-
-    reader->close();
 
 
     delete reader;
