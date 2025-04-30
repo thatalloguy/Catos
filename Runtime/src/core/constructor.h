@@ -77,13 +77,23 @@ namespace catos {
         ~Constructor() = default;
 
         template<typename... Args>
-        Instance* construct(Args... args) {
+        Instance* construct(Args... args) const {
             void* data = std::any_cast<void*(*)(Args...)>(ptr)(args...);
 
             return new Instance{
                 data,
                 type_hash,
                 _name
+            };
+        };
+
+        Instance* construct() const {
+            void* data = std::any_cast<void*(*)()>(ptr)();
+
+            return new Instance{
+                    data,
+                    type_hash,
+                    _name
             };
         };
 
@@ -108,6 +118,7 @@ template<typename T>
 T* instance_cast(catos::Instance* instance) {
     void* ptr = instance->data();
     delete instance;
+    instance = nullptr;
 
     return (T*) ptr;
 }

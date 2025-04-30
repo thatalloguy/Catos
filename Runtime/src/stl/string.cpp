@@ -51,7 +51,7 @@ catos::string::string(catos::string &&obj) {
 }
 
 void catos::string::cleanUp() {
-    if (buf != nullptr) {
+    if (buf != nullptr && size < 10000 ) {
         delete[] buf;
     }
 }

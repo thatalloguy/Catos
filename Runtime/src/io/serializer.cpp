@@ -193,16 +193,83 @@ void catos::Serializer::writeValue(const char *name, void *value, size_t hash) {
 void catos::Serializer::deserializeInstances(const catos::string &file_path, Mode mode, catos::vector<Instance*>& instances) {
     delete reader;
 
+    reader = new YamlReader{};
 
-    if (mode == Mode::YAML) {
-        reader = new YamlReader{};
-    } else {
-        reader = new YamlReader{};
+
+    if (!reader->open(getContents(file_path))) {
+        spdlog::error("Could not deserialize file: {}", file_path.c_str());
+        delete reader;
+        reader = nullptr;
+        return;
     }
 
+    while (true) {
+        SerializedType type = reader->getNextEntryType();
+
+        if (type != SerializedType::MAP) {
+            spdlog::warn("Excepted map");
+            // If we dont get objects we stop >:(
+            break;
+        }
+
+        if (!reader->nextArrrayElement()) {
+            break;
+        }
 
 
-//todo deserialize here
+        bool is_ptr = reader->readBool("is_ptr");
+        const catos::string& name = reader->getCurrentKey();
+        const TypeInfo* type_info = nullptr;
+
+        if (_registry.is_type_registered(name.c_str())) {
+            type_info = &_registry.get_type(name.c_str());
+        }
+
+        if (!type_info) {
+            spdlog::error("Failed to find type in the registry: {}", name.c_str());
+            reader->endMap();
+            continue;
+        } else {
+            spdlog::info("Found: {}", name.c_str());
+        }
+
+
+        Instance* instance = type_info->_constructor.construct();
+
+        if (!instance) {
+            spdlog::error("Could not create instance: {}", name.c_str());
+            reader->endMap();
+            return;
+        }
+
+        for (auto pair: type_info->properties) {
+            Property* property = pair.second;
+            auto property_name = property->get_name();
+            size_t property_hash = property->get_type_hash();
+
+            if (property->get_type() == PropertyType::VECTOR) {
+                //todo
+                spdlog::warn("Vector property not yet supported");
+            } else {
+                //Basics
+                if (property_hash == float_hash) {
+                    property->set_value(instance->data(), reader->readFloat(property_name));
+                } else if (property_hash == int_hash) {
+                    property->set_value(instance->data(), reader->readInt(property_name));
+                } else if (property_hash == uint_hash) {
+                    property->set_value(instance->data(), reader->readInt(property_name));
+                } else if (property_hash == bool_hash) {
+                    property->set_value(instance->data(), reader->readBool(property_name));
+                }
+
+            }
+        }
+
+        instances.push_back(instance);
+
+        reader->endMap();
+    }
 
     delete reader;
+    reader = nullptr;
 }

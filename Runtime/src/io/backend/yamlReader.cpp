@@ -5,26 +5,17 @@
 #include "yamlReader.h"
 #include "stl/vector.h"
 #include "spdlog/spdlog.h"
-#include <ryml.hpp>
 
-namespace {
-    ryml::NodeRef _root;
-    ryml::NodeRef _current_node;
-    catos::vector<ryml::NodeRef> _stack;
-    size_t _array_index = 0;
+#include <string>
 
-}
 bool catos::YamlReader::open(const std::string &content) {
-    try {
-        ryml::Tree tree = ryml::parse_in_arena(content.c_str());
-        _root = tree.rootref();
-        _current_node = _root;
-        _stack.push_back(_current_node);
-        return true;
-    } catch (const std::exception& e) {
-        spdlog::error("Could not parse yaml :( : {}", e.what());
-        return false;
-    }
+    _tree = ryml::parse_in_arena(content.c_str());
+    _root = _tree.rootref();
+    _current_node = _root;
+    _stack.push_back(_current_node);
+    spdlog::info("Parsing yaml");
+
+    return true;
 }
 
 
@@ -72,10 +63,13 @@ catos::string catos::YamlReader::readString(const catos::string &name) {
     }
 
     auto child = _current_node[ryml::to_csubstr(name.c_str())];
-    std::string str_value;
-    child >> str_value;
 
-    return {str_value.c_str()};
+    std::string value;
+    for (int i=0; i<child.val().len; i++) {
+        value += child.val().str[i];
+    }
+
+    return {value.c_str()};
 }
 
 void catos::YamlReader::beginMap(const catos::string &name) {
@@ -149,7 +143,13 @@ catos::SerializedType catos::YamlReader::getNextEntryType() {
 
 
 bool catos::YamlReader::nextArrrayElement() {
-    if (_array_index >= _current_node.num_children()) {
+    if (_current_node.is_root()) {
+        _current_node = _current_node[0];
+        return true;
+    }
+
+    auto n = _current_node.num_children();
+    if (_array_index >= n) {
         return false;
     }
 
@@ -161,5 +161,14 @@ bool catos::YamlReader::nextArrrayElement() {
 
 bool catos::YamlReader::validate() {
     return !_root.invalid();
+}
+
+catos::string catos::YamlReader::getCurrentKey() {
+    std::string value;
+    for (int i=0; i<_current_node.key().len; i++) {
+        value += _current_node.key().data()[i];
+    }
+
+    return {value.c_str()};
 }
 

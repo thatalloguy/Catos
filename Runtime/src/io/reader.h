@@ -55,6 +55,7 @@ namespace catos {
         virtual void endArray() = 0;
 
         virtual bool nextArrrayElement() = 0;
+        virtual catos::string getCurrentKey() = 0;
 
         virtual SerializedType getNextEntryType() = 0;
 

@@ -4,6 +4,8 @@
 #pragma once
 
 #include "io/reader.h"
+#include <ryml.hpp>
+
 
 namespace catos {
 
@@ -33,9 +35,18 @@ namespace catos {
 
         virtual bool nextArrrayElement() override;
 
+        virtual catos::string getCurrentKey() override;
+
 
     protected:
         virtual bool validate() override;
+
+    private:
+        ryml::Tree _tree;
+        ryml::NodeRef _root{};
+        ryml::NodeRef _current_node{};
+        catos::vector<ryml::NodeRef> _stack{};
+        size_t _array_index = 0;
     };
 
 }

@@ -56,11 +56,20 @@ int main() {
 
     catos::Serializer serializer{};
 
-    serializer.serializeInstances(instances);
+//    serializer.serializeInstances(instances);
 
     catos::vector<catos::Instance*> instances_in;
 
     serializer.deserializeInstances("../../../test.yaml", catos::Mode::YAML, instances_in);
+
+    spdlog::info("INSTANCE: {}", instances_in[0]->get_name().c_str());
+
+    Personality* personality = instance_cast<Personality>(instances_in[0]);
+
+    spdlog::info("weight: {}", personality->weight);
+    spdlog::info("Type: {}", personality->type.c_str());
+
+    delete personality;
 
 
 
