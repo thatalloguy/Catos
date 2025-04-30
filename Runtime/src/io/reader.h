@@ -19,15 +19,29 @@ namespace catos {
         ARRAY = 5,
     };
 
+
+    struct Pack {
+        catos::string key;
+        catos::string val;
+        bool has_val;
+        bool is_array;
+        bool is_map;
+        bool is_pointer;
+
+        catos::vector<Pack> children{};
+    };
+
+
+
     class Reader {
 
     public:
 
         virtual ~Reader() = default;
 
+        virtual bool open(const std::string& content) = 0;
 
         //Fundamentals
-
         virtual bool readBool(const catos::string& name) = 0;
         virtual int readInt(const catos::string& name) = 0;
         virtual float readFloat(const catos::string& name) = 0;
@@ -40,7 +54,7 @@ namespace catos {
         virtual void beginArray(const catos::string& name) = 0;
         virtual void endArray() = 0;
 
-        virtual void read(const catos::string& source, catos::vector<catos::Instance*>& out) = 0;
+        virtual bool nextArrrayElement() = 0;
 
         virtual SerializedType getNextEntryType() = 0;
 

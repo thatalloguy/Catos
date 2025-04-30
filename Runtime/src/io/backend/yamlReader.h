@@ -12,6 +12,8 @@ namespace catos {
         virtual ~YamlReader() = default;
 
 
+        bool open(const std::string& content) override;
+
         //Fundamentals
 
         virtual bool readBool(const catos::string& name) override;
@@ -26,9 +28,11 @@ namespace catos {
         virtual void beginArray(const catos::string& name) override;
         virtual void endArray() override;
 
-        virtual void read(const catos::string& source, catos::vector<catos::Instance*>& out) override;
 
         virtual SerializedType getNextEntryType() override;
+
+        virtual bool nextArrrayElement() override;
+
 
     protected:
         virtual bool validate() override;

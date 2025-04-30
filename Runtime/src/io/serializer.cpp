@@ -201,9 +201,8 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
     }
 
 
-    reader->read(getContents(file_path).c_str(), instances);
 
-
+//todo deserialize here
 
     delete reader;
 }
