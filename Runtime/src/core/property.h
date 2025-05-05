@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "types.h"
 #include "stl/any.h"
+#include "spdlog/spdlog.h"
 
 
 #include <stl/vector.h>
@@ -156,6 +157,7 @@ namespace catos {
     public:
 
         virtual void push_back_value(void* instance, catos::any value) = 0;
+        virtual void push_back_ptr(void* instance, void* value) = 0;
 
     };
 
@@ -223,7 +225,18 @@ namespace catos {
 
             catos::vector<U>* vec =  (catos::vector<U>*) &(obj->*memberPtr);
 
-            vec->push_back(value.get<U>());
+            U v = value.get<U>();
+            vec->push_back(v);
+
+
+        }
+
+        virtual void push_back_ptr(void* instance, void* value) override {
+            T* obj = (T*) instance;
+
+            catos::vector<U>* vec =  (catos::vector<U>*) &(obj->*memberPtr);
+
+            vec->push_back(*(U*)value);
 
 
         }

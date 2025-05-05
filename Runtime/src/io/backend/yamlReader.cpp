@@ -156,6 +156,7 @@ catos::SerializedType catos::YamlReader::getNextEntryType() {
     auto child = _current_node[_array_index];
     _array_index++;
 
+
     if (child.is_map()) {
         return SerializedType::MAP;
     } else if (child.is_seq()) {
@@ -210,7 +211,7 @@ catos::string catos::YamlReader::getCurrentKey() {
 }
 
 void catos::YamlReader::beginMap() {
-    _current_node = _current_node[0];
+    _current_node = _current_node[_array_index - 1];
     _stack.push_back(_current_node);
 }
 

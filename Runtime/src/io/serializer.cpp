@@ -284,12 +284,14 @@ void catos::Serializer::readVectorProperty(catos::Property *property, catos::Ins
 
     auto t = reader->getNextEntryType();
     while (t != SerializedType::INVALID) {
+        //reader->nextArrrayElement();
+
         switch (t) {
             case SerializedType::MAP:
                 reader->beginMap();
-                vec_property->push_back_value(
+                vec_property->push_back_ptr(
                         instance->data(),
-                        readInstance(&_registry.get_type(property->get_type_hash()), property->get_name())
+                        readInstance(&_registry.get_type(property->get_type_hash()), property->get_name())->data()
                         );
                 reader->endMap();
                 break;

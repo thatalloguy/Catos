@@ -23,7 +23,7 @@ public:
 
     float weight = 0.5f;
 //    Foo type{2};
-    catos::vector<Foo> type{Foo{1}, Foo{2}, Foo{3}};
+    catos::vector<Foo> type;
 
     void hello() {
         spdlog::info("HEllo world");
@@ -40,7 +40,9 @@ public:
 int main() {
     catos::vector<catos::Object> instances;
 
-    Personality robert;
+    Personality robert{
+        .type = {Foo{1}, Foo{2}, Foo{3}}
+    };
 
     instances.push_back({"Personality", &robert});
     catos::Registry registry{};
