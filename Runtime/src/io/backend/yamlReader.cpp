@@ -13,11 +13,42 @@ bool catos::YamlReader::open(const std::string &content) {
     _root = _tree.rootref();
     _current_node = _root;
     _stack.push_back(_current_node);
+    _is_root_open = true;
     spdlog::info("Parsing yaml");
 
     return true;
 }
 
+
+catos::string catos::YamlReader::readString() {
+    std::string value;
+    for (int i=0; i<_current_node[_array_index].val().len; i++) {
+        value += _current_node[_array_index].key().data()[i];
+    }
+
+    return {value.c_str()};
+}
+
+float catos::YamlReader::readFloat() {
+    float out;
+    _current_node[_array_index] >> out;
+
+    return out;
+}
+
+int catos::YamlReader::readInt() {
+    int out;
+    _current_node[_array_index] >> out;
+
+    return out;
+}
+
+bool catos::YamlReader::readBool() {
+    bool out;
+    _current_node[_array_index] >> out;
+
+    return out;
+}
 
 
 bool catos::YamlReader::readBool(const catos::string &name) {
@@ -86,6 +117,7 @@ void catos::YamlReader::beginMap(const catos::string &name) {
 void catos::YamlReader::endMap() {
     if (_stack.length() <= 1) {
         spdlog::warn("Attempting to close the root instead of a map");
+        _is_root_open = false;
         return;
     }
 
@@ -105,7 +137,7 @@ void catos::YamlReader::beginArray(const catos::string &name) {
 }
 
 void catos::YamlReader::endArray() {
-    if (_array_index <= 1) {
+    if (_array_index < 1) {
         spdlog::warn("Attempting to close a non Array");
         return;
     }
@@ -118,7 +150,7 @@ void catos::YamlReader::endArray() {
 
 catos::SerializedType catos::YamlReader::getNextEntryType() {
     if (_array_index >= _current_node.num_children()) {
-        return SerializedType::MAP;
+        return SerializedType::INVALID;
     }
 
     auto child = _current_node[_array_index];
@@ -143,6 +175,11 @@ catos::SerializedType catos::YamlReader::getNextEntryType() {
 
 
 bool catos::YamlReader::nextArrrayElement() {
+
+    if (!_is_root_open) {
+        return false;
+    }
+
     if (_current_node.is_root()) {
         _current_node = _current_node[0];
         return true;
@@ -170,5 +207,16 @@ catos::string catos::YamlReader::getCurrentKey() {
     }
 
     return {value.c_str()};
+}
+
+void catos::YamlReader::beginMap() {
+    _current_node = _current_node[0];
+    _stack.push_back(_current_node);
+}
+
+void catos::YamlReader::beginArray() {
+    _current_node = _current_node[0];
+    _array_index = 0;
+    _stack.push_back(_current_node);
 }
 

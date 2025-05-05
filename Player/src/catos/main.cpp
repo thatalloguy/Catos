@@ -22,8 +22,8 @@ public:
 
 
     float weight = 0.5f;
-    Foo type{2};
-    //catos::vector<Foo> type{Foo{1}, Foo{2}, Foo{3}};
+//    Foo type{2};
+    catos::vector<Foo> type{Foo{1}, Foo{2}, Foo{3}};
 
     void hello() {
         spdlog::info("HEllo world");
@@ -68,11 +68,11 @@ int main() {
     Personality* personality = instance_cast<Personality>(instances_in[0]);
 
     spdlog::info("weight: {}", personality->weight);
-    spdlog::info("foo.t: {}", personality->type.t);
+//    spdlog::info("foo.t: {}", personality->type.t);
 
-//    for (auto v : personality->type) {
-//        spdlog::info("FOO: {}", v.t);
-//    }
+    for (auto v : personality->type) {
+        spdlog::info("FOO: {}", v.t);
+    }
 
     delete personality;
 

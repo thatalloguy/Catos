@@ -17,6 +17,7 @@ namespace catos {
         STRING = 3,
         MAP = 4,
         ARRAY = 5,
+        INVALID = 6,
     };
 
 
@@ -48,11 +49,21 @@ namespace catos {
         virtual catos::string readString(const catos::string& name) = 0;
         //virtual void readBuffer(const catos::string& name, void* data, size_t size) = 0;
 
+
+        virtual bool readBool() = 0;
+        virtual int readInt() = 0;
+        virtual float readFloat() = 0;
+        virtual catos::string readString() = 0;
+
         virtual void beginMap(const catos::string& name) = 0;
         virtual void endMap() = 0;
 
         virtual void beginArray(const catos::string& name) = 0;
         virtual void endArray() = 0;
+
+
+        virtual void beginMap() = 0;
+        virtual void beginArray() = 0;
 
         virtual bool nextArrrayElement() = 0;
         virtual catos::string getCurrentKey() = 0;

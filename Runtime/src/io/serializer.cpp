@@ -203,6 +203,7 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
         return;
     }
 
+    bool quit = false;
     while (true) {
         SerializedType type = reader->getNextEntryType();
 
@@ -240,6 +241,9 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
         } else {
             spdlog::warn("Instance was nullptr");
         }
+
+
+        reader->endMap();
     }
 
     delete reader;
@@ -276,22 +280,56 @@ void catos::Serializer::readProperty(catos::Property *property, catos::Instance*
 
 void catos::Serializer::readVectorProperty(catos::Property *property, catos::Instance *instance, const catos::TypeInfo *info) {
 
-    auto* vec = (catos::raw_vector*)property->get_value(instance->data());
+    auto* vec_property = (catos::VectorProperty*) property;
 
-    while (reader->nextArrrayElement()) {
-
-
-        switch (reader->getNextEntryType()) {
+    auto t = reader->getNextEntryType();
+    while (t != SerializedType::INVALID) {
+        switch (t) {
             case SerializedType::MAP:
-                readInstance(&_registry.get_type(reader->getCurrentKey().c_str()), reader->getCurrentKey().c_str());
+                reader->beginMap();
+                vec_property->push_back_value(
+                        instance->data(),
+                        readInstance(&_registry.get_type(property->get_type_hash()), property->get_name())
+                        );
+                reader->endMap();
                 break;
+
             case SerializedType::FLOAT:
-                //push
+                vec_property->push_back_value(
+                            instance->data(),
+                            reader->readFloat()
+                        );
                 break;
+
+            case SerializedType::BOOL:
+                vec_property->push_back_value(
+                        instance->data(),
+                        reader->readBool()
+                );
+                break;
+
+            case SerializedType::INT:
+                vec_property->push_back_value(
+                        instance->data(),
+                        reader->readInt()
+                );
+                break;
+
+            case SerializedType::STRING:
+                vec_property->push_back_value(
+                        instance->data(),
+                        reader->readString()
+                );
+                break;
+
+
             default:
                 //push
                 break;
         }
+
+
+        t = reader->getNextEntryType();
 
     }
 
@@ -313,7 +351,6 @@ catos::Instance* catos::Serializer::readInstance(const catos::TypeInfo* info, co
     }
 
 
-    reader->endMap();
 
     return instance;
 }

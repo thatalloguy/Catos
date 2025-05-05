@@ -57,7 +57,7 @@ namespace catos {
 
         template<typename U, class T>
         TypeInfo& property(const char* property_name, catos::vector<U> T::* member, cstr description) {
-            properties[property_name] = new VectorProperty<T, U>(member);
+            properties[property_name] = new VectorPropertyImpl<T, U>(member);
             properties[property_name]->set_name(property_name);
             properties[property_name]->desc = description;
 

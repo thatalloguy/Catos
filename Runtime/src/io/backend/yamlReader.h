@@ -22,7 +22,16 @@ namespace catos {
         virtual int readInt(const catos::string& name) override;
         virtual float readFloat(const catos::string& name) override;
         virtual catos::string readString(const catos::string& name) override;
-        //virtual void readBuffer(const catos::string& name, void* data, size_t size) override;
+
+
+        virtual bool readBool() override;
+        virtual int readInt() override;
+        virtual float readFloat() override;
+        virtual catos::string readString() override;
+
+
+        virtual void beginMap() override;
+        virtual void beginArray() override;
 
         virtual void beginMap(const catos::string& name) override;
         virtual void endMap() override;
@@ -47,6 +56,8 @@ namespace catos {
         ryml::NodeRef _current_node{};
         catos::vector<ryml::NodeRef> _stack{};
         size_t _array_index = 0;
+
+        bool _is_root_open = false;
     };
 
 }

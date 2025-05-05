@@ -151,30 +151,39 @@ namespace catos {
 
     };
 
+
+    class VectorProperty: public Property {
+    public:
+
+        virtual void push_back_value(void* instance, catos::any value) = 0;
+
+    };
+
+
     template<typename T, typename U>
-    class VectorProperty : public Property {
+    class VectorPropertyImpl : public VectorProperty {
 
 
     public:
         catos::vector<U> T::* memberPtr;
         catos::raw_vector* vec = nullptr;
 
-        const char* name;
+        const char* name{};
 
-        size_t sizeof_type;
+        size_t sizeof_type{};
 
 
         std::string type_name;
-        size_t type_hash;
+        size_t type_hash{};
 
         ///PropertyImpl exist in order to avoid having to deal with templates at the user-side.
-        VectorProperty(catos::vector<U> T::* memPtr) : memberPtr(memPtr) {
+        VectorPropertyImpl(catos::vector<U> T::* memPtr) : memberPtr(memPtr) {
             type_name = typeid(U).name();
             type_hash = typeid(U).hash_code();
             sizeof_type = sizeof(U);
         };
 
-        ~VectorProperty() {
+        ~VectorPropertyImpl() {
             delete vec;
         }
 
@@ -206,6 +215,17 @@ namespace catos {
             T* obj = (T*) instance;
 
             obj->*memberPtr = val.get<catos::vector<U>>();
+        }
+
+
+        virtual void push_back_value(void* instance, catos::any value) override {
+            T* obj = (T*) instance;
+
+            catos::vector<U>* vec =  (catos::vector<U>*) &(obj->*memberPtr);
+
+            vec->push_back(value.get<U>());
+
+
         }
 
 
