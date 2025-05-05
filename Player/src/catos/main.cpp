@@ -11,10 +11,7 @@
 
 class Foo {
 public:
-    Foo(int d) {
-        spdlog::info("HELLO {}", d);
-        t = d;
-    }
+
 
     int t = 0;
 
@@ -25,7 +22,8 @@ public:
 
 
     float weight = 0.5f;
-    catos::string type = "happy";
+    Foo type{2};
+    //catos::vector<Foo> type{Foo{1}, Foo{2}, Foo{3}};
 
     void hello() {
         spdlog::info("HEllo world");
@@ -49,6 +47,9 @@ int main() {
 
     registry.init();
 
+    registry.register_class<Foo>("Foo")
+            .property("t", &Foo::t, "...");
+
     auto type_info = registry.register_class<Personality>("Personality")
             .property("weight", &Personality::weight, "...")
             .property("type", &Personality::type, "...")
@@ -56,7 +57,7 @@ int main() {
 
     catos::Serializer serializer{};
 
-//    serializer.serializeInstances(instances);
+    serializer.serializeInstances(instances);
 
     catos::vector<catos::Instance*> instances_in;
 
@@ -67,7 +68,11 @@ int main() {
     Personality* personality = instance_cast<Personality>(instances_in[0]);
 
     spdlog::info("weight: {}", personality->weight);
-    spdlog::info("Type: {}", personality->type.c_str());
+    spdlog::info("foo.t: {}", personality->type.t);
+
+//    for (auto v : personality->type) {
+//        spdlog::info("FOO: {}", v.t);
+//    }
 
     delete personality;
 

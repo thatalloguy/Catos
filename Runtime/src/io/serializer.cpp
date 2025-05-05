@@ -233,43 +233,87 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
             spdlog::info("Found: {}", name.c_str());
         }
 
+        auto instance = readInstance(type_info, name);
 
-        Instance* instance = type_info->_constructor.construct();
-
-        if (!instance) {
-            spdlog::error("Could not create instance: {}", name.c_str());
-            reader->endMap();
-            return;
+        if (instance) {
+            instances.push_back(instance);
+        } else {
+            spdlog::warn("Instance was nullptr");
         }
-
-        for (auto pair: type_info->properties) {
-            Property* property = pair.second;
-            auto property_name = property->get_name();
-            size_t property_hash = property->get_type_hash();
-
-            if (property->get_type() == PropertyType::VECTOR) {
-                //todo
-                spdlog::warn("Vector property not yet supported");
-            } else {
-                //Basics
-                if (property_hash == float_hash) {
-                    property->set_value(instance->data(), reader->readFloat(property_name));
-                } else if (property_hash == int_hash) {
-                    property->set_value(instance->data(), reader->readInt(property_name));
-                } else if (property_hash == uint_hash) {
-                    property->set_value(instance->data(), reader->readInt(property_name));
-                } else if (property_hash == bool_hash) {
-                    property->set_value(instance->data(), reader->readBool(property_name));
-                }
-
-            }
-        }
-
-        instances.push_back(instance);
-
-        reader->endMap();
     }
 
     delete reader;
     reader = nullptr;
+}
+
+void catos::Serializer::readProperty(catos::Property *property, catos::Instance* instance, const TypeInfo* info) {
+    auto property_name = property->get_name();
+    size_t property_hash = property->get_type_hash();
+
+    if (property->get_type() == PropertyType::VECTOR) {
+
+        reader->beginArray(property_name);
+
+        readVectorProperty(property, instance, info);
+
+        reader->endArray();
+
+    } else {
+        //Basics
+        if (property_hash == float_hash) {
+            property->set_value(instance->data(), reader->readFloat(property_name));
+        } else if (property_hash == int_hash) {
+            property->set_value(instance->data(), reader->readInt(property_name));
+        } else if (property_hash == uint_hash) {
+            property->set_value(instance->data(), reader->readInt(property_name));
+        } else if (property_hash == bool_hash) {
+            property->set_value(instance->data(), reader->readBool(property_name));
+        }
+
+    }
+}
+
+
+void catos::Serializer::readVectorProperty(catos::Property *property, catos::Instance *instance, const catos::TypeInfo *info) {
+
+    auto* vec = (catos::raw_vector*)property->get_value(instance->data());
+
+    while (reader->nextArrrayElement()) {
+
+
+        switch (reader->getNextEntryType()) {
+            case SerializedType::MAP:
+                readInstance(&_registry.get_type(reader->getCurrentKey().c_str()), reader->getCurrentKey().c_str());
+                break;
+            case SerializedType::FLOAT:
+                //push
+                break;
+            default:
+                //push
+                break;
+        }
+
+    }
+
+}
+
+catos::Instance* catos::Serializer::readInstance(const catos::TypeInfo* info, const catos::string& name) {
+
+
+    Instance* instance = info->_constructor.construct();
+
+    if (!instance) {
+        spdlog::error("Could not create instance: {}", name.c_str());
+        reader->endMap();
+        return instance;
+    }
+
+    for (auto pair: info->properties) {
+        readProperty(pair.second, instance, info);
+    }
+
+
+    reader->endMap();
+
+    return instance;
 }

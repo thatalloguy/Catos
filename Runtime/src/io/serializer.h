@@ -38,6 +38,11 @@ namespace catos {
         void writeSubobject(const Object& object, size_t hash, Registry& registry);
         void writeProperty(Property* property, Registry& registry, const Object& object);
 
+        void readProperty(Property* property, catos::Instance* instance, const TypeInfo* info);
+        void readVectorProperty(Property* property, Instance* instance,const TypeInfo* info);
+        catos::Instance* readInstance(const TypeInfo* info, const catos::string& name);
+
+
         void writeValue(const char* name, void* value, size_t hash);
 
     };
