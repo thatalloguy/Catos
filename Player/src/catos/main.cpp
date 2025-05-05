@@ -23,7 +23,7 @@ public:
 
     float weight = 0.5f;
 //    Foo type{2};
-    catos::vector<Foo> type;
+    catos::vector<float> type;
 
     void hello() {
         spdlog::info("HEllo world");
@@ -41,7 +41,7 @@ int main() {
     catos::vector<catos::Object> instances;
 
     Personality robert{
-        .type = {Foo{1}, Foo{2}, Foo{3}}
+        .type = {0.1f, 0.2f, 0.3f}
     };
 
     instances.push_back({"Personality", &robert});
@@ -73,7 +73,7 @@ int main() {
 //    spdlog::info("foo.t: {}", personality->type.t);
 
     for (auto v : personality->type) {
-        spdlog::info("FOO: {}", v.t);
+        spdlog::info("FOO: {}", v);
     }
 
     delete personality;

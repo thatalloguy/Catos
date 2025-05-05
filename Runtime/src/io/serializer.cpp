@@ -272,6 +272,8 @@ void catos::Serializer::readProperty(catos::Property *property, catos::Instance*
             property->set_value(instance->data(), reader->readInt(property_name));
         } else if (property_hash == bool_hash) {
             property->set_value(instance->data(), reader->readBool(property_name));
+        } else {
+            property->set_value(instance->data(), reader->readString(property_name));
         }
 
     }
@@ -281,58 +283,51 @@ void catos::Serializer::readProperty(catos::Property *property, catos::Instance*
 void catos::Serializer::readVectorProperty(catos::Property *property, catos::Instance *instance, const catos::TypeInfo *info) {
 
     auto* vec_property = (catos::VectorProperty*) property;
+    auto property_hash = vec_property->get_type_hash();
 
     auto t = reader->getNextEntryType();
+
     while (t != SerializedType::INVALID) {
-        //reader->nextArrrayElement();
+        if (_registry.is_type_registered(property_hash)) {
 
-        switch (t) {
-            case SerializedType::MAP:
-                reader->beginMap();
-                vec_property->push_back_ptr(
-                        instance->data(),
-                        readInstance(&_registry.get_type(property->get_type_hash()), property->get_name())->data()
-                        );
-                reader->endMap();
-                break;
+            reader->beginMap();
+            vec_property->push_back_ptr(
+                    instance->data(),
+                    readInstance(&_registry.get_type(property->get_type_hash()), property->get_name())->data()
+            );
+            reader->endMap();
 
-            case SerializedType::FLOAT:
-                vec_property->push_back_value(
-                            instance->data(),
-                            reader->readFloat()
-                        );
-                break;
-
-            case SerializedType::BOOL:
+        } else {
+            //Basics
+            if (property_hash == float_hash) {
                 vec_property->push_back_value(
                         instance->data(),
-                        reader->readBool()
+                        reader->readFloat()
                 );
-                break;
-
-            case SerializedType::INT:
+            } else if (property_hash == int_hash) {
                 vec_property->push_back_value(
                         instance->data(),
                         reader->readInt()
                 );
-                break;
-
-            case SerializedType::STRING:
+            } else if (property_hash == uint_hash) {
+                vec_property->push_back_value(
+                        instance->data(),
+                        reader->readInt()
+                );
+            } else if (property_hash == bool_hash) {
+                vec_property->push_back_value(
+                        instance->data(),
+                        reader->readBool()
+                );
+            } else {
                 vec_property->push_back_value(
                         instance->data(),
                         reader->readString()
                 );
-                break;
+            }
 
-
-            default:
-                //push
-                break;
         }
-
-
         t = reader->getNextEntryType();
-
     }
 
 }

@@ -7,6 +7,7 @@
 #include "spdlog/spdlog.h"
 
 #include <string>
+#include <iostream>
 
 bool catos::YamlReader::open(const std::string &content) {
     _tree = ryml::parse_in_arena(content.c_str());
@@ -22,30 +23,31 @@ bool catos::YamlReader::open(const std::string &content) {
 
 catos::string catos::YamlReader::readString() {
     std::string value;
-    for (int i=0; i<_current_node[_array_index].val().len; i++) {
-        value += _current_node[_array_index].key().data()[i];
+    for (int i=0; i<_current_node[_array_index - 1][0].val().len; i++) {
+        value += _current_node[_array_index - 1][0].key().data()[i];
     }
 
     return {value.c_str()};
 }
 
 float catos::YamlReader::readFloat() {
-    float out;
-    _current_node[_array_index] >> out;
+    float out = 0;
+
+    _current_node[_array_index - 1][0] >> out;
 
     return out;
 }
 
 int catos::YamlReader::readInt() {
     int out;
-    _current_node[_array_index] >> out;
+    _current_node[_array_index - 1][0] >> out;
 
     return out;
 }
 
 bool catos::YamlReader::readBool() {
     bool out;
-    _current_node[_array_index] >> out;
+    _current_node[_array_index - 1][0] >> out;
 
     return out;
 }
@@ -155,6 +157,10 @@ catos::SerializedType catos::YamlReader::getNextEntryType() {
 
     auto child = _current_node[_array_index];
     _array_index++;
+
+    if (child.has_key()) {
+        std::cout << "K " << child.key() << "\n";
+    }
 
 
     if (child.is_map()) {
