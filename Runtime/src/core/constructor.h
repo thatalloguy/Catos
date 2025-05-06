@@ -12,6 +12,7 @@
 
 namespace catos {
 
+    static int cal = 0;
 
     class Instance {
     public:
@@ -50,6 +51,7 @@ namespace catos {
         ConstructorInvoker() = default;
 
         static void* construct(Args... args) {
+            cal++;
             return new T{args...};
         }
 
@@ -79,7 +81,7 @@ namespace catos {
         template<typename... Args>
         Instance* construct(Args... args) const {
             void* data = std::any_cast<void*(*)(Args...)>(ptr)(args...);
-
+            cal++;
             return new Instance{
                 data,
                 type_hash,
@@ -89,7 +91,7 @@ namespace catos {
 
         Instance* construct() const {
             void* data = std::any_cast<void*(*)()>(ptr)();
-
+            cal++;
             return new Instance{
                     data,
                     type_hash,

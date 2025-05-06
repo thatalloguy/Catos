@@ -236,7 +236,9 @@ namespace catos {
 
             catos::vector<U>* vec =  (catos::vector<U>*) &(obj->*memberPtr);
 
-            vec->push_back(*(U*)value);
+            U* val = (U*) value;
+
+            vec->push_back(*val);
 
 
         }

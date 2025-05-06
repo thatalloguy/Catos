@@ -92,7 +92,7 @@ void catos::YamlWriter::format() {
         out_string += "  ";
     }
 
-    if (arrays_openend != arrays_closed && maps_opened == maps_closed + 1) {
+    if (arrays_openend != arrays_closed && maps_opened == maps_closed + 1 || maps_opened - maps_closed == 0) {
         out_string += "- ";
     }
 }

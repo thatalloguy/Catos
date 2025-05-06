@@ -207,18 +207,10 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
     while (true) {
         SerializedType type = reader->getNextEntryType();
 
-        if (type != SerializedType::MAP) {
-            spdlog::warn("Excepted map");
-            // If we dont get objects we stop >:(
-            break;
-        }
-
         if (!reader->nextArrrayElement()) {
             break;
         }
 
-
-        bool is_ptr = reader->readBool("is_ptr");
         const catos::string& name = reader->getCurrentKey();
         const TypeInfo* type_info = nullptr;
 
@@ -231,7 +223,7 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
             reader->endMap();
             continue;
         } else {
-            spdlog::info("Found: {}", name.c_str());
+            reader->beginMap(name.c_str());
         }
 
         auto instance = readInstance(type_info, name);
@@ -250,37 +242,45 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
     reader = nullptr;
 }
 
-void catos::Serializer::readProperty(catos::Property *property, catos::Instance* instance, const TypeInfo* info) {
+void catos::Serializer::readProperty(catos::Property *property, void* instance) {
     auto property_name = property->get_name();
     size_t property_hash = property->get_type_hash();
 
-    if (property->get_type() == PropertyType::VECTOR) {
+    if (_registry.is_type_registered(property_hash) && property->get_type() != PropertyType::VECTOR) {
+
+        reader->beginMap(property_name);
+
+        readSubMap(property, instance);
+
+        reader->endMap();
+    } else if (property->get_type() == PropertyType::VECTOR) {
 
         reader->beginArray(property_name);
 
-        readVectorProperty(property, instance, info);
+        readVectorProperty(property, instance);
 
         reader->endArray();
 
     } else {
         //Basics
         if (property_hash == float_hash) {
-            property->set_value(instance->data(), reader->readFloat(property_name));
+            property->set_value(instance, reader->readFloat(property_name));
         } else if (property_hash == int_hash) {
-            property->set_value(instance->data(), reader->readInt(property_name));
+
+            property->set_value(instance, reader->readInt(property_name));
         } else if (property_hash == uint_hash) {
-            property->set_value(instance->data(), reader->readInt(property_name));
+            property->set_value(instance, reader->readInt(property_name));
         } else if (property_hash == bool_hash) {
-            property->set_value(instance->data(), reader->readBool(property_name));
+            property->set_value(instance, reader->readBool(property_name));
         } else {
-            property->set_value(instance->data(), reader->readString(property_name));
+            property->set_value(instance, reader->readString(property_name));
         }
 
     }
 }
 
 
-void catos::Serializer::readVectorProperty(catos::Property *property, catos::Instance *instance, const catos::TypeInfo *info) {
+void catos::Serializer::readVectorProperty(catos::Property *property, void* instance) {
 
     auto* vec_property = (catos::VectorProperty*) property;
     auto property_hash = vec_property->get_type_hash();
@@ -288,12 +288,18 @@ void catos::Serializer::readVectorProperty(catos::Property *property, catos::Ins
     auto t = reader->getNextEntryType();
 
     while (t != SerializedType::INVALID) {
+        if (!reader->nextArrrayElement()) {
+            break;
+        }
+
+
+
         if (_registry.is_type_registered(property_hash)) {
 
             reader->beginMap();
             vec_property->push_back_ptr(
-                    instance->data(),
-                    readInstance(&_registry.get_type(property->get_type_hash()), property->get_name())->data()
+                    instance,
+                    readSubMap(property, instance)
             );
             reader->endMap();
 
@@ -301,29 +307,31 @@ void catos::Serializer::readVectorProperty(catos::Property *property, catos::Ins
             //Basics
             if (property_hash == float_hash) {
                 vec_property->push_back_value(
-                        instance->data(),
+                        instance,
                         reader->readFloat()
                 );
             } else if (property_hash == int_hash) {
                 vec_property->push_back_value(
-                        instance->data(),
+                        instance,
                         reader->readInt()
                 );
             } else if (property_hash == uint_hash) {
                 vec_property->push_back_value(
-                        instance->data(),
+                        instance,
                         reader->readInt()
                 );
             } else if (property_hash == bool_hash) {
                 vec_property->push_back_value(
-                        instance->data(),
+                        instance,
                         reader->readBool()
                 );
-            } else {
+            } else if (property_hash == typeid(catos::string).hash_code()) {
                 vec_property->push_back_value(
-                        instance->data(),
+                        instance,
                         reader->readString()
                 );
+            } else {
+                spdlog::warn("Could not read: {} | {}", property->get_name(), static_cast<unsigned int>(t));
             }
 
         }
@@ -344,10 +352,21 @@ catos::Instance* catos::Serializer::readInstance(const catos::TypeInfo* info, co
     }
 
     for (auto pair: info->properties) {
-        readProperty(pair.second, instance, info);
+        readProperty(pair.second, instance->data());
     }
 
 
 
     return instance;
+}
+
+void* catos::Serializer::readSubMap(catos::Property *property, void* parent) {
+    
+    TypeInfo& info = _registry.get_type(property->get_type_hash());
+    void* inst = property->get_value(parent);
+    for (auto prop_pair: info.properties) {
+        readProperty(prop_pair.second, inst);
+    }
+
+    return inst;
 }
