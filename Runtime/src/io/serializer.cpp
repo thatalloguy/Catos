@@ -14,11 +14,11 @@
 #include <io/backend/yamlReader.h>
 #include <io/backend/yamlwriter.h>
 
-const size_t float_hash = 12638226781420530164;
-const size_t int_hash = 12638232278978672507;
-const size_t uint_hash = 12638231179467044040;
-const size_t double_hash = 12638230079955414429;
-const size_t bool_hash = 10838281452030117757;
+size_t float_hash = typeid(float).hash_code();
+size_t int_hash = typeid(int).hash_code();
+size_t uint_hash = typeid(unsigned int).hash_code();
+size_t bool_hash = typeid(bool).hash_code();
+
 
 static catos::Writer* writer = nullptr;
 static catos::Reader* reader = nullptr;
@@ -166,27 +166,19 @@ void catos::Serializer::writeProperty(Property *property, Registry &registry, co
 }
 
 void catos::Serializer::writeValue(const char *name, void *value, size_t hash) {
-    switch (hash) {
-
-        case float_hash:
+    
+    if (hash == float_hash) {
             writer->writeFloat(name, *(float*)value);
-            break;
-
-        case int_hash:
+    } else if (int_hash == hash) {
             writer->writeInt(name, *(int*) value);
-            break;
-
-        case uint_hash:
+    } else if (hash == uint_hash) {
             writer->writeInt(name, *(unsigned int*) value);
-            break;
-
-        case bool_hash:
+    } else if (hash == bool_hash) {
             writer->writeBool(name, *(bool*) value);
-            break;
-
-        default:
-            spdlog::warn("Unknown type");
-            break;
+    } else if (hash == typeid(catos::string).hash_code()) {
+            writer->writeString(name, ((catos::string*) value)->c_str());
+    } else {
+        spdlog::warn("Could not write: {}", name);
     }
 }
 
@@ -206,6 +198,10 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
     bool quit = false;
     while (true) {
         SerializedType type = reader->getNextEntryType();
+
+        if (type == SerializedType::INVALID) {
+            break;
+        }
 
         if (!reader->nextArrrayElement()) {
             break;
