@@ -6,6 +6,8 @@
 #include "yamlwriter.h"
 #include "spdlog/spdlog.h"
 #include <ryml.hpp>
+#include <unordered_set>
+
 namespace {
     std::string out_string = "";
 }
@@ -92,7 +94,7 @@ void catos::YamlWriter::format() {
         out_string += "  ";
     }
 
-    if (arrays_openend != arrays_closed && maps_opened == maps_closed + 1 || maps_opened - maps_closed == 0) {
+    if (arrays_openend != arrays_closed && maps_opened == maps_closed + 1) {
         out_string += "- ";
     }
 }
