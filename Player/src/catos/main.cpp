@@ -46,12 +46,12 @@ int main() {
         .type = {Foo{1}, Foo{2}, Foo{3}}
     };
 
-    Personality robert2{
-            .type = {Foo{6}, Foo{5}, Foo{3}}
+    Foo robert2{
+            .t = 64
     };
 
     instances.push_back({"Personality", &robert});
-    instances.push_back({"Personality", &robert2});
+    instances.push_back({"Foo", &robert2});
     catos::Registry registry{};
 
     registry.init();
@@ -80,26 +80,37 @@ int main() {
 
     serializer.serializeInstances(instances);
 
-//    catos::vector<catos::Instance*> instances_in;
-//
-//    serializer.deserializeInstances("../../../test.yaml", catos::Mode::YAML, instances_in);
-//
-//    for (auto instance: instances_in) {
-//
-//        spdlog::info("INSTANCE: {}", instance->get_name().c_str());
-//        Personality* personality = instance_cast<Personality>(instance);
-//
-//        spdlog::info("weight: {}", personality->weight);
-//        spdlog::info("foo.t: {}", personality->test.t);
-//
-//        for (auto v : personality->type) {
-//            spdlog::info("FOO: {}", v.t);
-//        }
-//
-//        delete personality;
-//    }
-//
-//
+    catos::vector<catos::Instance*> instances_in;
+
+    serializer.deserializeInstances("../../../test.yaml", catos::Mode::YAML, instances_in);
+
+    for (auto instance: instances_in) {
+
+        spdlog::info("INSTANCE: {}", instance->get_name().c_str());
+
+        if (instance->hash() == typeid(Personality).hash_code()) {
+            Personality* personality = instance_cast<Personality>(instance);
+
+            spdlog::info("weight: {}", personality->weight);
+            spdlog::info("foo.t: {}", personality->test.t);
+
+            for (auto v : personality->type) {
+                spdlog::info("FOO: {}", v.t);
+            }
+
+            delete personality;
+        } else {
+            Foo* foo = instance_cast<Foo>(instance);
+
+            spdlog::info("foo.t: {}", foo->t);
+
+
+            delete foo;
+        }
+
+    }
+
+
 
     registry.clean_up();
     return 0;

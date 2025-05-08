@@ -110,7 +110,6 @@ void catos::YamlReader::beginMap(const catos::string &name) {
         spdlog::warn("{} SubMap could not be found", name.c_str());
         return;
     }
-
     _current_node = _current_node[name.c_str()];
     _stack.push_back(_current_node);
 }
@@ -133,7 +132,8 @@ void catos::YamlReader::beginArray(const catos::string &name) {
     }
 
     _current_node = _current_node[name.c_str()];
-    _array_index = _prev_array_index;
+    _array_index = 0;
+
     _stack.push_back(_current_node);
 }
 
@@ -145,7 +145,6 @@ void catos::YamlReader::endArray() {
 
     _stack.pop_back();
     _current_node = _stack.back();
-    _array_index = _prev_array_index;
 }
 
 
@@ -155,8 +154,7 @@ catos::SerializedType catos::YamlReader::getNextEntryType() {
     }
 
     auto child = _current_node[_array_index];
-
-
+    _array_index++;
 
     if (child.is_map()) {
         return SerializedType::MAP;
@@ -177,8 +175,13 @@ catos::SerializedType catos::YamlReader::getNextEntryType() {
 
 
 bool catos::YamlReader::nextArrrayElement() {
-
     auto n = _current_node.num_children();
+
+
+    if (_current_node.is_root() && _root.num_children() > _map_index) {
+        return true;
+    }
+
     if (_array_index >= n) {
         return false;
     }
@@ -196,7 +199,8 @@ catos::string catos::YamlReader::getCurrentKey() {
     auto node = _current_node;
 
     if (_current_node.is_root()) {
-        node = _current_node[_array_index];
+        node = _current_node[_map_index];
+        _map_index++;
     }
 
 
@@ -210,14 +214,13 @@ catos::string catos::YamlReader::getCurrentKey() {
 
 void catos::YamlReader::beginMap() {
     _current_node = _current_node[_array_index];
-    _prev_array_index = _array_index;
     _array_index++;
     _stack.push_back(_current_node);
 }
 
 void catos::YamlReader::beginArray() {
     _current_node = _current_node[0];
-    _array_index = _prev_array_index;
+    _array_index = 0;
 
     _stack.push_back(_current_node);
 }

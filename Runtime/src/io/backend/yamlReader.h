@@ -56,7 +56,7 @@ namespace catos {
         ryml::NodeRef _current_node{};
         catos::vector<ryml::NodeRef> _stack{};
         size_t _array_index = 0;
-        size_t _prev_array_index = 0;
+        size_t _map_index = 0;
 
         bool _is_root_open = false;
     };

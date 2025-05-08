@@ -200,10 +200,12 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
         SerializedType type = reader->getNextEntryType();
 
         if (type == SerializedType::INVALID) {
-            break;
+            spdlog::warn("Stopping reading because: SerializedType is INVALID");
+            //break;
         }
 
         if (!reader->nextArrrayElement()) {
+            spdlog::warn("Stopping reading because: No extra element");
             break;
         }
 
@@ -219,6 +221,7 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
             reader->endMap();
             continue;
         } else {
+            spdlog::info("Beginnig map {}", name.c_str());
             reader->beginMap(name.c_str());
         }
 
@@ -236,6 +239,8 @@ void catos::Serializer::deserializeInstances(const catos::string &file_path, Mod
 
     delete reader;
     reader = nullptr;
+
+    spdlog::info("Finish reading: size {} ", instances.length());
 }
 
 void catos::Serializer::readProperty(catos::Property *property, void* instance) {
