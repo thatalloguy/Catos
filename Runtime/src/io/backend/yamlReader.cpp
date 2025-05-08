@@ -178,11 +178,6 @@ catos::SerializedType catos::YamlReader::getNextEntryType() {
 
 bool catos::YamlReader::nextArrrayElement() {
 
-    if (_current_node.is_root()) {
-        spdlog::info("AR {}", _array_index);
-        return true;
-    }
-
     auto n = _current_node.num_children();
     if (_array_index >= n) {
         return false;
@@ -201,7 +196,7 @@ catos::string catos::YamlReader::getCurrentKey() {
     auto node = _current_node;
 
     if (_current_node.is_root()) {
-        node = _current_node[0];
+        node = _current_node[_array_index];
     }
 
 

@@ -80,26 +80,26 @@ int main() {
 
     serializer.serializeInstances(instances);
 
-    catos::vector<catos::Instance*> instances_in;
-
-    serializer.deserializeInstances("../../../test.yaml", catos::Mode::YAML, instances_in);
-
-    for (auto instance: instances_in) {
-
-        spdlog::info("INSTANCE: {}", instance->get_name().c_str());
-        Personality* personality = instance_cast<Personality>(instance);
-
-        spdlog::info("weight: {}", personality->weight);
-        spdlog::info("foo.t: {}", personality->test.t);
-
-        for (auto v : personality->type) {
-            spdlog::info("FOO: {}", v.t);
-        }
-
-        delete personality;
-    }
-
-
+//    catos::vector<catos::Instance*> instances_in;
+//
+//    serializer.deserializeInstances("../../../test.yaml", catos::Mode::YAML, instances_in);
+//
+//    for (auto instance: instances_in) {
+//
+//        spdlog::info("INSTANCE: {}", instance->get_name().c_str());
+//        Personality* personality = instance_cast<Personality>(instance);
+//
+//        spdlog::info("weight: {}", personality->weight);
+//        spdlog::info("foo.t: {}", personality->test.t);
+//
+//        for (auto v : personality->type) {
+//            spdlog::info("FOO: {}", v.t);
+//        }
+//
+//        delete personality;
+//    }
+//
+//
 
     registry.clean_up();
     return 0;

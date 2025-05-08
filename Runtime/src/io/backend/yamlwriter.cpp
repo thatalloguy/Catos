@@ -46,6 +46,18 @@ void catos::YamlWriter::writeString(const catos::string &name, const char *value
 }
 
 void catos::YamlWriter::beginMap(const catos::string &name) {
+    if (maps_opened - maps_closed == 0) {
+
+        for (auto map : _root_maps) {
+            if (map == name) {
+                spdlog::error("A root map must be Unique");
+                return;
+            }
+        }
+
+        _root_maps.push_back(name);
+    }
+
     format();
     maps_opened++;
     out_string += name.c_str();
@@ -100,5 +112,7 @@ void catos::YamlWriter::format() {
 }
 
 bool catos::YamlWriter::validate() {
+
+
     return (arrays_openend == arrays_closed && maps_opened == maps_closed);
 }

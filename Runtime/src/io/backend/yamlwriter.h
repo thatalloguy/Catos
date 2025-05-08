@@ -3,7 +3,8 @@
 //
 #pragma once
 
-#include "io/writer.h"
+#include <io/writer.h>
+#include <stl/vector.h>
 
 namespace catos {
 
@@ -34,6 +35,8 @@ namespace catos {
         bool validate() override;
 
     private:
+
+        catos::vector<catos::string> _root_maps{};
         int maps_opened = 0;
         int maps_closed = 0;
 
