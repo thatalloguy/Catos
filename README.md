@@ -44,9 +44,6 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] Loading most objects from binary.
 - - [x] Support for (custom) STL objects (string, vector, hashmap)
 ---
-- [ ] Renderer.
-- - [ ] Migrate to SDL_GPU
----
 - [ ] Renderer (High level):
 - - [x] Shadows.
 - - [x] GLTF loader.
@@ -117,7 +114,7 @@ This is because SDL_GPU already has `RenderPasses` and `Pipelines` out of the bo
 Allowing the user to specify what shaders, pipelines, buffers, textures and passes should be used and how. With the introduction of SDL_GPU it also means that we can't use GLSL but only HLSL, I intend to write a small validation layer (if needed) and then use SDL_Shadercross to compile them.
 
 ### Window management.
-The current windowing library is GLFW-3, however with the introduction of SDL_GPU I see no reason to stay with GLFW and therefor I will migrate to SDL 3.
+The current windowing library is GLFW-3, however I see no reason to stay with GLFW and therefor I will migrate to SDL 3.
 
 
 
@@ -128,7 +125,7 @@ The current windowing library is GLFW-3, however with the introduction of SDL_GP
 ## Dependencies
 ###  - doctest
 ###  - fastgltf [ V0.7.2 ]
-###  - glfw
+###  - SDL3
 ###  - rapidyml
 ###  - imgui
 ###  - [imgui dock](https://github.com/BentleyBlanks/imguiDock)
