@@ -3,13 +3,9 @@
 //
 #pragma once
 
-#ifdef _WIN32
-#define ON_WINDOWS
-#endif
-
+#include <SDL3/SDL.h>
 
 #include "math/vecs.h"
-#include <GLFW/glfw3.h>
 #include "types.h"
 
 namespace catos {
@@ -31,30 +27,26 @@ namespace catos {
     public:
         friend class App;
 
-        Window(WindowCreationInfo& creationInfo);
+        Window(const WindowCreationInfo& creationInfo);
         ~Window();
 
-        static math::Vector2 getMonitorSize();
 
         math::Vector2 getSize();
 
         bool should_window_close();
-        bool is_resized();
-        void set_resized();
 
         void update();
 
-        GLFWwindow* get_glfw_window();
+        void* get_raw_window_ptr();
 
 
     private:
-        GLFWwindow* _raw_window;
-        WindowCreationInfo& _createInfo;
+        SDL_Window* _raw_window{nullptr};
+        SDL_GLContext _context{};
+        const WindowCreationInfo& _createInfo;
 
-        bool _is_resized = false;
-
-        void enable_dark_theme();
-
+        bool _should_close = false;
+        SDL_Event event;
     };
 
 }

@@ -4,6 +4,7 @@
 #    - fastgltf v0.7.2
 #    - GLAD
 #    - GLFW v3.5.0
+#    - SDL 3
 #    - IMGUI
 #    - RAPIDYAML v0.8.0
 #    - spdlog v1.15.1
@@ -58,18 +59,31 @@ if (NOT TARGET pocketpy)
     FetchContent_MakeAvailable(pocketpy_content)
 endif()
 
+#
+#if (NOT TARGET glfw)
+#
+#    FetchContent_Declare(
+#            glfw_content
+#            GIT_REPOSITORY https://github.com/glfw/glfw.git
+#            GIT_TAG 3.4
+#    )
+#
+#    FetchContent_MakeAvailable(glfw_content)
+#
+#endif()
 
-if (NOT TARGET glfw)
+if (NOT TARGET SDL3::SDL3-static)
+    set(SDL_STATIC ON)
+    set(SDL_SHARED OFF)
 
     FetchContent_Declare(
-            glfw_content
-            GIT_REPOSITORY https://github.com/glfw/glfw.git
-            GIT_TAG 3.4
+            SDL_content
+            GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+            GIT_TAG cacac6cc341d5856d1857bdcf7390551eed54865
     )
+    FetchContent_MakeAvailable(SDL_content)
+endif ()
 
-    FetchContent_MakeAvailable(glfw_content)
-
-endif()
 
 if (NOT TARGET spdlog)
 
@@ -103,8 +117,6 @@ if (NOT TARGET imgui)
     )
 
     set(IMGUI_SOURCE_BACKEND
-            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_glfw.h
-            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
             ${imgui_content_SOURCE_DIR}/backends/imgui_impl_opengl3.h
             ${imgui_content_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
     )
