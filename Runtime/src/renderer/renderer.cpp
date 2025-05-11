@@ -35,7 +35,7 @@ const char* screenFragmentSource = "#version 420 core\n"
                                    "out vec4 outColor;\n"
                                    "void main() {\n"
                                    " vec3 col = texture(outTexture, TexCoords).rgb;\n"
-                                   " outColor = vec4(col, 1.0);\n"
+                                   " outColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
                                    "}\n";
 
 

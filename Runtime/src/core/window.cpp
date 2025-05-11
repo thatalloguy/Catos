@@ -3,7 +3,7 @@
 //
 
 #include "window.h"
-
+#include <glad/glad.h>
 
 
 #include "spdlog/spdlog.h"
@@ -33,7 +33,6 @@ Window::Window(const catos::WindowCreationInfo &creationInfo) : _createInfo(crea
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 
-
 //
 //    GLFWmonitor* monitor;
 //
@@ -50,6 +49,7 @@ Window::Window(const catos::WindowCreationInfo &creationInfo) : _createInfo(crea
     }
     _context = SDL_GL_CreateContext(_raw_window);
 
+    gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress);
 }
 
 Window::~Window() {
@@ -77,6 +77,8 @@ void Window::update() {
             _should_close = true;
         }
     }
+
+    SDL_GL_SwapWindow(_raw_window);
 
 }
 

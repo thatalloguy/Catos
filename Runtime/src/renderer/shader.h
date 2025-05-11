@@ -6,7 +6,6 @@
 #ifndef CATOS_SHADER_H
 #define CATOS_SHADER_H
 
-#include "glad/glad.h"
 #include "math/vecs.h"
 
 namespace catos {

@@ -30,7 +30,12 @@ if (NOT TARGET glad)
     FetchContent_MakeAvailable(glad_content)
 
     set(GLAD_SRC
-        ${glad_content_SOURCE_DIR}/include/
+        ${glad_content_SOURCE_DIR}/src/glad.c
+    )
+
+
+    set(GLAD_INCLUDE
+            ${glad_content_SOURCE_DIR}/include/
     )
 
 endif()

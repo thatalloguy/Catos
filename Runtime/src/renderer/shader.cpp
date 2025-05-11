@@ -2,6 +2,8 @@
 // Created by allos on 10/16/2024.
 //
 
+#include <glad/glad.h>
+
 #include "shader.h"
 #include "spdlog/spdlog.h"
 
