@@ -128,9 +128,9 @@ The current windowing library is GLFW-3, however I see no reason to stay with GL
 ###  - SDL3
 ###  - rapidyml
 ###  - imgui
-###  - [imgui dock](https://github.com/BentleyBlanks/imguiDock)
-###  - pocketpy / gsoc24 (Experimental)
+###  - pocketpy
 ###  - spdlog
+### - Rmlui
 ###  - stb_image
 
 ## Notes:

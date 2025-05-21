@@ -6,7 +6,6 @@
 #include <renderer/renderer.h>
 #include <renderer/renderPipeline.h>
 
-
 #include <fstream>
 #include "spdlog/spdlog.h"
 

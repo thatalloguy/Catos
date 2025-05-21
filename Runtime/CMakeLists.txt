@@ -48,7 +48,7 @@ file(GLOB_RECURSE FASTGLTF_DEPS
         ../Thirdparty/stb/stb_image.h
 )
 
-add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC} ${GLAD_SRC} ${FASTGLTF_DEPS} ${IMGUI_SOURCE} ${IMGUI_SOURCE_BACKEND})
+add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC} ${GLAD_SRC} ${FASTGLTF_DEPS})
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
 
@@ -60,12 +60,7 @@ add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST}  ${GLAD_SRC}  "../Third
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 
-if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
-        target_link_libraries(catos-runtime-static PUBLIC dwmapi)
-endif()
-
 target_link_libraries(catos-runtime-static PUBLIC spdlog)
-#target_link_libraries(catos-runtime-static PUBLIC glfw)
 target_link_libraries(catos-runtime-static PUBLIC SDL3::SDL3-static)
 target_link_libraries(catos-runtime-static PUBLIC ryml)
 target_link_libraries(catos-runtime-static PUBLIC doctest)
@@ -76,7 +71,6 @@ target_include_directories(catos-runtime-static PUBLIC ${GLAD_INCLUDE})
 target_include_directories(catos-runtime-static PUBLIC ${pocketpy_content_SOURCE_DIR}/include)
 target_include_directories(catos-runtime-static PUBLIC ${SDL3_content_SOURCE_DIR}/include)
 target_include_directories(catos-runtime-static PUBLIC ${rapidyaml_content_SOURCE_DIR}/src)
-target_include_directories(catos-runtime-static PUBLIC ${imgui_content_SOURCE_DIR})
 target_include_directories(catos-runtime-static PUBLIC "../Thirdparty/stb/")
 
 

@@ -5,10 +5,10 @@
 #    - GLAD
 #    - GLFW v3.5.0
 #    - SDL 3
-#    - IMGUI
 #    - RAPIDYAML v0.8.0
 #    - spdlog v1.15.1
 #    - stb_image
+#    - RmlUI 6.1
 
 if (NOT TARGET doctest)
     FetchContent_Declare(
@@ -64,18 +64,16 @@ if (NOT TARGET pocketpy)
     FetchContent_MakeAvailable(pocketpy_content)
 endif()
 
-#
-#if (NOT TARGET glfw)
-#
-#    FetchContent_Declare(
-#            glfw_content
-#            GIT_REPOSITORY https://github.com/glfw/glfw.git
-#            GIT_TAG 3.4
-#    )
-#
-#    FetchContent_MakeAvailable(glfw_content)
-#
-#endif()
+if (NOT TARGET rmlui)
+
+    FetchContent_Declare(
+            rmlui_content
+            GIT_REPOSITORY https://github.com/mikee89/RmlUi.git
+            GIT_TAG 6.1
+    )
+
+    FetchContent_MakeAvailable(rmlui_content)
+endif()
 
 if (NOT TARGET SDL3::SDL3-static)
     set(SDL_STATIC ON)
@@ -101,29 +99,3 @@ if (NOT TARGET spdlog)
     FetchContent_MakeAvailable(spdlog_content)
 
 endif()
-
-if (NOT TARGET imgui)
-    FetchContent_Declare(
-            imgui_content
-            GIT_REPOSITORY https://github.com/ocornut/imgui.git
-            GIT_TAG docking
-    )
-    FetchContent_MakeAvailable(imgui_content)
-
-    set(IMGUI_SOURCE
-            ${imgui_content_SOURCE_DIR}/imconfig.h
-            ${imgui_content_SOURCE_DIR}/imgui.cpp
-            ${imgui_content_SOURCE_DIR}/imgui.h
-            ${imgui_content_SOURCE_DIR}/imgui_demo.cpp
-            ${imgui_content_SOURCE_DIR}/imgui_draw.cpp
-            ${imgui_content_SOURCE_DIR}/imgui_internal.h
-            ${imgui_content_SOURCE_DIR}/imgui_tables.cpp
-            ${imgui_content_SOURCE_DIR}/imgui_widgets.cpp
-    )
-
-    set(IMGUI_SOURCE_BACKEND
-            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_opengl3.h
-            ${imgui_content_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-    )
-
-endif ()

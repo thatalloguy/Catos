@@ -3,10 +3,6 @@ file(GLOB_RECURSE EDITOR_SRC
 
         src/catos/Editor/Editor.cpp
         src/catos/Editor/Editor.h
-
-
-        src/catos/Editor/World/WorldTreeView.h
-        src/catos/Editor/World/WorldTreeView.cpp
 )
 
 add_executable(catos-editor
