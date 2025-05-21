@@ -60,6 +60,7 @@ add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST}  ${GLAD_SRC}  "../Third
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 
+target_link_libraries(catos-runtime-static PUBLIC RmlUi::RmlUi)
 target_link_libraries(catos-runtime-static PUBLIC spdlog)
 target_link_libraries(catos-runtime-static PUBLIC SDL3::SDL3-static)
 target_link_libraries(catos-runtime-static PUBLIC ryml)

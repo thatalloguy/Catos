@@ -6,6 +6,9 @@
 #include <renderer/renderer.h>
 #include <renderer/renderPipeline.h>
 
+//Rml
+#include <RmlUi/core.h>
+
 #include <fstream>
 #include "spdlog/spdlog.h"
 

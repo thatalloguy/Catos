@@ -64,15 +64,42 @@ if (NOT TARGET pocketpy)
     FetchContent_MakeAvailable(pocketpy_content)
 endif()
 
-if (NOT TARGET rmlui)
-
+if(NOT TARGET Freetype::Freetype)
     FetchContent_Declare(
-            rmlui_content
-            GIT_REPOSITORY https://github.com/mikee89/RmlUi.git
-            GIT_TAG 6.1
+            freetype
+            GIT_REPOSITORY https://github.com/freetype/freetype.git
+            GIT_TAG VER-2-13-0
     )
 
-    FetchContent_MakeAvailable(rmlui_content)
+    #Freetype options straight from my a##
+    set(FT_DISABLE_ZLIB ON CACHE BOOL "" FORCE)
+    set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
+    set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
+    set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
+    set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
+
+    # Make FreeType available
+    FetchContent_MakeAvailable(freetype)
+
+    add_library(Freetype::Freetype ALIAS freetype)
+endif()
+
+
+if (NOT TARGET RmlUi)
+
+    FetchContent_Declare(
+            RmlUi_content
+            GIT_REPOSITORY https://github.com/mikke89/RmlUi.git
+            GIT_TAG 58c751531f4c1a1eb2dc56f409b8e8a323a0c9ad
+    )
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
+    set(NO_FONT_INTERFACE_DEFAULT OFF CACHE BOOL "" FORCE)
+
+    set(FREETYPE_DIR "${freetype_SOURCE_DIR}" CACHE PATH "" FORCE)
+
+
+    FetchContent_MakeAvailable(RmlUi_content)
 endif()
 
 if (NOT TARGET SDL3::SDL3-static)
