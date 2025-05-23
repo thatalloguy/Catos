@@ -53,7 +53,7 @@ Window::Window(const catos::WindowCreationInfo &creationInfo) : _createInfo(crea
 }
 
 Window::~Window() {
-    SDL_GL_DeleteContext(_context);
+    SDL_GL_DestroyContext(_context);
     SDL_DestroyWindow(_raw_window);
     SDL_Quit();
 }

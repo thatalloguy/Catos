@@ -64,6 +64,18 @@ if (NOT TARGET pocketpy)
     FetchContent_MakeAvailable(pocketpy_content)
 endif()
 
+if (NOT TARGET SDL3::SDL3)
+    set(SDL_SHARED ON)
+
+    FetchContent_Declare(
+            SDL_content
+            GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+            GIT_TAG release-3.2.14
+    )
+    FetchContent_MakeAvailable(SDL_content)
+
+
+endif ()
 if(NOT TARGET Freetype::Freetype)
     FetchContent_Declare(
             freetype
@@ -92,27 +104,14 @@ if (NOT TARGET RmlUi)
             GIT_REPOSITORY https://github.com/mikke89/RmlUi.git
             GIT_TAG 58c751531f4c1a1eb2dc56f409b8e8a323a0c9ad
     )
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-    set(BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
-    set(NO_FONT_INTERFACE_DEFAULT OFF CACHE BOOL "" FORCE)
 
+    set(RMLUI_BACKEND "SDL_GL3" CACHE STRING "RmlUi backend")
     set(FREETYPE_DIR "${freetype_SOURCE_DIR}" CACHE PATH "" FORCE)
 
 
     FetchContent_MakeAvailable(RmlUi_content)
 endif()
 
-if (NOT TARGET SDL3::SDL3-static)
-    set(SDL_STATIC ON)
-    set(SDL_SHARED OFF)
-
-    FetchContent_Declare(
-            SDL_content
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-            GIT_TAG cacac6cc341d5856d1857bdcf7390551eed54865
-    )
-    FetchContent_MakeAvailable(SDL_content)
-endif ()
 
 
 if (NOT TARGET spdlog)

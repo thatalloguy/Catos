@@ -53,26 +53,47 @@ target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
 
 
-
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c src/tests/*.cpp)
 add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST}  ${GLAD_SRC}  "../Thirdparty/stb/stb_image.h")
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 
-target_link_libraries(catos-runtime-static PUBLIC RmlUi::RmlUi)
-target_link_libraries(catos-runtime-static PUBLIC spdlog)
-target_link_libraries(catos-runtime-static PUBLIC SDL3::SDL3-static)
-target_link_libraries(catos-runtime-static PUBLIC ryml)
-target_link_libraries(catos-runtime-static PUBLIC doctest)
-target_link_libraries(catos-runtime-static PUBLIC pocketpy)
+
+####
+set(RMLUI_BACKEND_PATH ${RmlUi_SOURCE_DIR}/Backends)
+add_library(rmlui_backend_SDL_GL3 INTERFACE)
+target_sources(rmlui_backend_SDL_GL3 INTERFACE
+        ${RMLUI_BACKEND_PATH}/RmlUi_Platform_SDL.cpp
+        ${RMLUI_BACKEND_PATH}/RmlUi_Renderer_GL3.cpp
+)
+target_include_directories(rmlui_backend_SDL_GL3 INTERFACE ${RMLUI_BACKEND_PATH})
+target_compile_definitions(rmlui_backend_SDL_GL3 INTERFACE
+        RMLUI_SDL_VERSION_MAJOR=3
+        RMLUI_NUM_MSAA_SAMPLES=4
+        RMLUI_GL3_CUSTOM_LOADER=<glad/glad.h>
+)
+####
 
 
-target_include_directories(catos-runtime-static PUBLIC ${GLAD_INCLUDE})
-target_include_directories(catos-runtime-static PUBLIC ${pocketpy_content_SOURCE_DIR}/include)
-target_include_directories(catos-runtime-static PUBLIC ${SDL3_content_SOURCE_DIR}/include)
-target_include_directories(catos-runtime-static PUBLIC ${rapidyaml_content_SOURCE_DIR}/src)
-target_include_directories(catos-runtime-static PUBLIC "../Thirdparty/stb/")
+
+target_link_libraries(catos-runtime-static PUBLIC
+        RmlUi::RmlUi
+        spdlog
+        SDL3::SDL3
+        ryml
+        doctest
+        pocketpy
+        rmlui_backend_SDL_GL3
+)
+
+target_include_directories(catos-runtime-static PUBLIC
+        ${GLAD_INCLUDE}
+        ${pocketpy_content_SOURCE_DIR}/include
+        ${SDL3_content_SOURCE_DIR}/include
+        ${rapidyaml_content_SOURCE_DIR}/src
+        "../Thirdparty/stb/"
+)
 
 
 add_test(NAME catos-runtime-tests COMMAND catos-runtime-tests)

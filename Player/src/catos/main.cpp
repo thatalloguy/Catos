@@ -7,6 +7,7 @@
 #include <renderer/renderPipeline.h>
 
 //Rml
+#define RMLUI_SDL_VERSION_MAJOR 3
 #include <RmlUi/core.h>
 
 #include <fstream>
