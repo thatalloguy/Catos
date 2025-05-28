@@ -135,4 +135,5 @@ The current windowing library is GLFW-3, however I see no reason to stay with GL
 
 ## Notes:
 ### in order to load python bindings you must do '#define CATOS_SCRIPTING_ENABLED'
+### And python scripting is broken :/ 
 
