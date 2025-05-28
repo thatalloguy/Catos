@@ -1,6 +1,6 @@
 // engine includes
 #pragma once
-
+//
 #include <core/window.h>
 #include <renderer/renderPass.h>
 #include <renderer/renderer.h>
@@ -8,9 +8,12 @@
 
 //Rml
 #define RMLUI_SDL_VERSION_MAJOR 3
-#include <RmlUi/core.h>
 
+#include <RmlUi/core.h>
+#include <RmlUi/Debugger.h>
+#include <ui/Backend.h>
 #include <fstream>
+
 #include "spdlog/spdlog.h"
 
 std::string vertexShaderSource;
@@ -34,11 +37,11 @@ std::string loadTxtFromFile(const char* path){
 }
 
 int main() {
-
+    //
     catos::Window window{catos::WindowCreationInfo{
         {1280, 720},
         {0.0f, 0.0f},
-        "Hello SDL CATOS!",
+        "My Catos App",
 
     }};
 
@@ -72,12 +75,59 @@ int main() {
 
     Matrix4 cam{};
 
-    while (!window.should_window_close()) {
-        window.update();
 
+    if (!Backend::Initialize(window)) {
+        spdlog::error("Failed to initialize backend!");
+        return -5;
+    }
+
+    Rml::SetSystemInterface(Backend::GetSystemInterface());
+    Rml::SetRenderInterface(Backend::GetRenderInterface());
+
+    Rml::Initialise();
+
+    Rml::Context* context = Rml::CreateContext("Hello SDL CATOS!", Rml::Vector2i(1280, 720));
+
+    if (!context) {
+        spdlog::error("Failed to create context!");
+        return -2;
+    }
+
+    Rml::Debugger::Initialise(context);
+
+
+    if (!Rml::LoadFontFace("../../../Assets/Roboto-Regular.ttf")) {
+        spdlog::error("Failed to load font!");
+    }
+
+    Rml::ElementDocument* document = context->LoadDocument("../../../test.rml");
+
+    if (!document) {
+        spdlog::error("Failed to load document!");
+        return -3;
+    }
+    document->Show();
+    Rml::Debugger::SetVisible(false);
+
+    bool running = true;
+    while (running) {
+        running = Backend::ProcessEvents(context);
+        //window.update();
+        //
         defaultPipeline.draw(cam);
 
+
+        context->Update();
+
+        Backend::BeginFrame();
+        context->Render();
+        Backend::PresentFrame();
+
     }
+
+    Rml::Shutdown();
+
+    Backend::Shutdown();
 
     return 0;
 }

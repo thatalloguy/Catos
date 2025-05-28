@@ -76,6 +76,24 @@ if (NOT TARGET SDL3::SDL3)
 
 
 endif ()
+
+if (NOT TARGET SDL3_image::SDL3_image)
+    set(SDLIMAGE_VENDORED ON)
+    set(SDLIMAGE_AVIF OFF)	# disable formats we don't use to make the build faster and smaller.
+    set(SDLIMAGE_BMP OFF)
+    set(SDLIMAGE_JPEG OFF)
+    set(SDLIMAGE_WEBP OFF)
+
+    FetchContent_Declare(
+            SDL_Image_content
+            GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+            GIT_TAG release-3.2.4
+    )
+    FetchContent_MakeAvailable(SDL_Image_content)
+
+
+endif ()
+
 if(NOT TARGET Freetype::Freetype)
     FetchContent_Declare(
             freetype
@@ -105,7 +123,6 @@ if (NOT TARGET RmlUi)
             GIT_TAG 58c751531f4c1a1eb2dc56f409b8e8a323a0c9ad
     )
 
-    set(RMLUI_BACKEND "SDL_GL3" CACHE STRING "RmlUi backend")
     set(FREETYPE_DIR "${freetype_SOURCE_DIR}" CACHE PATH "" FORCE)
 
 

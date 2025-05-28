@@ -48,6 +48,8 @@ Window::Window(const catos::WindowCreationInfo &creationInfo) : _createInfo(crea
         spdlog::error("Could not create Window: {}", SDL_GetError());
     }
     _context = SDL_GL_CreateContext(_raw_window);
+    SDL_GL_MakeCurrent(_raw_window, _context);
+    SDL_GL_SetSwapInterval(1);
 
     gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress);
 }

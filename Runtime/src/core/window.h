@@ -15,7 +15,7 @@ namespace catos {
     struct WindowCreationInfo {
         math::Vector2 size{800, 600};
         math::Vector2 position{ 50, 50};
-        cstr title = "Catos Application ";
+        cstr title = "Catos Application";
         bool is_fullscreen = false;
         bool borderless = false;
         bool enable_darktheme = true; // NOTE: WINDOWS ONLY!!!!!

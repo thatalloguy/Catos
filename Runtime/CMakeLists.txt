@@ -38,6 +38,8 @@ file(GLOB_RECURSE CATOS_RUNTIME_SRC
         src/io/backend/*.h
         src/io/backend/*.cpp
 
+        src/ui/*.h
+        src/ui/*.cpp
 )
 
 
@@ -48,19 +50,23 @@ file(GLOB_RECURSE FASTGLTF_DEPS
         ../Thirdparty/stb/stb_image.h
 )
 
-add_library(catos-runtime-static STATIC ${CATOS_RUNTIME_SRC} ${GLAD_SRC} ${FASTGLTF_DEPS})
+add_library(catos-runtime-static STATIC
+        ${CATOS_RUNTIME_SRC}
+        ${GLAD_SRC}
+        ${FASTGLTF_DEPS}
+)
 target_link_libraries(catos-runtime-static PUBLIC catos-runtime)
 target_include_directories(catos-runtime-static PUBLIC src)
 
 
 #tests
 file(GLOB_RECURSE CATOS_RUNTIME_TEST src/tests/*.h src/tests/*.hpp src/tests/*.c src/tests/*.cpp)
-add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST}  ${GLAD_SRC}  "../Thirdparty/stb/stb_image.h")
+add_executable(catos-runtime-tests ${CATOS_RUNTIME_TEST}   "../Thirdparty/stb/stb_image.h")
 #???
 target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 
 
-####
+
 set(RMLUI_BACKEND_PATH ${RmlUi_SOURCE_DIR}/Backends)
 add_library(rmlui_backend_SDL_GL3 INTERFACE)
 target_sources(rmlui_backend_SDL_GL3 INTERFACE
@@ -73,18 +79,16 @@ target_compile_definitions(rmlui_backend_SDL_GL3 INTERFACE
         RMLUI_NUM_MSAA_SAMPLES=4
         RMLUI_GL3_CUSTOM_LOADER=<glad/glad.h>
 )
-####
-
-
 
 target_link_libraries(catos-runtime-static PUBLIC
         RmlUi::RmlUi
         spdlog
         SDL3::SDL3
+        SDL3_image::SDL3_image
+        rmlui_backend_SDL_GL3
         ryml
         doctest
         pocketpy
-        rmlui_backend_SDL_GL3
 )
 
 target_include_directories(catos-runtime-static PUBLIC
