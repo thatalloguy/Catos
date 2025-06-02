@@ -16,6 +16,11 @@
 
 #include "spdlog/spdlog.h"
 
+struct ContextData {
+    float data = 2.3f;
+    catos::string text = "This is a Catos String!";
+};
+
 std::string vertexShaderSource;
 std::string fragmentShaderSource;
 
@@ -99,6 +104,20 @@ int main() {
     if (!Rml::LoadFontFace("../../../Assets/Roboto-Regular.ttf")) {
         spdlog::error("Failed to load font!");
     }
+
+
+    Rml::DataModelConstructor constructor = context->CreateDataModel("context_data");
+
+    ContextData contextData{};
+
+    if (!constructor)
+        return 204;
+
+    constructor.Bind("data", &contextData.data);
+
+
+    auto model = constructor.GetModelHandle();
+
 
     Rml::ElementDocument* document = context->LoadDocument("../../../test.rml");
 
