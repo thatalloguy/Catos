@@ -67,25 +67,11 @@ target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 
 
 
-set(RMLUI_BACKEND_PATH ${RmlUi_SOURCE_DIR}/Backends)
-add_library(rmlui_backend_SDL_GL3 INTERFACE)
-target_sources(rmlui_backend_SDL_GL3 INTERFACE
-        ${RMLUI_BACKEND_PATH}/RmlUi_Platform_SDL.cpp
-        ${RMLUI_BACKEND_PATH}/RmlUi_Renderer_GL3.cpp
-)
-target_include_directories(rmlui_backend_SDL_GL3 INTERFACE ${RMLUI_BACKEND_PATH})
-target_compile_definitions(rmlui_backend_SDL_GL3 INTERFACE
-        RMLUI_SDL_VERSION_MAJOR=3
-        RMLUI_NUM_MSAA_SAMPLES=4
-        RMLUI_GL3_CUSTOM_LOADER=<glad/glad.h>
-)
 
 target_link_libraries(catos-runtime-static PUBLIC
-        RmlUi::RmlUi
         spdlog
         SDL3::SDL3
         SDL3_image::SDL3_image
-        rmlui_backend_SDL_GL3
         ryml
         doctest
         pocketpy
