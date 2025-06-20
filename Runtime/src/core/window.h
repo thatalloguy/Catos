@@ -3,10 +3,12 @@
 //
 #pragma once
 
+#include <functional>
 #include <SDL3/SDL.h>
 
 #include "math/vecs.h"
 #include "types.h"
+#include "stl/vector.h"
 
 namespace catos {
 
@@ -39,10 +41,13 @@ namespace catos {
 
         void* get_raw_window_ptr();
 
+        void add_callback(std::function<void(SDL_Event* event)> callback);
+        void* get_gl_context() { return &_context; };
 
     private:
         SDL_Window* _raw_window{nullptr};
         SDL_GLContext _context{};
+        catos::vector<std::function<void(SDL_Event* event)>> _callbacks;
         const WindowCreationInfo& _createInfo;
 
         bool _should_close = false;

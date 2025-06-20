@@ -78,6 +78,10 @@ void Window::update() {
         if (event.type == SDL_EVENT_QUIT) {
             _should_close = true;
         }
+
+        for (const auto& callback : _callbacks) {
+            callback(&event);
+        }
     }
 
     SDL_GL_SwapWindow(_raw_window);
@@ -86,4 +90,8 @@ void Window::update() {
 
 void* Window::get_raw_window_ptr() {
     return _raw_window;
+}
+
+void Window::add_callback(std::function<void(SDL_Event *event)> callback) {
+    _callbacks.push_back(callback);
 }
