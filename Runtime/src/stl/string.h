@@ -5,6 +5,8 @@
 #ifndef CATOS_STRING_H
 #define CATOS_STRING_H
 
+#include "pair.h"
+
 namespace catos {
 
     /// Custom string class that functions as dynamic C_str.
