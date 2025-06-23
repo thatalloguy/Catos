@@ -9,7 +9,7 @@
 namespace catos {
 
     struct NodeCreationInfo {
-        const
+
     };
 
     static bool validate_node_creation_info(const NodeCreationInfo& info) {
