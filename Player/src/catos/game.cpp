@@ -2,17 +2,17 @@
 // Created by allos on 24/06/2025.
 //
 
-#include "Game.h"
+#include "game.h"
 
-catos::Game::Game(const GameCreationInfo &info) {
-
-}
-
-catos::Game::~Game() {
+catos::game::game(const GameCreationInfo &info) {
 
 }
 
-void catos::Game::initializeSystems() {
+catos::game::~game() {
+
+}
+
+void catos::game::initializeSystems() {
     // First lets create a window
 
     ///todo create the window as described via a game.yaml or game.pack
@@ -29,22 +29,22 @@ void catos::Game::initializeSystems() {
     }
 }
 
-void catos::Game::loadProject() {
+void catos::game::loadProject() {
 
 }
 
-bool catos::Game::is_alive() {
+bool catos::game::is_alive() {
     return !_window.should_window_close();
 }
 
-void catos::Game::update() {
+void catos::game::update() {
     _window.update();
 }
 
-void catos::Game::render() {
+void catos::game::render() {
 
 }
 
-void catos::Game::destroySystems() {
+void catos::game::destroySystems() {
 
 }

@@ -1,8 +1,8 @@
-#include "catos/Game.h"
+#include "catos/game.h"
 
 int main() {
 
-    catos::Game game{{""}};
+    catos::game game{{""}};
 
     game.initializeSystems();
 

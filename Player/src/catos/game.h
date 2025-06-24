@@ -27,11 +27,11 @@ namespace catos {
         string engine_version{CATOS_VERSION};
     };
 
-    class Game: public App {
+    class game: public App {
 
     public:
-        Game(const GameCreationInfo& info);
-        virtual ~Game();
+        game(const GameCreationInfo& info);
+        virtual ~game();
 
         virtual void initializeSystems();
         virtual void loadProject();
