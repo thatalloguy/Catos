@@ -29,9 +29,9 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Vector
 - - [x] HashMap
 ---
-- [x] Entity Model
-- - [x] Worlds.
-- - [x] Entities.
+- Nodes
+- - [x] Node
+- - [ ] Attaching scripts to nodes.
 ---
 - [x] Scripting.
 - - [x] Loading python scripting.
@@ -66,23 +66,13 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - Good Input System
 - - [ ] Ability to define actions.
 - - [ ] Binding both controller input and keyboard / mouse input to actions.
-- - [ ] API func that only returns true when an action is pressed initially 
----
-- Nodes
-- - [ ] Camera3D
-- - [ ] Mesh3D
-- - [ ] RigidBody3D
-- - [ ] Collider3D
-- - [ ] Attaching scripts to nodes.
+- - [ ] API func that only returns true when an action is pressed initially
 ---
 - [ ] A tweening API.
 ---
 - Utils
 - - [ ] Commands.
 - - [ ] Debug camera
---- 
-- [ ] UI system.
-- - [ ] Kinda like HTML.
 ---
 - [ ] Editor 
 - - [ ] Node manipulation.
@@ -108,13 +98,8 @@ It can also later read them back from yaml and binary. Yaml is meant to be used 
 Binary is for exported games and meant for loading objects fast.
 
 ### Modern renderer.
-Catos's renderer is meant to be customizable at heart. The current renderer is written ontop of opengl and allows the user to easily create their own `Pipelines` and `RenderPasses` .
-However the plan is to migrate from opengl to SDL_GPU, which is a relatively thin layer ontop of both DirectX12, Vulkan and Metal. This will recuire me to rewrite the entire render structure.
-This is because SDL_GPU already has `RenderPasses` and `Pipelines` out of the box. The implementation will be focused on ease of customization with the help of nodes, which is meant to function as a framegraph.
-Allowing the user to specify what shaders, pipelines, buffers, textures and passes should be used and how. With the introduction of SDL_GPU it also means that we can't use GLSL but only HLSL, I intend to write a small validation layer (if needed) and then use SDL_Shadercross to compile them.
+Catos's renderer is meant to be customized for any situation. Instead of being a out of the box solution its more of a dynamic framework, with which the user can create their own render pipelines and passes.
 
-### Window management.
-The current windowing library is GLFW-3, however I see no reason to stay with GLFW and therefor I will migrate to SDL 3.
 
 
 
