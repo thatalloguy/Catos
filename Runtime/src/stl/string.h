@@ -4,8 +4,7 @@
 
 #ifndef CATOS_STRING_H
 #define CATOS_STRING_H
-
-
+#include <format>
 
 
 namespace catos {

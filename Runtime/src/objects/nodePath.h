@@ -7,23 +7,23 @@
 
 namespace catos {
 
-    class NodePath {
-        struct Data {
-            vector<string> path;
-            vector<string> previous;
-        } _data{};
-
-
-    public:
-        NodePath() = default;
-        NodePath(const string& path);
-        ~NodePath() = default;
-
-
-        const string& next_name();
-        const string& previous_name();
-
-    };
+    // class NodePath {
+    //     struct Data {
+    //         vector<string> path;
+    //         vector<string> previous;
+    //     } _data{};
+    //
+    //
+    // public:
+    //     NodePath() = default;
+    //     NodePath(const string& path);
+    //     ~NodePath() = default;
+    //
+    //
+    //     const string& next_name();
+    //     const string& previous_name();
+    //
+    // };
 
 
 }

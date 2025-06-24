@@ -12,28 +12,17 @@
 namespace catos {
 
 
-    /// A struct that holds all info the application needs at launch
-    struct AppCreationInfo {
-        ///            MAJOR | MINOR | PATCH?
-        uint version = 001;
-        str applicationTitle = "Catos Application";
-    };
-
-
     /// Main class that holds all information.
     class App {
 
     public:
 
         /// Initializes the Application (Also registers all "known" class to the registry)
-        App(AppCreationInfo* creationInfo);
-        ~App();
+        App();
+        virtual ~App();
 
         /// Returns if the app is still running.
-        bool is_alive();
-
-
-
+        virtual bool is_alive() { return true; };
 
         /// Used to bind an instance to an type
         template<typename A>
@@ -47,19 +36,10 @@ namespace catos {
             return  (A*) (_instance_register[typeid(A).hash_code()]);
         }
 
-
-        /// Returns a pointer to the info with what the application is made.
-        AppCreationInfo* getAppInfo();
-
-
-    private:
-
+    protected:
         void init_registry();
 
-
-        AppCreationInfo* _info;
-        bool _is_alive = false;
-
+    private:
         std::unordered_map<size_t, const void* > _instance_register;
     };
 

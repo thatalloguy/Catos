@@ -10,12 +10,8 @@
 int main() {
     //
 
-    catos::AppCreationInfo editorApp{
-        0,
-        "Catos Editor"
-    };
 
-    catos::App app{&editorApp};
+    catos::App app{};
 
     catos::Editor editor(app);
 

@@ -100,7 +100,10 @@ Binary is for exported games and meant for loading objects fast.
 ### Modern renderer.
 Catos's renderer is meant to be customized for any situation. Instead of being a out of the box solution its more of a dynamic framework, with which the user can create their own render pipelines and passes.
 
-
+### Error codes and their meanings:
+- 200-299 are codes from the player
+- 100-199 are codes from the core engine
+- 300-399 are codes from the editor
 
 
 ## Star History

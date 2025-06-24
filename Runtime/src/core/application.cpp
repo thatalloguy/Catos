@@ -6,13 +6,9 @@
 #include "core/registry.h"
 
 
-catos::App::App(AppCreationInfo* creationInfo) {
-
-    _info = creationInfo;
+catos::App::App() {
 
     init_registry();
-
-    _is_alive = true;
 }
 
 catos::App::~App() {
@@ -24,8 +20,6 @@ catos::App::~App() {
 
 void catos::App::init_registry() {
 
-
-
     bind<Registry>(new Registry);
 
     auto registry = *get<Registry>();
@@ -35,12 +29,5 @@ void catos::App::init_registry() {
 }
 
 
-bool catos::App::is_alive() {
-    return _is_alive;
-}
-
-catos::AppCreationInfo *catos::App::getAppInfo() {
-    return _info;
-}
 
 

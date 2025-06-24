@@ -16,14 +16,10 @@ static bool resized = false;
 //    resized = true;
 //}
 
-Window::Window(const catos::WindowCreationInfo &creationInfo) : _createInfo(creationInfo) {
+bool Window::initialize(const catos::WindowCreationInfo &creationInfo) {
 
 
     SDL_Init(SDL_INIT_VIDEO);
-//    if (!) {
-//        spdlog::error("Could not initialize SDL3!");
-//        exit(-11); // For the game to run we would need glfw
-//    }
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
@@ -33,25 +29,19 @@ Window::Window(const catos::WindowCreationInfo &creationInfo) : _createInfo(crea
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 
-//
-//    GLFWmonitor* monitor;
-//
-//    if (creationInfo.is_fullscreen) {
-//        monitor = glfwGetPrimaryMonitor();
-//    } else {
-//        monitor = NULL;
-//    }
-
     _raw_window = SDL_CreateWindow(creationInfo.title, creationInfo.size.x, creationInfo.size.y, SDL_WINDOW_OPENGL);
 
     if (!_raw_window) {
         spdlog::error("Could not create Window: {}", SDL_GetError());
+        return false;
     }
     _context = SDL_GL_CreateContext(_raw_window);
     SDL_GL_MakeCurrent(_raw_window, _context);
     SDL_GL_SetSwapInterval(1);
 
     gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress);
+
+    return true;
 }
 
 Window::~Window() {

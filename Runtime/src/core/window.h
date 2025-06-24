@@ -29,7 +29,8 @@ namespace catos {
     public:
         friend class App;
 
-        Window(const WindowCreationInfo& creationInfo);
+        Window() {};
+        bool initialize(const WindowCreationInfo& creationInfo);
         ~Window();
 
 
@@ -48,7 +49,6 @@ namespace catos {
         SDL_Window* _raw_window{nullptr};
         SDL_GLContext _context{};
         catos::vector<std::function<void(SDL_Event* event)>> _callbacks;
-        const WindowCreationInfo& _createInfo;
 
         bool _should_close = false;
         SDL_Event event;

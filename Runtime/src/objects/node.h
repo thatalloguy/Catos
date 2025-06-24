@@ -8,6 +8,8 @@
 
 #include "spdlog/spdlog.h"
 
+
+
 template <>
 struct std::hash<catos::string>
 {
