@@ -7,6 +7,10 @@
 
 #include <string>
 
+void catos::string::clear() {
+    cleanUp();
+}
+
 catos::string::~string() {
 
     cleanUp();
@@ -54,6 +58,7 @@ catos::string::string(catos::string &&obj) {
 void catos::string::cleanUp() {
     if (buf != nullptr && size < 10000 ) {
         delete[] buf;
+        size = 0;
     }
 }
 
@@ -71,7 +76,7 @@ catos::string &catos::string::operator=(catos::string &&obj) {
     return *this;
 }
 
-catos::string catos::string::operator+(const catos::string &obj) {
+catos::string catos::string::operator+(const catos::string &obj) const {
     string s; // new string.
 
     s.size = this->size + obj.size;

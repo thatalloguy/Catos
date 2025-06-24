@@ -3,29 +3,35 @@
 //
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <stl/string.h>
 
-namespace catos {
+#include "spdlog/spdlog.h"
 
-    struct NodeCreationInfo {
-
-    };
-
-    static bool validate_node_creation_info(const NodeCreationInfo& info) {
-
+template <>
+struct std::hash<catos::string>
+{
+    std::size_t operator()(const catos::string& str) const noexcept
+    {
+        unsigned int hash = 0;
+        for (auto it = str.begin(); it != str.end(); ++it) {
+            hash = *it + (hash << 6) + (hash << 16) - hash;
+        }
+        //hash = hash % str.length();
+        return hash;
     }
+};
 
+namespace catos {
 
     class Node {
     public:
 
-        static Node* create();
 
         Node(bool manage_memory=true): _manage_memory(manage_memory) {};
         virtual ~Node() = default;
 
-        virtual void initialize();
+        virtual void initialize(const string& name);
 
         virtual void update();
         virtual void render();
@@ -34,29 +40,33 @@ namespace catos {
 
         void set_parent(Node* parent);
 
-        Node* find_node(const string& path, bool recursive=true) const;
+        bool has_child(const string& name);
+
+        Node* find_node(const string& name, bool recursive=true) const;
         Node* get_child(const string& name) const;
         Node* get_parent() const;
-        Node* get_root() const;
 
         int num_children() const;
         bool is_root() const;
 
-        const string& path() const;
+        const string& path();
+        const string& path() const { return _path; };
         const string& name() const;
+
+        void change_name(const string& new_name);
+        void change_child_name(const string& name,const string& new_name);
 
     private:
         bool _manage_memory{true};
 
         string _path{""};
         string _name{""};
-        string _type{"Node"};
 
     protected:
-        Node* _parent{nullptr};
-        Node* _root{nullptr};
+        string _type{"Node"};
 
-        std::map<string, Node*> _children{};
+        Node* _parent{nullptr};
+        std::unordered_map<catos::string, Node*> _children{};
     };
 
     static bool is_node_valid(Node* node) { return node != nullptr; };

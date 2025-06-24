@@ -69,17 +69,6 @@ namespace catos {
     };
 
 
-        struct StringHashFunc {
-        size_t operator()(const string& key, int Size) const {
-            unsigned int hash = 0;
-            for (auto it = key.begin(); it != key.end(); ++it) {
-                hash = *it + (hash << 6) + (hash << 16) - hash;
-            }
-            hash = hash % Size;
-            return hash;
-        }
-    };
-
     /**
      * Hashmap structure object.
      * NOTE: alot of custom types such as catos::string dont work.

@@ -5,9 +5,12 @@
 #ifndef CATOS_STRING_H
 #define CATOS_STRING_H
 
-#include "pair.h"
+
+
 
 namespace catos {
+
+
 
     /// Custom string class that functions as dynamic C_str.
     class string {
@@ -35,7 +38,7 @@ namespace catos {
         string& operator=(string&& obj);
 
         /// Adds a string to itself.
-        string operator+(const string& obj);
+        string operator+(const string& obj) const;
 
         // copy
         void operator+=(const string& obj);
@@ -55,9 +58,14 @@ namespace catos {
         char* begin() const {return &buf[0]; };
         char* end() const {return &buf[size - 1]; };
 
+
+        ///Clears everything
+        void clear();
+
         /// Deletes the allocated char array
         ~string();
 
+        unsigned int length() const { return size; };
     private:
         void cleanUp();
 
@@ -67,9 +75,7 @@ namespace catos {
     };
 
 
-
 }
-
 
 
 #endif //CATOS_STRING_H
