@@ -19,7 +19,8 @@ Editor::Editor(const App &app, Window *window): _app(app), _window(window) {
             title.c_str(),
         };
 
-        _window = new Window(editorDefaultCreationInfo);
+        _window = new Window();
+        _window->initialize(editorDefaultCreationInfo);
     }
 
     utils::initialize_imgui(_window->get_raw_window_ptr(), _window->get_gl_context());

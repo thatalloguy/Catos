@@ -44,12 +44,12 @@ namespace catos {
 
         bool has_child(const string& name);
 
-        Node* find_node(const string& name, bool recursive=true) const;
-        Node* get_child(const string& name) const;
-        Node* get_parent() const;
+        Node* find_node(const string& name, bool recursive=true);
+        Node* get_child(const string& name);
+        Node* get_parent();
 
-        int num_children() const;
-        bool is_root() const;
+        int num_children();
+        bool is_root();
 
         const string& path();
         const string& path() const { return _path; };

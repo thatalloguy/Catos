@@ -110,18 +110,9 @@ Catos's renderer is meant to be customized for any situation. Instead of being a
 
 [![Star History Chart](https://api.star-history.com/svg?repos=thatalloguy/catos&type=Date)](https://www.star-history.com/#thatalloguy/catos&Date)
 
-## Dependencies
-###  - doctest
-###  - fastgltf [ V0.7.2 ]
-###  - SDL3
-###  - rapidyml
-###  - imgui
-###  - pocketpy
-###  - spdlog
-### - Rmlui
-###  - stb_image
-
-## Notes:
-### in order to load python bindings you must do '#define CATOS_SCRIPTING_ENABLED'
-### And python scripting is broken :/ 
-
+### Dependencies
+  - SDL3
+  - rapidyml
+  - imgui
+  - spdlog
+  - stb_image

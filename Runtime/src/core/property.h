@@ -16,9 +16,6 @@
 #include <any>
 
 
-#ifdef CATOS_SCRIPTING_ENABLED
-#include "scripting/ScriptingEngine.h"
-#endif
 
 namespace catos {
 
@@ -63,7 +60,6 @@ namespace catos {
 
 
         virtual void set_name(const char* name) = 0;
-        virtual void registerToPy() = 0;
 
         cstr desc = "NONE";
     };
@@ -134,15 +130,6 @@ namespace catos {
         size_t& get_type_hash() override {
             return type_hash;
         };
-
-        void registerToPy() override {
-
-#ifdef CATOS_SCRIPTING_ENABLED
-            auto& inst = catos::ScriptingEngine::getInstance();
-
-            inst.registerProperty<T, U>(name, memberPtr);
-#endif
-        }
 
         bool is_class() override {
             return std::is_class<U>::value;
@@ -263,15 +250,6 @@ namespace catos {
             return type_hash;
         };
 
-        void registerToPy() override {
-
-#ifdef CATOS_SCRIPTING_ENABLED
-            auto& inst = catos::ScriptingEngine::getInstance();
-
-            inst.registerProperty<T, catos::vector<U>>(name, memberPtr);
-#endif
-        }
-
         bool is_class() override {
             return std::is_class<U>::value;
         }
@@ -345,15 +323,6 @@ namespace catos {
             return type_hash;
         };
 
-        void registerToPy() override {
-
-#ifdef CATOS_SCRIPTING_ENABLED
-            auto& inst = catos::ScriptingEngine::getInstance();
-
-            inst.registerProperty<T, catos::vector<U>>(name, memberPtr);
-#endif
-        }
-
         bool is_class() override {
             return std::is_class<K>::value;
         }
@@ -421,15 +390,6 @@ namespace catos {
         size_t& get_type_hash() override {
             return type_hash;
         };
-
-        void registerToPy() override {
-
-#ifdef CATOS_SCRIPTING_ENABLED
-            auto& inst = catos::ScriptingEngine::getInstance();
-
-            inst.registerProperty<T, U>(name, memberPtr);
-#endif
-        }
 
         bool is_class() override {
             return std::is_class<U>::value;

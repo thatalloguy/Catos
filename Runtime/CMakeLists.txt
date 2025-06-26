@@ -74,12 +74,10 @@ target_link_libraries(catos-runtime-static PUBLIC
         SDL3_image::SDL3_image
         ryml
         doctest
-        pocketpy
 )
 
 target_include_directories(catos-runtime-static PUBLIC
         ${GLAD_INCLUDE}
-        ${pocketpy_content_SOURCE_DIR}/include
         ${SDL3_content_SOURCE_DIR}/include
         ${rapidyaml_content_SOURCE_DIR}/src
         "../Thirdparty/stb/"

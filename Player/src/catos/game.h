@@ -51,7 +51,4 @@ namespace catos {
     };
 
 
-    static void registerTypes() {
-
-    }
 }

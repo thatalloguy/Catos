@@ -1,14 +1,10 @@
 ## We need the following libs:
-#    - Pocketpy v2.0.6
 #    - Doctest v2.4.11
-#    - fastgltf v0.7.2
 #    - GLAD
-#    - GLFW v3.5.0
 #    - SDL 3
 #    - RAPIDYAML v0.8.0
 #    - spdlog v1.15.1
 #    - stb_image
-#    - RmlUI 6.1
 
 if (NOT TARGET doctest)
     FetchContent_Declare(
@@ -79,18 +75,6 @@ if (NOT TARGET rapidyaml)
     )
 
     FetchContent_MakeAvailable(rapidyaml_content)
-endif()
-
-
-if (NOT TARGET pocketpy)
-
-    FetchContent_Declare(
-            pocketpy_content
-            GIT_REPOSITORY https://github.com/pocketpy/pocketpy.git
-            GIT_TAG v2.0.6
-    )
-
-    FetchContent_MakeAvailable(pocketpy_content)
 endif()
 
 if (NOT TARGET SDL3::SDL3)

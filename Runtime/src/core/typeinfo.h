@@ -101,8 +101,7 @@ namespace catos {
                 return it->second;
             }
 
-            //TODO replace with logger
-            std::cerr << "Could not find property\n";
+            spdlog::error("Could not find property");
 
             return nullptr;
         };
@@ -121,30 +120,6 @@ namespace catos {
         Constructor& get_constructor() {
             return _constructor;
         }
-
-
-        template<typename T>
-        void registerToPython() {
-#ifdef CATOS_SCRIPTING_ENABLED
-            auto& inst = ScriptingEngine::getInstance();
-
-            auto structPos = name.find("struct");
-
-            if (structPos == std::string::npos) {
-                structPos = name.find("class");
-            }
-
-            inst.registerClass<T>(name.substr(structPos + 7).c_str());
-
-            for (auto property : properties) {
-                property.second->registerToPy();
-            }
-
-            for (auto method : methods) {
-                method.second->registerToPy(method.first.c_str());
-            }
-#endif
-        };
 
         ///Checks wether or not the ptr is a nullptr;
         static bool is_valid(Property* ptr) { return ptr != nullptr; };

@@ -7,15 +7,9 @@
 #include "types.h"
 
 
-#ifdef CATOS_SCRIPTING_ENABLED
-#include "scripting/ScriptingEngine.h"
-#endif
-
 namespace catos {
     class MethodHolder {
-    public:
 
-        virtual void registerToPy(const char* name) = 0;
     };
 
     template<typename ReturnType, class ClassType, typename... Args>
@@ -28,13 +22,6 @@ namespace catos {
 
         }
 
-        void registerToPy(const char* name) override {
-#ifdef CATOS_SCRIPTING_ENABLED
-            auto& inst = catos::ScriptingEngine::getInstance();
-
-            inst.registerMethod<ClassType>(name, _ptr);
-#endif
-        }
     };
 
 
@@ -98,37 +85,6 @@ namespace catos {
 
             returnName = typeid(ReturnType).name();
 
-
-            if (getNames<Args...>() != "") {
-
-                parameters = getNames<Args...>();
-
-
-                std::string search = "char const * __ptr64";
-                std::string replace = "string";
-
-                size_t pos = 0;
-                // replace cstr to string
-                while((pos = parameters.find(search, pos)) != std::string::npos) {
-                    parameters.replace(pos, search.length(), replace);
-                    pos += replace.length();
-                }
-                search = "class catos:: ";
-                replace = "ref ";
-                pos = 0;
-
-                // Change class catos::  to ref for c#
-                while((pos = parameters.find(search, pos)) != std::string::npos) {
-                    parameters.replace(pos, search.length(), replace);
-                    pos += replace.length();
-                }
-
-                // remove ","
-                parameters.erase(parameters.size() - 1, 1);
-                parameterNames = getArgNames<Args...>();
-                parameterNames.erase(parameterNames.size() - 1, 1);
-            }
-
         };
 
         ~Method() {
@@ -144,11 +100,6 @@ namespace catos {
         void invoke_function(void* instance, Args... args) {
             std::any_cast<void(*)(void*, void*, Args...)>(ptr)(&_mFunc, instance, args...);
         };
-
-        void registerToPy(const char* name) {
-            holder->registerToPy(name);
-        }
-
 
         cstr desc = "NONE";
         std::string returnName = "void";

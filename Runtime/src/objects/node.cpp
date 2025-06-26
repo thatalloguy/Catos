@@ -55,7 +55,7 @@ bool catos::Node::has_child(const string &name) {
 }
 
 
-catos::Node* catos::Node::find_node(const string &name, bool recursive) const {
+catos::Node* catos::Node::find_node(const string &name, bool recursive) {
     auto it = _children.find(name);
 
     if (it != _children.end()) {
@@ -75,7 +75,7 @@ catos::Node* catos::Node::find_node(const string &name, bool recursive) const {
     return nullptr;
 }
 
-catos::Node * catos::Node::get_child(const string &name) const {
+catos::Node * catos::Node::get_child(const string &name) {
     auto it = _children.find(name);
 
     if (it != _children.end()) {
@@ -86,15 +86,15 @@ catos::Node * catos::Node::get_child(const string &name) const {
     return nullptr;
 }
 
-catos::Node * catos::Node::get_parent() const {
+catos::Node * catos::Node::get_parent() {
     return _parent;
 }
 
-int catos::Node::num_children() const {
+int catos::Node::num_children() {
     return (int) _children.size();
 }
 
-bool catos::Node::is_root() const {
+bool catos::Node::is_root() {
     return _parent == nullptr;
 }
 
