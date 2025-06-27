@@ -8,6 +8,16 @@
 
 
 
+#if _WIN64
+#   define CATOS_WIN
+#   define CATOS_API __declspec(dllexport)
+#   define CATOS_PATH_SEPARATOR '\\'
+#elif __linux__
+#   define CATOS_LINUX
+#   define CATOS_API __attribute__ ((visibility ("default")))
+#   define CATOS_PATH_SEPARATOR '/'
+#   define CATOS_UNIX
+#endif
 
 typedef std::string_view str;
 typedef const char*  cstr;
