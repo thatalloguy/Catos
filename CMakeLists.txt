@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 
+include(Cmake/CMakeFunctions.cmake)
 include(FetchContent)
 
 
