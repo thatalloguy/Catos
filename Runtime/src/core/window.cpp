@@ -30,6 +30,7 @@ bool Window::initialize(const catos::WindowCreationInfo &creationInfo) {
 
 
     _raw_window = SDL_CreateWindow(creationInfo.title, creationInfo.size.x, creationInfo.size.y, SDL_WINDOW_OPENGL);
+    SDL_SetWindowResizable(_raw_window, creationInfo.can_resize);
 
     if (!_raw_window) {
         spdlog::error("Could not create Window: {}", SDL_GetError());

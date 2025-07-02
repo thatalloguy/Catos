@@ -19,6 +19,7 @@ namespace catos {
         math::Vector2 position{ 50, 50};
         cstr title = "Catos Application";
         bool is_fullscreen = false;
+        bool can_resize = false;
         bool borderless = false;
         bool enable_darktheme = true; // NOTE: WINDOWS ONLY!!!!!
     };

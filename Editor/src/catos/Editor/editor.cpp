@@ -17,6 +17,8 @@ Editor::Editor(const App &app, Window *window): _app(app), _window(window) {
             {1280, 720},
             {0, 0},
             title.c_str(),
+            false,
+            true
         };
 
         _window = new Window();
@@ -57,12 +59,9 @@ catos::Window* Editor::get_window() {
 void Editor::run() {
 
     while (!_window->should_window_close()) {
-
         _window->update();
 
         this->render();
-
-
     }
 
 }

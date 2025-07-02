@@ -34,8 +34,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] Attaching scripts to nodes.
 ---
 - [x] Scripting.
-- - [x] Loading python scripting.
-- - [x] exposing cpp api to python.
+- - [x] Loading Dll's / c++ scripts.
 ---
 - [ ] Solid Serialization System.
 - - [x] Saving most objects to yaml.
@@ -88,9 +87,6 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ### reflection system
 Catos uses/depents allot on its own custom reflection system. The system is written across: registry.h, typeinfo.h, property.h, method.h
 The reflection system support any fundemental type and some special types, such as `catos::vector` and `std::unordered_map` .
-
-### Automatic python binding.
-Powered by its reflection system, Catos can automatically bind cpp class with properties and functions to python.
 
 ### Serialization system.
 Powered by the reflection system, Catos can write most cpp classes to both yaml and binary(WIP). 
