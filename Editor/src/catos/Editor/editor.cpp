@@ -8,6 +8,7 @@ using namespace catos;
 namespace {
 
 
+    ///Credits to Skore for the Docking implementation :D
     ImGuiID dockspace_id{10000};
 
     ImGuiID centerSpaceId{10000};
