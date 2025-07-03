@@ -13,6 +13,9 @@ namespace catos {
     public:
         ~YamlWriter() override = default;
 
+
+        bool open(const catos::string& path) override;
+
         void writeBool(const string &name, bool value) override;
 
         void writeInt(const string &name, int value) override;
@@ -44,6 +47,9 @@ namespace catos {
         int arrays_closed = 0;
 
         void format();
+
+        bool is_file_open = false;
+        catos::string out_file;
     };
 
 }

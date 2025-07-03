@@ -27,7 +27,7 @@ namespace catos {
         Serializer();
         ~Serializer();
 
-        void serializeInstances(const catos::vector<Object>& instances, Mode mode = Mode::YAML);
+        void serializeInstances(const string& file_path, const catos::vector<Object>& instances, Mode mode = Mode::YAML);
         void deserializeInstances(const catos::string& file_path, Mode mode, catos::vector<Instance*>& instances);
 
     private:

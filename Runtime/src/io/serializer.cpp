@@ -55,7 +55,7 @@ catos::Serializer::~Serializer() {
 
 
 
-void catos::Serializer::serializeInstances(const catos::vector<Object> &instances, Mode mode) {
+void catos::Serializer::serializeInstances(const string& file_path, const catos::vector<Object> &instances, Mode mode) {
     delete writer;
 
     if (mode == Mode::YAML) {
@@ -64,7 +64,7 @@ void catos::Serializer::serializeInstances(const catos::vector<Object> &instance
         writer = new YamlWriter{};
     }
 
-
+    writer->open(file_path);
     writer->begin();
 
     for (const auto& object : instances) {

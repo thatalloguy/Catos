@@ -15,6 +15,9 @@ namespace catos {
 
         virtual ~Writer() = default;
 
+
+        virtual bool open(const catos::string& path) = 0;
+
         //Fundamentals
         virtual void writeBool(const catos::string& name, bool value) = 0;
         virtual void writeInt(const catos::string& name, int value) = 0;

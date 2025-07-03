@@ -12,6 +12,11 @@ namespace {
     std::string out_string = "";
 }
 
+bool catos::YamlWriter::open(const catos::string &path) {
+    is_file_open =true;
+    out_file = path;
+}
+
 void catos::YamlWriter::writeBool(const catos::string &name, bool value) {
    format();
    out_string += name.c_str();
@@ -50,7 +55,7 @@ void catos::YamlWriter::beginMap(const catos::string &name) {
 
         for (auto map : _root_maps) {
             if (map == name) {
-                spdlog::error("A root map must be Unique");
+                spdlog::error("[YamlWriter] A root map must be Unique");
                 return;
             }
         }
@@ -87,16 +92,26 @@ void catos::YamlWriter::begin() {
 void catos::YamlWriter::close() {
 
     if (!validate()) {
-        spdlog::error("Could not validate Yaml");
+        spdlog::error("[YamlWriter] Could not validate Yaml");
         return;
     }
 
+    if (!is_file_open) {
+        spdlog::error("[YamlWriter] No File given to write to");
+        return;
+    }
 
-    FILE* file = fopen("../../../test.yaml", "w");
+    FILE* file = fopen(out_file.c_str(), "w");
 
-    fprintf(file, out_string.c_str());
+    if (file != nullptr) {
+        fprintf(file, out_string.c_str());
 
-    fclose(file);
+        fclose(file);
+    } else {
+        spdlog::error("[YamlWriter] Could not write to file: {}", out_file);
+    }
+
+    is_file_open = false;
 
 }
 
