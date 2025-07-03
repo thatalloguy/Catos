@@ -15,6 +15,7 @@ void DummyWindow::render() {
 
     std::string name = "DummyWindow##" + std::to_string(_id);
 
+    spdlog::info("WINDOW: {}", name);
     ImGui::Begin(name.c_str());
 
     ImGui::Text("Hello World");

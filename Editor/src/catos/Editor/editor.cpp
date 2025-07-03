@@ -5,6 +5,63 @@
 
 using namespace catos;
 
+namespace {
+
+
+    ImGuiID dockspace_id{10000};
+
+    ImGuiID centerSpaceId{10000};
+    ImGuiID leftSpaceId{};
+    ImGuiID rightSpaceId{};
+    ImGuiID rightTopSpaceId{};
+    ImGuiID rightBottomSpaceId{};
+    ImGuiID bottomLeftSpaceId{};
+    ImGuiID bottomRightSpaceId{};
+
+    unsigned int GetDockId(DockPosition dock_position) {
+        switch (dock_position) {
+            case DockPosition::None: return 0xffffffffui32;
+            case DockPosition::Center: return centerSpaceId;
+            case DockPosition::Left: return leftSpaceId;
+            case DockPosition::Right: return rightSpaceId;
+            case DockPosition::RightTop: return rightTopSpaceId;
+            case DockPosition::RightBottom: return rightBottomSpaceId;
+            case DockPosition::BottomLeft: return bottomLeftSpaceId;
+            case DockPosition::BottomRight: return bottomRightSpaceId;
+        }
+
+        return 0xffffffffui32;
+    }
+
+    bool dock_initialized = false;
+
+    void init_dock_space() {
+        if (!dock_initialized) {
+            dock_initialized = true;
+
+            utils::reset_dockspace(dockspace_id);
+
+            centerSpaceId = dockspace_id;
+            rightTopSpaceId = ImGui::DockBuilderSplitNode(centerSpaceId, ImGuiDir_Right, 0.15f, nullptr, &centerSpaceId);
+            rightBottomSpaceId = ImGui::DockBuilderSplitNode(rightTopSpaceId, ImGuiDir_Down, 0.50f, nullptr, &rightTopSpaceId);
+
+            bottomLeftSpaceId = ImGui::DockBuilderSplitNode(centerSpaceId, ImGuiDir_Down, 0.20f, nullptr, &centerSpaceId);
+            bottomRightSpaceId = ImGui::DockBuilderSplitNode(bottomLeftSpaceId, ImGuiDir_Right, 0.30f, nullptr, &bottomLeftSpaceId);
+
+            leftSpaceId = ImGui::DockBuilderSplitNode(centerSpaceId, ImGuiDir_Left, 0.12f, nullptr, &centerSpaceId);
+            rightSpaceId = ImGui::DockBuilderSplitNode(centerSpaceId, ImGuiDir_Right, 0.12f, nullptr, &centerSpaceId);
+
+            // for (const auto& windowType : editorWindowStorages)
+            // {
+            //     if (windowType.createOnInit)
+            //     {
+            //         CreateWindow(windowType, nullptr);
+            //     }
+            // }
+        }
+    }
+}
+
 Editor::Editor(const App &app, Window *window): _app(app), _window(window) {
     if (!_window) {
         // create our own window.
@@ -72,9 +129,16 @@ void Editor::render() {
 
     utils::new_imGui_frame();
 
+    utils::create_dockspace(dockspace_id);
+    init_dock_space();
+
     for (auto pair : _windows) {
         pair.second->render();
     }
+    ImGui::DockBuilderDockWindow("DummyWindow##0", leftSpaceId);
+    ImGui::DockBuilderDockWindow("DummyWindow##1", rightBottomSpaceId);
+
+    ImGui::End();
 
     utils::render_imGui();
 }

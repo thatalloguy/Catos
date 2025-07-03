@@ -13,4 +13,6 @@ class DummyWindow : EditorWindow {
     void render() override;
     void clean_up() override;
 
+    DockPosition get_dock_pos() override { return DockPosition::Right; };
+
 };

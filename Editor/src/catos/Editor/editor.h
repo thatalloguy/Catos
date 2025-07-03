@@ -14,6 +14,20 @@
 
 namespace catos {
 
+
+    ///Credits to Skore for the Dock implementation.
+    enum class DockPosition: unsigned int {
+        None = 0,
+        Center = 1,
+        Left = 2,
+        Right = 3,
+        RightTop = 4,
+        RightBottom = 5,
+        BottomLeft = 6,
+        BottomRight = 7,
+    };
+
+
     class EditorWindow {
     public:
         EditorWindow() = default;
@@ -25,8 +39,9 @@ namespace catos {
         virtual void init(const App& app, int id) = 0;
         virtual void render() = 0;
         virtual void clean_up() = 0;
-    protected:
 
+        virtual DockPosition get_dock_pos() = 0;
+    protected:
         int _instance{0};
         int _id{-1};
     };

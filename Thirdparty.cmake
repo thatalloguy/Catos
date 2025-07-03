@@ -20,7 +20,7 @@ if (NOT TARGET imgui)
     FetchContent_Declare(
             imgui_content
             GIT_REPOSITORY https://github.com/ocornut/imgui.git
-            GIT_TAG v1.91.9b
+            GIT_TAG docking
     )
     FetchContent_MakeAvailable(imgui_content)
 

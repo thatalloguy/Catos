@@ -4,6 +4,8 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl3.h>
 
+#include "imgui_internal.h"
+
 namespace utils {
 
 
@@ -15,12 +17,46 @@ namespace utils {
         ImGui_ImplOpenGL3_Init("#version 440");
         ImGui::StyleColorsDark();
 
+    	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    	ImGui::GetIO().IniFilename = nullptr;
     }
 
     static void new_imGui_frame() {
         ImGui_ImplSDL3_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
+    }
+
+	static void create_dockspace(ImGuiID dockspaceId) {
+    	static ImGuiDockNodeFlags dockNodeFlags = ImGuiDockNodeFlags_None;
+
+    	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    	auto             viewport = ImGui::GetMainViewport();
+    	ImGui::SetNextWindowPos(viewport->WorkPos);
+    	ImGui::SetNextWindowSize(viewport->WorkSize);
+    	ImGui::SetNextWindowViewport(viewport->ID);
+    	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(20, 20, 23, 255));
+    	windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    	windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+    	dockNodeFlags |= ImGuiDockNodeFlags_NoWindowMenuButton;
+    	ImGui::Begin("DockSpace", 0, windowFlags);
+    	ImGui::PopStyleVar(3);
+    	ImGui::PopStyleColor(1);
+
+    	ImGuiStyle& style = ImGui::GetStyle();
+    	ImGui::DockSpace(dockspaceId, ImVec2(0.0f, viewport->WorkSize.y - 40), dockNodeFlags);
+
+    }
+
+	static void reset_dockspace(ImGuiID dockspaceId) {
+    	auto viewport = ImGui::GetMainViewport();
+    	ImGui::DockBuilderRemoveNode(dockspaceId);
+    	ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace);
+    	ImGui::DockBuilderSetNodeSize(dockspaceId, viewport->WorkSize);
     }
 
     static void render_imGui() {
