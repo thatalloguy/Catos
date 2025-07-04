@@ -59,6 +59,8 @@ namespace {
             //         CreateWindow(windowType, nullptr);
             //     }
             // }
+
+
         }
     }
 }
@@ -136,8 +138,6 @@ void Editor::render() {
     for (auto pair : _windows) {
         pair.second->render();
     }
-    ImGui::DockBuilderDockWindow("DummyWindow##0", leftSpaceId);
-    ImGui::DockBuilderDockWindow("DummyWindow##1", rightBottomSpaceId);
 
     ImGui::End();
 

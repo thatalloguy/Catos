@@ -15,10 +15,12 @@ namespace utils {
         ImGui::CreateContext();
         ImGui_ImplSDL3_InitForOpenGL((SDL_Window*) window, context);
         ImGui_ImplOpenGL3_Init("#version 440");
-        ImGui::StyleColorsDark();
+    	ImGui::StyleColorsDark();
+    	ImGuiIO& io = ImGui::GetIO();
 
-    	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    	ImGui::GetIO().IniFilename = nullptr;
+    	io.IniFilename = nullptr;
+    	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    	io.ConfigViewportsNoTaskBarIcon = true;
     }
 
     static void new_imGui_frame() {

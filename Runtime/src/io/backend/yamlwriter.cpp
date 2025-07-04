@@ -15,6 +15,8 @@ namespace {
 bool catos::YamlWriter::open(const catos::string &path) {
     is_file_open =true;
     out_file = path;
+
+    return true;
 }
 
 void catos::YamlWriter::writeBool(const catos::string &name, bool value) {
@@ -108,7 +110,7 @@ void catos::YamlWriter::close() {
 
         fclose(file);
     } else {
-        spdlog::error("[YamlWriter] Could not write to file: {}", out_file);
+        spdlog::error("[YamlWriter] Could not write to file: {}", out_file.c_str());
     }
 
     is_file_open = false;
