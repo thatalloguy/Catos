@@ -65,7 +65,7 @@ namespace {
     }
 }
 
-Editor::Editor(const App &app, Window *window): _app(app), _window(window) {
+Editor::Editor(App &app, Window *window): _app(app), _window(window) {
     if (!_window) {
         // create our own window.
 

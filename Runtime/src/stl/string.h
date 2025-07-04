@@ -58,6 +58,8 @@ namespace catos {
         char* end() const {return &buf[size - 1]; };
 
 
+        void resize(int new_size);
+
         ///Clears everything
         void clear();
 

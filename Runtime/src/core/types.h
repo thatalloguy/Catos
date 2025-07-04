@@ -5,7 +5,7 @@
 
 
 #include <string>
-
+#include <typeinfo>
 
 
 #if _WIN64
@@ -17,7 +17,18 @@
 #   define CATOS_API __attribute__ ((visibility ("default")))
 #   define CATOS_PATH_SEPARATOR '/'
 #   define CATOS_UNIX
+#else
+# define CATOS_MAC
+#   define CATOS_API __attribute__ ((visibility ("default")))
 #endif
+
+inline size_t float_hash = typeid(float).hash_code();
+inline size_t int_hash = typeid(int).hash_code();
+inline size_t uint_hash = typeid(unsigned int).hash_code();
+inline size_t bool_hash = typeid(bool).hash_code();
+
+
+
 
 typedef std::string_view str;
 typedef const char*  cstr;

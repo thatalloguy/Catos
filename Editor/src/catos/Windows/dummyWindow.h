@@ -1,18 +1,48 @@
 #pragma once
 
 #include "../Editor/editor.h"
+#include "core/registry.h"
 
-using namespace catos;
+namespace catos {
 
-class DummyWindow : EditorWindow {
+
+    struct Dummy {
+        float dataf = 0.2f;
+        int datai = 2;
+        string datas = "hello";
+        math::Vector3 vec3{1, 2, 3};
+    };
+
+
+    static TypeInfo dummyTypeInfo;
+    static Dummy instance{};
+
+    static bool has_registered = false;
+
+    class DummyWindow : EditorWindow {
     public:
-    DummyWindow() = default;
-    ~DummyWindow() override = default;
 
-    void init(const App& app, int id) override;
-    void render() override;
-    void clean_up() override;
+        static void registerType(Registry& registry) {
+            if (has_registered)
+                return;
 
-    DockPosition get_dock_pos() override { return DockPosition::Right; };
+            has_registered = true;
 
-};
+            dummyTypeInfo = registry.register_class<Dummy>("Dummy")
+                .property("dataf", &Dummy::dataf, "...")
+                .property("datai", &Dummy::datai, "...")
+                .property("datas", &Dummy::datas, "...");
+        }
+
+        DummyWindow() = default;
+        ~DummyWindow() override = default;
+
+        void init(App& app, int id) override;
+        void render() override;
+        void clean_up() override;
+
+        DockPosition get_dock_pos() override { return DockPosition::Right; };
+
+    };
+
+}

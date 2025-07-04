@@ -6,10 +6,11 @@
 
 
 #include <functional>
-#include <core/application.h>
 
-#include "core/window.h"
-#include "stl/string.h"
+#include <core/application.h>
+#include <core/window.h>
+#include <stl/string.h>
+#include <core/registry.h>
 
 
 namespace catos {
@@ -36,7 +37,7 @@ namespace catos {
         bool is_valid_instance() const { return _instance >= 0 && _id >= 0; };
 
 
-        virtual void init(const App& app, int id) = 0;
+        virtual void init(App& app, int id) = 0;
         virtual void render() = 0;
         virtual void clean_up() = 0;
 
@@ -52,7 +53,7 @@ namespace catos {
     class Editor {
     public:
         //If a window isnt passed along the editor creates one itself.
-        Editor(const App& app, Window* window=nullptr);
+        Editor(App& app, Window* window=nullptr);
 
         template<typename T>
         constexpr void registerEditorWindow(const std::string& name) {
@@ -74,7 +75,7 @@ namespace catos {
         std::unordered_map<std::string, windowConstructor> _editors;
 
         Window* _window{nullptr};
-        const App& _app;
+        App& _app;
 
         int id_counter=0;
     };

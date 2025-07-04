@@ -7,6 +7,19 @@
 
 #include <string>
 
+void catos::string::resize(int new_size) {
+
+    if (new_size < size) {
+        return;
+    }
+
+    char* temp = new char[new_size + 1];
+
+    std::strncpy(temp, buf, size);
+    size = new_size;
+    buf = temp;
+}
+
 void catos::string::clear() {
     cleanUp();
 }
@@ -59,6 +72,7 @@ void catos::string::cleanUp() {
     if (buf != nullptr && size < 10000 ) {
         delete[] buf;
         size = 0;
+        buf = nullptr;
     }
 }
 

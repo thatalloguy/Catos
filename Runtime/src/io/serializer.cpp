@@ -14,11 +14,6 @@
 #include <io/backend/yamlReader.h>
 #include <io/backend/yamlwriter.h>
 
-size_t float_hash = typeid(float).hash_code();
-size_t int_hash = typeid(int).hash_code();
-size_t uint_hash = typeid(unsigned int).hash_code();
-size_t bool_hash = typeid(bool).hash_code();
-
 
 static catos::Writer* writer = nullptr;
 static catos::Reader* reader = nullptr;
