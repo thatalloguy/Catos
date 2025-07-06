@@ -17,7 +17,7 @@ int main() {
 
     editor.registerEditorWindow<catos::DummyWindow>("DummyWindow");
 
-    editor.new_editor("DummyWindow");
+    // editor.new_editor("DummyWindow");
     editor.new_editor("DummyWindow");
 
     editor.run();
