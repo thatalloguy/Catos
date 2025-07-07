@@ -20,7 +20,7 @@ namespace utils {
     	ImGui::StyleColorsDark();
     	ImGuiIO& io = ImGui::GetIO();
 
-    	io.IniFilename = nullptr;
+    	// io.IniFilename = nullptr;
     	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     	io.ConfigViewportsNoTaskBarIcon = true;
     }

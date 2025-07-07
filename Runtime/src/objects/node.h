@@ -8,6 +8,7 @@
 
 #include "spdlog/spdlog.h"
 
+#include <ranges>
 
 
 template <>
@@ -25,6 +26,10 @@ struct std::hash<catos::string>
 };
 
 namespace catos {
+    class Node;
+
+
+    typedef std::ranges::elements_view<std::ranges::ref_view<std::unordered_map<catos::string, catos::Node*>>, 1> Nodes;
 
     class Node {
     public:
@@ -55,6 +60,8 @@ namespace catos {
         const string& path() const { return _path; };
         const string& name() const;
 
+        Nodes children() { return Nodes(_children); };
+
         void change_name(const string& new_name);
         void change_child_name(const string& name,const string& new_name);
 
@@ -70,6 +77,7 @@ namespace catos {
         Node* _parent{nullptr};
         std::unordered_map<catos::string, Node*> _children{};
     };
+
 
     static bool is_node_valid(Node* node) { return node != nullptr; };
 }

@@ -34,6 +34,7 @@ namespace {
     void renderObject(Registry* registry, size_t hash, void* instance, const char* name) {
         auto info = registry->get_type(hash);
 
+        ImGui::Indent();
         if (ImGui::TreeNodeEx(name, ImGuiTreeNodeFlags_Framed)) {
             for (auto pair : info.properties) {
                 if (_registry->is_type_registered(pair.second->get_type_hash())) {
@@ -45,6 +46,7 @@ namespace {
             }
             ImGui::TreePop();
         }
+        ImGui::Unindent();
     }
 }
 

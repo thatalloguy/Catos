@@ -2,6 +2,7 @@
 
 #ifndef CATOS_VERSION
 #define CATOS_VERSION "0.0.1"
+#include "objects/node.h"
 #endif
 
 
@@ -52,6 +53,9 @@ namespace catos {
 
     class Editor {
     public:
+
+        static Editor* get_current_instance();
+
         //If a window isnt passed along the editor creates one itself.
         Editor(App& app, Window* window=nullptr);
 
@@ -61,10 +65,12 @@ namespace catos {
         }
 
         void new_editor(const std::string& name);
+        void set_current_root(Node* new_root);
         int get_new_id();
 
 
         Window* get_window();
+        Node* get_current_scene_root() { return _current_root; };
         void run();
         void render();
         void clean_up();
@@ -75,6 +81,7 @@ namespace catos {
         std::unordered_map<std::string, windowConstructor> _editors;
 
         Window* _window{nullptr};
+        Node* _current_root{nullptr};
         App& _app;
 
         int id_counter=0;

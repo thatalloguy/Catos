@@ -4,7 +4,6 @@
 
 #include "node.h"
 
-#include <ranges>
 #include <string>
 
 #include "spdlog/spdlog.h"
@@ -25,6 +24,8 @@ void catos::Node::render() {
     for (auto child: _children | std::views::values) {
         child->render();
     }
+
+
 }
 
 void catos::Node::destroy() {

@@ -52,20 +52,25 @@ namespace {
             leftSpaceId = ImGui::DockBuilderSplitNode(centerSpaceId, ImGuiDir_Left, 0.12f, nullptr, &centerSpaceId);
             rightSpaceId = ImGui::DockBuilderSplitNode(centerSpaceId, ImGuiDir_Right, 0.12f, nullptr, &centerSpaceId);
 
-            // for (const auto& windowType : editorWindowStorages)
-            // {
-            //     if (windowType.createOnInit)
-            //     {
-            //         CreateWindow(windowType, nullptr);
-            //     }
-            // }
 
 
         }
     }
+
+    Editor* instance = nullptr;
+}
+
+Editor * Editor::get_current_instance() {
+    return instance;
 }
 
 Editor::Editor(App &app, Window *window): _app(app), _window(window) {
+    if (instance != nullptr) {
+        spdlog::error("A editor instance is already running");
+        return;
+    } else {
+        instance = this;
+    }
     if (!_window) {
         // create our own window.
 
@@ -106,6 +111,10 @@ void Editor::new_editor(const std::string& name) {
 
     _windows.insert({id, new_window});
 
+}
+
+void Editor::set_current_root(Node *new_root) {
+    _current_root = new_root;
 }
 
 int Editor::get_new_id() {
