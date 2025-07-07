@@ -21,7 +21,7 @@ namespace {
 
     unsigned int GetDockId(DockPosition dock_position) {
         switch (dock_position) {
-            case DockPosition::None: return 0xffffffffui32;
+            case DockPosition::None: return UINT_MAX;
             case DockPosition::Center: return centerSpaceId;
             case DockPosition::Left: return leftSpaceId;
             case DockPosition::Right: return rightSpaceId;
@@ -31,7 +31,7 @@ namespace {
             case DockPosition::BottomRight: return bottomRightSpaceId;
         }
 
-        return 0xffffffffui32;
+        return UINT_MAX;
     }
 
     bool dock_initialized = false;
