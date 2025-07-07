@@ -5,6 +5,7 @@
 #include "core/application.h"
 #include "Editor/editor.h"
 #include "Windows/dummyWindow.h"
+#include "Windows/inspectorWindow.h"
 
 
 int main() {
@@ -16,9 +17,10 @@ int main() {
     catos::Editor editor(app);
 
     editor.registerEditorWindow<catos::DummyWindow>("DummyWindow");
+    editor.registerEditorWindow<catos::InspectorWindow>("Inspector");
 
-    // editor.new_editor("DummyWindow");
     editor.new_editor("DummyWindow");
+    editor.new_editor("Inspector");
 
     editor.run();
 
