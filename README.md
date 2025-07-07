@@ -15,8 +15,8 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 ️
 #
 #
+progress: ~35%
 #### ToDo
-
 ---
 - [x] Reflection system
 - - [x] Methods
@@ -67,19 +67,26 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [ ] Binding both controller input and keyboard / mouse input to actions.
 - - [ ] API func that only returns true when an action is pressed initially
 ---
-- [ ] A tweening API.
----
 - Utils
 - - [ ] Commands.
 - - [ ] Debug camera
+- - [ ] A tweening API.
 ---
 - [ ] Editor 
-- - [ ] Node manipulation.
-- - [ ] Project management.
+- - [x] Inspecting/Editing any object registered to the registry.
+- - [ ] TreeView: window where you can create,edit,select,delete nodes.
+- - [ ] Console window.
 - - [ ] World View tab
 - - [ ] Asset browser.
 - - [ ] Undo/redo
 - - [ ] Copy/paste
+---
+- [ ] Launcher
+- - [ ] Creating Projects.
+- - [ ] Index window with all created projects.
+- - [ ] Upgrading projects to newer versions.
+- - [ ] Exporting Projects.
+---
 #
 
 ## Current Features:
