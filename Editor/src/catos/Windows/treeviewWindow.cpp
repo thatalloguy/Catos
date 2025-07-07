@@ -7,6 +7,23 @@
 
 using namespace catos;
 
+namespace {
+
+    void renderNode(Node* node) {
+
+        if (ImGui::TreeNode(node->name().c_str())) {
+
+
+            for (auto child : node->children()) {
+                renderNode(child);
+            }
+
+            ImGui::TreePop();
+        }
+
+    }
+}
+
 void TreeViewWindow::init(App &app, int id) {
     _id = id;
 
@@ -18,23 +35,17 @@ void TreeViewWindow::init(App &app, int id) {
 
 void TreeViewWindow::render() {
 
-    std::string name = "TreeViewWindow##" + std::to_string(_id);
+    std::string name =  "TreeViewWindow##" + std::to_string(_id);
 
     ImGui::Begin(name.c_str());
 
-    ImGui::Button("+");
+    ImGui::Button(ICON_FA_PLUS);
     ImGui::SameLine();
-    ImGui::InputTextWithHint(": ", "Search for a node", &current_search);
+    ImGui::InputTextWithHint(ICON_FA_MAGNIFYING_GLASS, "Search for a node", &current_search);
     ImGui::Separator();
     Node* root = editor->get_current_scene_root();
 
-    if (ImGui::TreeNode(root->name().c_str())) {
-
-        ImGui::Text("Hello World");
-
-        ImGui::TreePop();
-    }
-
+    renderNode(root);
     ImGui::End();
 }
 

@@ -68,9 +68,10 @@ Editor::Editor(App &app, Window *window): _app(app), _window(window) {
     if (instance != nullptr) {
         spdlog::error("A editor instance is already running");
         return;
-    } else {
-        instance = this;
     }
+
+    instance = this;
+
     if (!_window) {
         // create our own window.
 
@@ -94,6 +95,7 @@ Editor::Editor(App &app, Window *window): _app(app), _window(window) {
     _window->add_callback(ImGui_ImplSDL3_ProcessEvent);
 
 
+    utils::load_fonts("../../../Assets/", 0);
     utils::load_style();
 }
 

@@ -19,7 +19,15 @@ int main() {
     catos::Editor editor(app);
 
     catos::Node root{false};
+    catos::Node parent{false};
+    catos::Node child{false};
+
     root.initialize("root");
+    parent.initialize("parent");
+    child.initialize("child");
+
+    child.set_parent(&parent);
+    parent.set_parent(&root);
 
     editor.registerEditorWindow<catos::DummyWindow>("DummyWindow");
     editor.registerEditorWindow<catos::InspectorWindow>("Inspector");

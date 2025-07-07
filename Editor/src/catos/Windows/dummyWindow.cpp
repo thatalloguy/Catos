@@ -20,9 +20,11 @@ void DummyWindow::init(App &app, int id) {
 
 void DummyWindow::render() {
 
-    std::string name = "DummyWindow##" + std::to_string(_id);
+    std::string name = "DevWindow##" + std::to_string(_id);
 
     ImGui::Begin(name.c_str());
+
+    ImGui::Text("Current FPS: %i", (int) ImGui::GetIO().Framerate);
 
     ImGui::End();
 }

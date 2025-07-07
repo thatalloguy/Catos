@@ -8,6 +8,8 @@
 
 #include <stl/string.h>
 
+#include "IconsFontAwesome6.h"
+
 namespace utils {
 
 
@@ -23,6 +25,18 @@ namespace utils {
     	// io.IniFilename = nullptr;
     	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     	io.ConfigViewportsNoTaskBarIcon = true;
+    }
+
+	/// fa-solid-900.otf + Roboto-Regular.ttf
+	static void load_fonts(const catos::string& base_path, float pixel_size = 0.0f) {
+    	ImGuiIO& io = ImGui::GetIO();
+
+
+    	io.Fonts->AddFontFromFileTTF((base_path + "Roboto-Regular.ttf").c_str(), pixel_size);
+    	ImFontConfig config;
+    	config.MergeMode = true;
+    	static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+    	io.Fonts->AddFontFromFileTTF((base_path + "fa-solid-900.otf").c_str(), pixel_size, &config, icon_ranges);
     }
 
     static void new_imGui_frame() {
