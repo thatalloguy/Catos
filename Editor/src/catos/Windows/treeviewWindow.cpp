@@ -11,7 +11,25 @@ namespace {
 
     void renderNode(Node* node) {
 
-        if (ImGui::TreeNode(node->name().c_str())) {
+        ImGuiTreeNodeFlags flags{};
+
+        if (node->num_children() > 0) {
+            flags = ImGuiTreeNodeFlags_OpenOnArrow |
+            ImGuiTreeNodeFlags_OpenOnDoubleClick |
+            ImGuiTreeNodeFlags_SpanAvailWidth |
+            ImGuiTreeNodeFlags_SpanFullWidth |
+            ImGuiTreeNodeFlags_FramePadding;
+
+        } else {
+            flags = ImGuiTreeNodeFlags_OpenOnArrow |
+                    ImGuiTreeNodeFlags_OpenOnDoubleClick |
+                    ImGuiTreeNodeFlags_SpanAvailWidth |
+                    ImGuiTreeNodeFlags_SpanFullWidth |
+                    ImGuiTreeNodeFlags_FramePadding |
+                    ImGuiTreeNodeFlags_Leaf;
+        }
+
+        if (ImGui::TreeNodeEx(node->name().c_str(), flags)) {
 
 
             for (auto child : node->children()) {

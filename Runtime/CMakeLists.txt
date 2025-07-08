@@ -71,7 +71,6 @@ target_link_libraries(catos-runtime-tests catos-runtime-static doctest)
 target_link_libraries(catos-runtime-static PUBLIC
         spdlog
         SDL3::SDL3
-        SDL3_image::SDL3_image
         ryml
         doctest
 )
