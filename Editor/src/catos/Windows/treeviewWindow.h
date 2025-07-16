@@ -3,6 +3,10 @@
 //
 #pragma once
 
+#ifndef PLAYLOAD_TYPES
+#define CATOS_NODE_PAYLOAD "catos_node"
+#endif
+
 #include "../Editor/editor.h"
 
 namespace catos {

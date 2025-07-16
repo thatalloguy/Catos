@@ -13,12 +13,15 @@ namespace {
 
         ImGuiTreeNodeFlags flags{};
 
+        bool open = false;
+
         if (node->num_children() > 0) {
             flags = ImGuiTreeNodeFlags_OpenOnArrow |
             ImGuiTreeNodeFlags_OpenOnDoubleClick |
             ImGuiTreeNodeFlags_SpanAvailWidth |
             ImGuiTreeNodeFlags_SpanFullWidth |
             ImGuiTreeNodeFlags_FramePadding;
+
 
         } else {
             flags = ImGuiTreeNodeFlags_OpenOnArrow |
@@ -29,15 +32,35 @@ namespace {
                     ImGuiTreeNodeFlags_Leaf;
         }
 
-        if (ImGui::TreeNodeEx(node->name().c_str(), flags)) {
+
+        open = ImGui::TreeNodeEx(node->name().c_str(), flags);
 
 
-            for (auto child : node->children()) {
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoHoldToOpenOthers)) {
+
+            ImGui::SetDragDropPayload(CATOS_NODE_PAYLOAD, nullptr, 0);
+            ImGui::Text(node->name().c_str());
+            ImGui::EndDragDropSource();
+        }
+
+        if (ImGui::BeginDragDropTarget()) {
+
+            if (const auto* payload = ImGui::AcceptDragDropPayload(CATOS_NODE_PAYLOAD)) {
+                spdlog::info("DROPPEDDDDD: ");
+            }
+
+            ImGui::EndDragDropTarget();
+        }
+
+        if (open) {
+            for (auto* child:  node->children()) {
                 renderNode(child);
             }
 
+
             ImGui::TreePop();
         }
+
 
     }
 }
