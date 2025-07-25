@@ -47,6 +47,11 @@ void catos::Node::set_parent(Node *parent) {
         return;
     }
 
+    if (_parent != nullptr ) {
+        _parent->remove_child(_name);
+    }
+
+
     _parent = parent;
     parent->_children.insert({_name, this});
 }
@@ -151,4 +156,16 @@ void catos::Node::change_child_name(const string &name,const string& new_name) {
     _children.erase(it);
 
     _children.insert({new_name, node});
+}
+
+void catos::Node::remove_child(const string &child) {
+    auto it = _children.find(child);
+    if (it == _children.end()) {
+        spdlog::warn("Could not remove child {}", child.c_str());
+        return;
+    }
+
+
+
+    _children.erase(it);
 }

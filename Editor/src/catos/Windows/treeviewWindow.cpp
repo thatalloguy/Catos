@@ -9,6 +9,10 @@ using namespace catos;
 
 namespace {
 
+    Node* payload_node = nullptr;
+    Node* target_node = nullptr;
+
+
     void renderNode(Node* node) {
 
         ImGuiTreeNodeFlags flags{};
@@ -36,17 +40,24 @@ namespace {
         open = ImGui::TreeNodeEx(node->name().c_str(), flags);
 
 
-        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoHoldToOpenOthers)) {
+        if (!node->is_root()) {
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoHoldToOpenOthers)) {
 
-            ImGui::SetDragDropPayload(CATOS_NODE_PAYLOAD, nullptr, 0);
-            ImGui::Text(node->name().c_str());
-            ImGui::EndDragDropSource();
+                ImGui::SetDragDropPayload(CATOS_NODE_PAYLOAD, nullptr, 0);
+                ImGui::Text(node->name().c_str());
+
+                payload_node = node;
+
+                ImGui::EndDragDropSource();
+            }
         }
+
 
         if (ImGui::BeginDragDropTarget()) {
 
             if (const auto* payload = ImGui::AcceptDragDropPayload(CATOS_NODE_PAYLOAD)) {
-                spdlog::info("DROPPEDDDDD: ");
+                spdlog::info("DROPPEDDDDD: {}", payload_node->name().c_str());
+                target_node = node;
             }
 
             ImGui::EndDragDropTarget();
@@ -88,6 +99,15 @@ void TreeViewWindow::render() {
 
     renderNode(root);
     ImGui::End();
+
+    if (payload_node && target_node) {
+        spdlog::info("SHOULD DROP TRUE");
+
+        payload_node->set_parent(target_node);
+
+        payload_node = nullptr;
+        target_node = nullptr;
+    }
 }
 
 void TreeViewWindow::clean_up() {

@@ -76,6 +76,8 @@ namespace catos {
 
         Node* _parent{nullptr};
         std::unordered_map<catos::string, Node*> _children{};
+
+        void remove_child(const string& child);
     };
 
 
