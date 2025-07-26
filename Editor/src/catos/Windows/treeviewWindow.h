@@ -7,6 +7,11 @@
 #define CATOS_NODE_PAYLOAD "catos_node"
 #endif
 
+#ifndef NODE_CREATION_NAME
+#define NODE_CREATION_WINDOW_ID 256
+#define NODE_CREATION_NAME "Create a new Node"
+#endif
+
 #include "../Editor/editor.h"
 
 namespace catos {

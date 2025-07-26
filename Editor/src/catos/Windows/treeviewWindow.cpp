@@ -36,10 +36,10 @@ namespace {
                     ImGuiTreeNodeFlags_Leaf;
         }
 
-
         open = ImGui::TreeNodeEx(node->name().c_str(), flags);
 
 
+        //You should not be able to reparent the root.
         if (!node->is_root()) {
             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoHoldToOpenOthers)) {
 
@@ -55,8 +55,7 @@ namespace {
 
         if (ImGui::BeginDragDropTarget()) {
 
-            if (const auto* payload = ImGui::AcceptDragDropPayload(CATOS_NODE_PAYLOAD)) {
-                spdlog::info("DROPPEDDDDD: {}", payload_node->name().c_str());
+            if (ImGui::AcceptDragDropPayload(CATOS_NODE_PAYLOAD)) {
                 target_node = node;
             }
 
@@ -71,6 +70,7 @@ namespace {
 
             ImGui::TreePop();
         }
+
 
 
     }
@@ -91,7 +91,9 @@ void TreeViewWindow::render() {
 
     ImGui::Begin(name.c_str());
 
-    ImGui::Button(ICON_FA_PLUS);
+    if (ImGui::Button(ICON_FA_PLUS)) {
+        ImGui::OpenPopupEx(NODE_CREATION_WINDOW_ID);
+    }
     ImGui::SameLine();
     ImGui::InputTextWithHint(ICON_FA_MAGNIFYING_GLASS, "Search for a node", &current_search);
     ImGui::Separator();
@@ -107,6 +109,14 @@ void TreeViewWindow::render() {
 
         payload_node = nullptr;
         target_node = nullptr;
+    }
+
+    if (ImGui::BeginPopupEx(NODE_CREATION_WINDOW_ID, ImGuiPopupFlags_None)) {
+
+
+        ImGui::Text("Hello world");
+
+        ImGui::EndPopup();
     }
 }
 
