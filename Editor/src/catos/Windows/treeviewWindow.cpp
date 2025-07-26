@@ -70,9 +70,38 @@ namespace {
 
             ImGui::TreePop();
         }
+    }
 
 
+    void renderSearchBar(string& current_search) {
 
+        if (ImGui::Button(ICON_FA_PLUS)) {
+            ImGui::OpenPopupEx(NODE_CREATION_WINDOW_ID);
+        }
+        ImGui::SameLine();
+        ImGui::InputTextWithHint(ICON_FA_MAGNIFYING_GLASS, "Search for a node", &current_search);
+        ImGui::Separator();
+    }
+
+    void updateDragDrop() {
+
+        if (payload_node && target_node) {
+            payload_node->set_parent(target_node);
+
+            payload_node = nullptr;
+            target_node = nullptr;
+        }
+    }
+
+    void renderNodeCreationPopup() {
+
+        if (ImGui::BeginPopupEx(NODE_CREATION_WINDOW_ID, ImGuiPopupFlags_None)) {
+
+
+            ImGui::Text("Hello world");
+
+            ImGui::EndPopup();
+        }
     }
 }
 
@@ -91,33 +120,18 @@ void TreeViewWindow::render() {
 
     ImGui::Begin(name.c_str());
 
-    if (ImGui::Button(ICON_FA_PLUS)) {
-        ImGui::OpenPopupEx(NODE_CREATION_WINDOW_ID);
-    }
-    ImGui::SameLine();
-    ImGui::InputTextWithHint(ICON_FA_MAGNIFYING_GLASS, "Search for a node", &current_search);
-    ImGui::Separator();
+
+    renderSearchBar(current_search);
+
     Node* root = editor->get_current_scene_root();
 
     renderNode(root);
     ImGui::End();
 
-    if (payload_node && target_node) {
-        spdlog::info("SHOULD DROP TRUE");
+    updateDragDrop();
 
-        payload_node->set_parent(target_node);
+    renderNodeCreationPopup();
 
-        payload_node = nullptr;
-        target_node = nullptr;
-    }
-
-    if (ImGui::BeginPopupEx(NODE_CREATION_WINDOW_ID, ImGuiPopupFlags_None)) {
-
-
-        ImGui::Text("Hello world");
-
-        ImGui::EndPopup();
-    }
 }
 
 void TreeViewWindow::clean_up() {
