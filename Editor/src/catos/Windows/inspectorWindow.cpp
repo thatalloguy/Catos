@@ -53,7 +53,7 @@ namespace {
 
 void InspectorWindow::init(App &app, int id) {
     _id = id;
-    registerType(*app.get<Registry>());
+    registerType(Registry::get());
 }
 
 

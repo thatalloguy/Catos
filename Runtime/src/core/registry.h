@@ -23,7 +23,6 @@ namespace catos {
 
         static Registry& get();
 
-        void init();
         void clean_up();
 
         template<typename A>

@@ -8,7 +8,6 @@
 
 catos::App::App() {
 
-    init_registry();
 }
 
 catos::App::~App() {
@@ -17,17 +16,4 @@ catos::App::~App() {
     delete registry;
 
 }
-
-void catos::App::init_registry() {
-
-    bind<Registry>(new Registry);
-
-    auto registry = *get<Registry>();
-
-
-
-}
-
-
-
 
