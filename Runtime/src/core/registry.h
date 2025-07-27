@@ -52,7 +52,7 @@ namespace catos {
 
             if (_hash_register.find(hash) == _hash_register.end()) {
                 spdlog::error("[Reflection] Could not find type: HASH {}", hash);
-                throw std::exception("KeyNotFound");
+                throw "KeyNotFound";
             }
 
             return *_hash_register[hash];
@@ -62,7 +62,7 @@ namespace catos {
         TypeInfo& get_type(const std::string& name) {
             if (_register.find(name) == _register.end()) {
                 spdlog::error("[Reflection] Could not find type: {}", name.c_str());
-                throw std::exception("KeyNotFound");
+                throw "KeyNotFound";
             }
             return _register[name];
         }
