@@ -130,5 +130,7 @@ namespace catos {
         std::unordered_map<std::string , Property*> properties;
         std::unordered_map<std::string , Method* > methods;
 
+        vector<TypeInfo*> children{};
+
     };
 }

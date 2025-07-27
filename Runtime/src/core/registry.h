@@ -23,7 +23,6 @@ namespace catos {
 
         static Registry& get();
 
-        void init();
         void clean_up();
 
         template<typename A>
@@ -46,15 +45,25 @@ namespace catos {
         /// Returns the registered Type
         template<typename A>
         TypeInfo& get_type() {
-            return *(_hash_register[typeid(A).hash_code()]);
+            return get_type(typeid(A).hash_code());
         }
 
         TypeInfo& get_type(size_t hash) {
+
+            if (_hash_register.find(hash) == _hash_register.end()) {
+                spdlog::error("[Reflection] Could not find type: HASH {}", hash);
+                throw std::exception("KeyNotFound");
+            }
+
             return *_hash_register[hash];
         }
 
 
         const TypeInfo& get_type(const std::string& name) {
+            if (_register.find(name) == _register.end()) {
+                spdlog::error("[Reflection] Could not find type: {}", name.c_str());
+                throw std::exception("KeyNotFound");
+            }
             return (_register[name]);
         }
 

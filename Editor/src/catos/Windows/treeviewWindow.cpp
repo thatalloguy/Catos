@@ -108,6 +108,7 @@ namespace {
 void TreeViewWindow::init(App &app, int id) {
     _id = id;
 
+    registry = &Registry::get();
     editor = Editor::get_current_instance();
 }
 
@@ -123,9 +124,15 @@ void TreeViewWindow::render() {
 
     renderSearchBar(current_search);
 
-    Node* root = editor->get_current_scene_root();
+    for (auto entry : registry->entries()) {
+        ImGui::Text(entry.first.c_str());
+    }
 
-    renderNode(root);
+
+
+
+    //Node* root = editor->get_current_scene_root();
+    //renderNode(root);
     ImGui::End();
 
     updateDragDrop();

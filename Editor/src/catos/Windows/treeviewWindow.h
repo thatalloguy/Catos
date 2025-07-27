@@ -29,6 +29,7 @@ namespace catos {
     private:
         Editor* editor{nullptr};
         string current_search{""};
+        Registry* registry{nullptr};
     };
 
 }

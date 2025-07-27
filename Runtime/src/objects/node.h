@@ -80,6 +80,19 @@ namespace catos {
         void remove_child(const string& child);
     };
 
+    class DummyNode: public Node {
+
+    };
+
+    class DummyNode2: public DummyNode {
+
+    };
+
+    class DummyNode3: public Node {
+
+    };
+
+
 
     static bool is_node_valid(Node* node) { return node != nullptr; };
 }

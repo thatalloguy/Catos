@@ -36,9 +36,6 @@ namespace catos {
             return  (A*) (_instance_register[typeid(A).hash_code()]);
         }
 
-    protected:
-        void init_registry();
-
     private:
         std::unordered_map<size_t, const void* > _instance_register;
     };
