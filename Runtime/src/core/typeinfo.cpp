@@ -7,7 +7,7 @@
 
 
 catos::TypeInfo &catos::TypeInfo::inherits(const std::string &class_name) {
-    auto reg =  Registry::get();
+    Registry& reg =  Registry::get();
 
     if (!reg.is_type_registered(class_name)) {
         spdlog::error(
@@ -18,17 +18,19 @@ catos::TypeInfo &catos::TypeInfo::inherits(const std::string &class_name) {
 
         return *this;
     }
-    auto p = reg.get_type(class_name);
+    TypeInfo& p = reg.get_type(class_name);
 
-    for (auto prop : p.properties) {
+    for (auto& prop : p.properties) {
         properties.insert(prop);
     }
 
-    for (auto meths : p.methods) {
+    for (auto& meths : p.methods) {
         methods.insert(meths);
     }
 
     p.children.push_back(this);
+    spdlog::info("INHERITED: {}", p.children.length());
+
 
     return *this;
 }

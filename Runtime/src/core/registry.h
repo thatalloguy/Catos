@@ -59,12 +59,12 @@ namespace catos {
         }
 
 
-        const TypeInfo& get_type(const std::string& name) {
+        TypeInfo& get_type(const std::string& name) {
             if (_register.find(name) == _register.end()) {
                 spdlog::error("[Reflection] Could not find type: {}", name.c_str());
                 throw std::exception("KeyNotFound");
             }
-            return (_register[name]);
+            return _register[name];
         }
 
         const std::unordered_map<std::string, TypeInfo>& entries() {

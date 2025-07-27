@@ -11,6 +11,7 @@ namespace {
 
     Node* payload_node = nullptr;
     Node* target_node = nullptr;
+    TypeInfo* node_info = nullptr;
 
 
     void renderNode(Node* node) {
@@ -93,16 +94,52 @@ namespace {
         }
     }
 
+    void renderNodeType(TypeInfo& info) {
+
+        ImGuiTreeNodeFlags flags{};
+        bool open = false;
+
+        if (info.children.length() > 0) {
+            flags = ImGuiTreeNodeFlags_OpenOnArrow |
+            ImGuiTreeNodeFlags_OpenOnDoubleClick |
+            ImGuiTreeNodeFlags_SpanAvailWidth |
+            ImGuiTreeNodeFlags_SpanFullWidth |
+            ImGuiTreeNodeFlags_FramePadding;
+
+
+        } else {
+            flags = ImGuiTreeNodeFlags_OpenOnArrow |
+                    ImGuiTreeNodeFlags_OpenOnDoubleClick |
+                    ImGuiTreeNodeFlags_SpanAvailWidth |
+                    ImGuiTreeNodeFlags_SpanFullWidth |
+                    ImGuiTreeNodeFlags_FramePadding |
+                    ImGuiTreeNodeFlags_Leaf;
+        }
+
+
+        open = ImGui::TreeNodeEx(info.name.c_str(), flags);
+
+        if (open) {
+            for (auto child : info.children) {
+                renderNodeType(*child);
+            }
+
+            ImGui::TreePop();
+
+        }
+    }
     void renderNodeCreationPopup() {
 
         if (ImGui::BeginPopupEx(NODE_CREATION_WINDOW_ID, ImGuiPopupFlags_None)) {
 
 
-            ImGui::Text("Hello world");
+
+            renderNodeType(*node_info);
 
             ImGui::EndPopup();
         }
     }
+
 }
 
 void TreeViewWindow::init(App &app, int id) {
@@ -110,6 +147,8 @@ void TreeViewWindow::init(App &app, int id) {
 
     registry = &Registry::get();
     editor = Editor::get_current_instance();
+
+    node_info = &registry->get_type("Node");
 }
 
 
@@ -124,15 +163,11 @@ void TreeViewWindow::render() {
 
     renderSearchBar(current_search);
 
-    for (auto entry : registry->entries()) {
-        ImGui::Text(entry.first.c_str());
-    }
 
 
 
-
-    //Node* root = editor->get_current_scene_root();
-    //renderNode(root);
+    Node* root = editor->get_current_scene_root();
+    renderNode(root);
     ImGui::End();
 
     updateDragDrop();
