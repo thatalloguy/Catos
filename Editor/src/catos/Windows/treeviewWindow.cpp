@@ -13,6 +13,8 @@ namespace {
     Node* target_node = nullptr;
     TypeInfo* node_info = nullptr;
 
+    Node* selected_node = nullptr;
+
 
     void renderNode(Node* node) {
 
@@ -39,6 +41,10 @@ namespace {
 
         open = ImGui::TreeNodeEx(node->name().c_str(), flags);
 
+        if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            //select the entity
+            selected_node = node;
+        }
 
         //You should not be able to reparent the root.
         if (!node->is_root()) {
@@ -62,6 +68,7 @@ namespace {
 
             ImGui::EndDragDropTarget();
         }
+
 
         if (open) {
             for (auto* child:  node->children()) {
@@ -95,7 +102,6 @@ namespace {
     }
 
     void renderNodeType(TypeInfo& info) {
-
         ImGuiTreeNodeFlags flags{};
         bool open = false;
 
@@ -105,8 +111,6 @@ namespace {
             ImGuiTreeNodeFlags_SpanAvailWidth |
             ImGuiTreeNodeFlags_SpanFullWidth |
             ImGuiTreeNodeFlags_FramePadding;
-
-
         } else {
             flags = ImGuiTreeNodeFlags_OpenOnArrow |
                     ImGuiTreeNodeFlags_OpenOnDoubleClick |
@@ -123,17 +127,12 @@ namespace {
             for (auto child : info.children) {
                 renderNodeType(*child);
             }
-
             ImGui::TreePop();
-
         }
     }
     void renderNodeCreationPopup() {
 
         if (ImGui::BeginPopupEx(NODE_CREATION_WINDOW_ID, ImGuiPopupFlags_None)) {
-
-
-
             renderNodeType(*node_info);
 
             ImGui::EndPopup();
@@ -155,7 +154,6 @@ void TreeViewWindow::init(App &app, int id) {
 
 
 void TreeViewWindow::render() {
-
     std::string name =  "TreeViewWindow##" + std::to_string(_id);
 
     ImGui::Begin(name.c_str());

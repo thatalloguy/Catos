@@ -29,8 +29,6 @@ catos::TypeInfo &catos::TypeInfo::inherits(const std::string &class_name) {
     }
 
     p.children.push_back(this);
-    spdlog::info("INHERITED: {}", p.children.length());
-
 
     return *this;
 }
