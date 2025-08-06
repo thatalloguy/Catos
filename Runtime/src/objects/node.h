@@ -10,6 +10,8 @@
 
 #include <ranges>
 
+#include "stl/vector.h"
+
 
 template <>
 struct std::hash<catos::string>
@@ -29,7 +31,6 @@ namespace catos {
     class Node;
 
 
-    typedef std::ranges::elements_view<std::ranges::ref_view<std::unordered_map<catos::string, catos::Node*>>, 1> Nodes;
 
     class Node {
     public:
@@ -44,6 +45,8 @@ namespace catos {
         virtual void render();
 
         virtual void destroy();
+
+        virtual size_t get_node_type_hash() ;
 
         void set_parent(Node* parent);
 
@@ -60,28 +63,34 @@ namespace catos {
         const string& path() const { return _path; };
         const string& name() const;
 
-        Nodes children() { return Nodes(_children); };
+        vector<Node*>&  children() { return _children; };
 
         void change_name(const string& new_name);
-        void change_child_name(const string& name,const string& new_name);
+
+
+        string _name{""};
 
     private:
         bool _manage_memory{true};
 
         string _path{""};
-        string _name{""};
 
     protected:
         string _type{"Node"};
 
         Node* _parent{nullptr};
-        std::unordered_map<catos::string, Node*> _children{};
+
+        ///TODO REPLACE WITH CUSTOM STRUCTURE THATS FAST FOR LOOK UP (hashmap wont work)
+        vector<Node*> _children{};
 
         void remove_child(const string& child);
     };
 
     class DummyNode: public Node {
-
+    public:
+        size_t get_node_type_hash() override{
+            return typeid(DummyNode).hash_code();
+        }
     };
 
     class DummyNode2: public DummyNode {

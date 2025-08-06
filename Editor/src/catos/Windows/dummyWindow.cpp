@@ -10,9 +10,14 @@
 using namespace catos;
 
 
+void testEvent(void* listener, const EventCallback& callback) {
+    spdlog::info("HELLOOO!!!!");
+}
 
 void DummyWindow::init(App &app, int id) {
     _id = id;
+
+    Editor::get_current_instance()->add_event_listener("test", this, testEvent);
 }
 
 

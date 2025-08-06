@@ -13,6 +13,19 @@ inline size_t string_hash = typeid(catos::string).hash_code();
 inline size_t vec3_hash = typeid(catos::math::Vector3).hash_code();
 
 namespace {
+    ObjectInfo info;
+
+    void node_select_callback(void* listener, const EventCallback& callback) {
+        Node* node = (Node*) callback.data;
+
+        info.hash = node->get_node_type_hash();
+        info.instance = node;
+        info.name = node->name();
+
+    }
+
+
+
     void renderValue(size_t hash, void* value, const char* name) {
 
         if (hash == float_hash) {
@@ -35,6 +48,7 @@ namespace {
         auto info = registry->get_type(hash);
 
         ImGui::Indent();
+        ImGui::SetNextItemOpen(true);
         if (ImGui::TreeNodeEx(name, ImGuiTreeNodeFlags_Framed)) {
             for (auto pair : info.properties) {
                 if (_registry->is_type_registered(pair.second->get_type_hash())) {
@@ -54,6 +68,12 @@ namespace {
 void InspectorWindow::init(App &app, int id) {
     _id = id;
     registerType(Registry::get());
+
+    info.hash =  typeid(Dummy).hash_code();
+    info.instance = &instance;
+    info.name = "Dummy";
+
+    Editor::get_current_instance()->add_event_listener("node-selected", this, node_select_callback);
 }
 
 
@@ -65,7 +85,7 @@ void InspectorWindow::render() {
 
     ImGui::Begin(name.c_str());
 
-    renderObject(_registry, typeid(Dummy).hash_code(), &instance, "Dummy");
+    renderObject(_registry, info.hash, info.instance, info.name.c_str());
 
     ImGui::End();
 }

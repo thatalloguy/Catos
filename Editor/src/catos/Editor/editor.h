@@ -16,6 +16,32 @@
 
 namespace catos {
 
+    struct EventCallback {
+        void* caller;
+        void* data;
+    };
+
+
+    struct ObjectInfo {
+        string name;
+        size_t hash;
+        void* instance;
+    };
+
+
+    typedef void(*EventFunction)(void* listener, const EventCallback& callback);
+
+    struct EventListener {
+        void* listener;
+        EventFunction func_ptr;
+        //Automatically set by the Editor when registered.
+        unsigned int listener_id;
+    };
+
+    // List of events
+    /*
+     * node-selected
+    */
 
     ///Credits to Skore for the Dock implementation.
     enum class DockPosition: unsigned int {
@@ -75,10 +101,16 @@ namespace catos {
         void render();
         void clean_up();
 
+
+        void add_event_listener(const catos::string& event, void* listener, EventFunction callback);
+        void emit_event(const string& event, const EventCallback& callback);
+
     private:
         bool _is_initialized{false};
+
         std::unordered_map<int, EditorWindow*> _windows;
         std::unordered_map<std::string, windowConstructor> _editors;
+        std::unordered_map<string, vector<EventListener>> _event_listeners;
 
         Window* _window{nullptr};
         Node* _current_root{nullptr};

@@ -18,6 +18,7 @@ namespace catos {
     };
 
 
+
     static TypeInfo dummyTypeInfo;
     static Dummy instance{};
 

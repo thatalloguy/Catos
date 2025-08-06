@@ -7,6 +7,7 @@ using namespace catos;
 
 namespace {
 
+    std::unordered_map<string, unsigned int> _listener_id_map;
 
     ///Credits to Skore for the Docking implementation :D
     ImGuiID dockspace_id{10000};
@@ -166,4 +167,42 @@ void Editor::clean_up() {
     utils::destroy_imGui();
 
     delete _window;
+}
+
+void Editor::add_event_listener(const catos::string &event, void* listener, const EventFunction callback) {
+    unsigned int new_listener_id = 1;
+    auto it = _listener_id_map.find(event);
+
+    if (it == _listener_id_map.end()) {
+        _listener_id_map.insert({event, 1});
+    } else {
+        it->second++;
+        new_listener_id = it->second;
+    }
+
+    auto& vec = _event_listeners[event];
+    vec.push_back(EventListener{
+        listener,
+        callback,
+        new_listener_id
+    });
+
+    spdlog::debug("Added new event listener for event: [{}]", event.c_str());
+}
+
+void Editor::emit_event(const string &event, const EventCallback &callback) {
+
+    auto it = _event_listeners.find(event);
+
+    if (it == _event_listeners.end()) {
+        spdlog::error("Event not found");
+        return;
+    }
+    for (auto& event_listener : it->second) {
+        event_listener.func_ptr(
+            event_listener.listener,
+            callback
+        );
+    }
+
 }

@@ -27,7 +27,6 @@ namespace catos {
 
         DockPosition get_dock_pos() override { return DockPosition::Right; };
     private:
-        Editor* editor{nullptr};
         string current_search{""};
         Registry* registry{nullptr};
     };

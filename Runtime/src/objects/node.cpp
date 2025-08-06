@@ -15,13 +15,13 @@ void catos::Node::initialize(const string& name) {
 }
 
 void catos::Node::update() {
-    for (auto child: _children | std::views::values) {
+    for (auto child: _children) {
         child->update();
     }
 }
 
 void catos::Node::render() {
-    for (auto child: _children | std::views::values) {
+    for (auto child: _children) {
         child->render();
     }
 
@@ -29,12 +29,16 @@ void catos::Node::render() {
 }
 
 void catos::Node::destroy() {
-    for (auto child: _children | std::views::values) {
+    for (auto child: _children) {
         child->destroy();
         if (_manage_memory) {
             delete child;
         }
     }
+}
+
+size_t catos::Node::get_node_type_hash() {
+    return typeid(Node).hash_code();
 }
 
 void catos::Node::set_parent(Node *parent) {
@@ -53,23 +57,29 @@ void catos::Node::set_parent(Node *parent) {
 
 
     _parent = parent;
-    parent->_children.insert({_name, this});
+    parent->_children.push_back({this});
 }
 
 bool catos::Node::has_child(const string &name) {
-    return _children.find(name) != _children.end();
+    for (int i=0; i<_children.length(); i++) {
+        if (_children[i]->name() == name) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
 catos::Node* catos::Node::find_node(const string &name, bool recursive) {
-    auto it = _children.find(name);
-
-    if (it != _children.end()) {
-        return it->second;
+    for (int i=0; i<_children.length(); i++) {
+        if (_children[i]->name() == name) {
+            return _children[i];
+        }
     }
-    else if (recursive && it == _children.end()) {
-        for (auto pair : _children) {
-            Node* node = pair.second->find_node(name, true);
+    if (recursive) {
+        for (auto child : _children) {
+            Node* node = child->find_node(name, true);
 
             if (node != nullptr) {
                 return node;
@@ -82,12 +92,13 @@ catos::Node* catos::Node::find_node(const string &name, bool recursive) {
 }
 
 catos::Node * catos::Node::get_child(const string &name) {
-    auto it = _children.find(name);
-
-    if (it != _children.end()) {
-        return it->second;
+    for (int i=0; i<_children.length(); i++) {
+        if (_children[i]->name() == name) {
+            return _children[i];
+        }
     }
 
+    spdlog::info("Could not find child: {}", name.c_str());
 
     return nullptr;
 }
@@ -97,7 +108,7 @@ catos::Node * catos::Node::get_parent() {
 }
 
 int catos::Node::num_children() {
-    return (int) _children.size();
+    return (int) _children.length();
 }
 
 bool catos::Node::is_root() {
@@ -135,37 +146,17 @@ const catos::string& catos::Node::name() const {
 }
 
 void catos::Node::change_name(const string &new_name) {
-    if (_parent != nullptr) {
-        // take in account siblings
-        _parent->change_child_name(_name, new_name);
-    } else {
-        _name = new_name;
-    }
+    _name = new_name;
 }
 
-void catos::Node::change_child_name(const string &name,const string& new_name) {
-    auto it = _children.find(name);
-    if (it == _children.end()) {
-        spdlog::warn("Could not rename node {}", name.c_str());
-        return;
-    }
-
-    Node* node = it->second;
-    node->_name = new_name;
-
-    _children.erase(it);
-
-    _children.insert({new_name, node});
-}
 
 void catos::Node::remove_child(const string &child) {
-    auto it = _children.find(child);
-    if (it == _children.end()) {
-        spdlog::warn("Could not remove child {}", child.c_str());
-        return;
+    for (int i=0; i<_children.length(); i++) {
+        if (_children[i]->name() == child) {
+            _children.remove(i);
+            return;
+        }
     }
 
-
-
-    _children.erase(it);
+    spdlog::warn("Could not find child: {}", child.c_str());
 }

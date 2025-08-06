@@ -15,6 +15,9 @@ namespace {
 
     Node* selected_node = nullptr;
 
+    Editor* editor = nullptr;
+
+    unsigned int leaf_id_counter = 0;
 
     void renderNode(Node* node) {
 
@@ -39,11 +42,24 @@ namespace {
                     ImGuiTreeNodeFlags_Leaf;
         }
 
-        open = ImGui::TreeNodeEx(node->name().c_str(), flags);
+        if (node == selected_node) {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(100, 100, 214, 255));
+        }
+        open = ImGui::TreeNodeEx(reinterpret_cast<const void*>(leaf_id_counter), flags, node->name().c_str());
+        leaf_id_counter++;
+
+        if (node == selected_node) {
+            ImGui::PopStyleColor();
+        }
 
         if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
             //select the entity
             selected_node = node;
+
+            editor->emit_event("node-selected", {
+                nullptr,
+                node
+            });
         }
 
         //You should not be able to reparent the root.
@@ -148,6 +164,7 @@ void TreeViewWindow::init(App &app, int id) {
     editor = Editor::get_current_instance();
 
     node_info = &registry->get_type("Node");
+
 }
 
 
@@ -165,6 +182,7 @@ void TreeViewWindow::render() {
 
 
     Node* root = editor->get_current_scene_root();
+    leaf_id_counter = 0;
     renderNode(root);
     ImGui::End();
 
