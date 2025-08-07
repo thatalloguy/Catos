@@ -61,21 +61,18 @@ namespace catos {
 
         const string& path();
         const string& path() const { return _path; };
-        const string& name() const;
 
         vector<Node*>&  children() { return _children; };
 
-        void change_name(const string& new_name);
 
-
-        string _name{""};
+        string name{""};
 
     private:
-        bool _manage_memory{true};
 
         string _path{""};
 
     protected:
+        bool _manage_memory{true};
         string _type{"Node"};
 
         Node* _parent{nullptr};
@@ -88,9 +85,20 @@ namespace catos {
 
     class DummyNode: public Node {
     public:
+
+        DummyNode(bool manage_memory=true) {
+            Node::_manage_memory = manage_memory;
+        };
+
+
         size_t get_node_type_hash() override{
             return typeid(DummyNode).hash_code();
         }
+
+    public:
+
+        float _data{0.1f};
+
     };
 
     class DummyNode2: public DummyNode {

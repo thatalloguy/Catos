@@ -23,8 +23,8 @@ int main() {
 
     auto registry = &catos::Registry::get();
 
-    registry->register_class<catos::Node>("Node").property("name", &catos::Node::_name, "...");
-    registry->register_class<catos::DummyNode>("DummyNode").inherits("Node");
+    registry->register_class<catos::Node>("Node").property("name", &catos::Node::name, "...");
+    registry->register_class<catos::DummyNode>("DummyNode").inherits("Node").property("data", &catos::DummyNode::_data, "...");
     registry->register_class<catos::DummyNode2>("DummyNode2").inherits("DummyNode");
     registry->register_class<catos::DummyNode3>("DummyNode3").inherits("Node");
 
@@ -32,7 +32,7 @@ int main() {
 
     catos::Node root{false};
     catos::Node parent{false};
-    catos::Node child{false};
+    catos::DummyNode child{false};
 
     root.initialize("root");
     parent.initialize("parent");

@@ -7,8 +7,10 @@
 #define CATOS_NODE_PAYLOAD "catos_node"
 #endif
 
-#ifndef NODE_CREATION_NAME
+#ifndef TREE_POPUPS_IDS
 #define NODE_CREATION_WINDOW_ID 256
+#define TREE_CONTEXT_WINDOW_ID 257
+
 #define NODE_CREATION_NAME "Create a new Node"
 #endif
 

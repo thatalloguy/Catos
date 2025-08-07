@@ -20,10 +20,19 @@ namespace {
 
         info.hash = node->get_node_type_hash();
         info.instance = node;
-        info.name = node->name();
+        info.name = node->name;
 
     }
+    void node_deletion_callback(void* listener, const EventCallback& callback) {
+        Node* node = (Node*) callback.data;
 
+        if (((Node*) info.instance) == node) {
+            spdlog::debug("Warning? the current selected node is gonna be deleted");
+
+            info.instance = nullptr;
+            info.hash = 0;
+        }
+    }
 
 
     void renderValue(size_t hash, void* value, const char* name) {
@@ -44,16 +53,16 @@ namespace {
         }
     }
 
-    void renderObject(Registry* registry, size_t hash, void* instance, const char* name) {
+    void renderObject(Registry* registry, size_t hash, void* instance) {
         auto info = registry->get_type(hash);
 
         ImGui::Indent();
         ImGui::SetNextItemOpen(true);
-        if (ImGui::TreeNodeEx(name, ImGuiTreeNodeFlags_Framed)) {
+        if (ImGui::TreeNodeEx(info.name.c_str(), ImGuiTreeNodeFlags_Framed)) {
             for (auto pair : info.properties) {
                 if (_registry->is_type_registered(pair.second->get_type_hash())) {
                     void* sub_obj = pair.second->get_value(instance);
-                    renderObject(registry, pair.second->get_type_hash(), sub_obj, pair.second->get_name());
+                    renderObject(registry, pair.second->get_type_hash(), sub_obj);
                 } else {
                     renderValue(pair.second->get_type_hash(), pair.second->get_value(instance), pair.second->get_name());
                 }
@@ -74,10 +83,8 @@ void InspectorWindow::init(App &app, int id) {
     info.name = "Dummy";
 
     Editor::get_current_instance()->add_event_listener("node-selected", this, node_select_callback);
+    Editor::get_current_instance()->add_event_listener("node-deletion", this, node_deletion_callback);
 }
-
-
-
 
 void InspectorWindow::render() {
 
@@ -85,7 +92,9 @@ void InspectorWindow::render() {
 
     ImGui::Begin(name.c_str());
 
-    renderObject(_registry, info.hash, info.instance, info.name.c_str());
+    if (info.instance != nullptr && info.hash != -1) {
+        renderObject(_registry, info.hash, info.instance);
+    }
 
     ImGui::End();
 }

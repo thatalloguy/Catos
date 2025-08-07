@@ -11,7 +11,7 @@
 
 
 void catos::Node::initialize(const string& name) {
-    _name = name;
+    this->name = name;
 }
 
 void catos::Node::update() {
@@ -29,11 +29,16 @@ void catos::Node::render() {
 }
 
 void catos::Node::destroy() {
+
     for (auto child: _children) {
         child->destroy();
         if (_manage_memory) {
             delete child;
         }
+    }
+
+    if (_parent) {
+        _parent->remove_child(name);
     }
 }
 
@@ -46,13 +51,13 @@ void catos::Node::set_parent(Node *parent) {
     if (parent == nullptr)
         return;
 
-    if (parent->has_child(_name)) {
+    if (parent->has_child(name)) {
         spdlog::warn("Parent already has this child");
         return;
     }
 
     if (_parent != nullptr ) {
-        _parent->remove_child(_name);
+        _parent->remove_child(name);
     }
 
 
@@ -62,7 +67,7 @@ void catos::Node::set_parent(Node *parent) {
 
 bool catos::Node::has_child(const string &name) {
     for (int i=0; i<_children.length(); i++) {
-        if (_children[i]->name() == name) {
+        if (_children[i]->name == name) {
             return true;
         }
     }
@@ -73,7 +78,7 @@ bool catos::Node::has_child(const string &name) {
 
 catos::Node* catos::Node::find_node(const string &name, bool recursive) {
     for (int i=0; i<_children.length(); i++) {
-        if (_children[i]->name() == name) {
+        if (_children[i]->name == name) {
             return _children[i];
         }
     }
@@ -93,7 +98,7 @@ catos::Node* catos::Node::find_node(const string &name, bool recursive) {
 
 catos::Node * catos::Node::get_child(const string &name) {
     for (int i=0; i<_children.length(); i++) {
-        if (_children[i]->name() == name) {
+        if (_children[i]->name == name) {
             return _children[i];
         }
     }
@@ -121,7 +126,7 @@ const catos::string& catos::Node::path() {
     vector<string> paths;
 
     while (super_parent != nullptr) {
-        paths.push_back(super_parent->name());
+        paths.push_back(super_parent->name);
 
         super_parent = super_parent->get_parent();
     }
@@ -136,23 +141,16 @@ const catos::string& catos::Node::path() {
         _path += paths[i-1];
         _path += "/";
     }
-    _path += _name;
+    _path += name;
 
     return _path;
 }
 
-const catos::string& catos::Node::name() const {
-    return _name;
-}
-
-void catos::Node::change_name(const string &new_name) {
-    _name = new_name;
-}
 
 
 void catos::Node::remove_child(const string &child) {
     for (int i=0; i<_children.length(); i++) {
-        if (_children[i]->name() == child) {
+        if (_children[i]->name == child) {
             _children.remove(i);
             return;
         }

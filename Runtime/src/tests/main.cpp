@@ -148,17 +148,17 @@ namespace catos::tests {
         child.initialize("child");
         child.set_parent(&parent);
 
-        spdlog::info("path: {} | {}", root.name().c_str(), root.path().c_str());
-        spdlog::info("path: {} | {}", parent.name().c_str(), parent.path().c_str());
-        spdlog::info("path: {} | {}", child.name().c_str(), child.path().c_str());
+        spdlog::info("path: {} | {}", root.name.c_str(), root.path().c_str());
+        spdlog::info("path: {} | {}", parent.name.c_str(), parent.path().c_str());
+        spdlog::info("path: {} | {}", child.name.c_str(), child.path().c_str());
 
-        child.change_name("child2");
+        child.name = "child2";
 
         spdlog::info("---------------------");
 
-        spdlog::info("path: {} | {}", root.name().c_str(), root.path().c_str());
-        spdlog::info("path: {} | {}", parent.name().c_str(), parent.path().c_str());
-        spdlog::info("path: {} | {}", child.name().c_str(), child.path().c_str());
+        spdlog::info("path: {} | {}", root.name.c_str(), root.path().c_str());
+        spdlog::info("path: {} | {}", parent.name.c_str(), parent.path().c_str());
+        spdlog::info("path: {} | {}", child.name.c_str(), child.path().c_str());
 
         spdlog::info("---------------------");
 
