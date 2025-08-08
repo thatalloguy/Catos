@@ -57,6 +57,8 @@ namespace catos {
         char* begin() const {return &buf[0]; };
         char* end() const {return &buf[size - 1]; };
 
+        bool contains(const string& substr) const;
+
 
         void resize(int new_size);
 

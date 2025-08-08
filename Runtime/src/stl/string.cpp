@@ -7,6 +7,7 @@
 
 #include <string>
 
+
 void catos::string::resize(int new_size) {
 
     if (new_size < size) {
@@ -129,4 +130,13 @@ void catos::string::operator+=(const catos::string &obj) {
     this->size += obj.size;
 
     buf = t_buf;
+}
+
+bool catos::string::contains(const string &substr) const {
+
+    if (strstr(this->c_str(), substr.c_str()) != nullptr) {
+        return true;
+    }
+
+    return false;
 }

@@ -43,7 +43,7 @@ namespace {
     }
 
 
-    void renderNode(Node* node) {
+    void renderNode(Node* node, string& current_search) {
 
         ImGuiTreeNodeFlags flags{};
 
@@ -66,18 +66,23 @@ namespace {
                     ImGuiTreeNodeFlags_Leaf;
         }
 
+        bool pop_colors = false;
+
         if (node == selected_node) {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(100, 100, 214, 255));
+            pop_colors = true;
+        }else if (!node->name.contains(current_search) && current_search != "") {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(100, 100, 100, 255));
+            pop_colors = true;
         }
+
 
         open = ImGui::TreeNodeEx(reinterpret_cast<const void*>(leaf_id_counter), flags, node->name.c_str());
         leaf_id_counter++;
 
-        if (node == selected_node) {
+        if (pop_colors) {
             ImGui::PopStyleColor();
         }
-
-
 
         if (ImGui::IsItemHovered()) {
 
@@ -87,14 +92,17 @@ namespace {
             }
 
             //Node selection
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && selected_node != node) {
                 selected_node = node;
 
                 editor->emit_event("node-selected", {
                     nullptr,
                     node
                 });
-            } else if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+            } else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && selected_node == node) {
+                selected_node = nullptr;
+            }
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
                 ImGui::OpenPopupEx(TREE_CONTEXT_WINDOW_ID);
             }
         }
@@ -125,7 +133,7 @@ namespace {
 
         if (open) {
             for (auto* child:  node->children()) {
-                renderNode(child);
+                renderNode(child, current_search);
             }
 
 
@@ -238,7 +246,7 @@ void TreeViewWindow::render() {
     if (!is_context_menu_open)
         hovered_node = nullptr;
 
-    renderNode(root);
+    renderNode(root, current_search);
     ImGui::End();
 
     updateDragDrop();
