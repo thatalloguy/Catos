@@ -11,12 +11,13 @@ namespace {
 
     vector<Node*> allocated_nodes{};
 
+    Node* selected_node = nullptr;
     Node* payload_node = nullptr;
     Node* target_node = nullptr;
-    TypeInfo* node_info = nullptr;
-
-    Node* selected_node = nullptr;
     Node* hovered_node = nullptr;
+
+    TypeInfo* selected_type = nullptr;
+    TypeInfo* node_info = nullptr;
 
     bool is_context_menu_open = false;
 
@@ -140,11 +141,11 @@ namespace {
             ImGui::TreePop();
         }
     }
-    void renderNodeType(TypeInfo& info) {
+    void renderNodeType(TypeInfo* info) {
         ImGuiTreeNodeFlags flags{};
         bool open = false;
 
-        if (info.children.length() > 0) {
+        if (info->children.length() > 0) {
             flags = ImGuiTreeNodeFlags_OpenOnArrow |
                     ImGuiTreeNodeFlags_OpenOnDoubleClick |
                     ImGuiTreeNodeFlags_SpanAvailWidth |
@@ -159,15 +160,53 @@ namespace {
                     ImGuiTreeNodeFlags_Leaf;
         }
 
+        bool pop_colors = false;
 
-        open = ImGui::TreeNodeEx(info.name.c_str(), flags);
+        if (info == selected_type) {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(100, 100, 214, 255));
+            pop_colors = true;
+        }
+
+        open = ImGui::TreeNodeEx(info->name.c_str(), flags);
+
+        if (pop_colors)
+            ImGui::PopStyleColor();
+
+
+
+        if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                selected_type = info;
+        }
+
 
         if (open) {
-            for (TypeInfo* child : info.children) {
-                renderNodeType(*child);
+            for (TypeInfo* child : info->children) {
+                renderNodeType(child);
             }
             ImGui::TreePop();
         }
+
+
+    }
+
+    void createNewNode() {
+        if (!selected_type) {
+            spdlog::warn("No new nodetype is selected");
+            return;
+        }
+
+        Node* new_node = instance_cast<Node>(selected_type->get_constructor().construct());
+
+        // if we dont have a node selected add it to the root.
+        Node* new_node_parent = selected_node != nullptr ? selected_node : editor->get_current_scene_root();
+        new_node->name = selected_type->name.c_str();
+
+        new_node->set_parent(new_node_parent);
+
+        allocated_nodes.push_back(new_node);
+
+        spdlog::debug("Created new Node of type: {}", selected_type->name.c_str());
+        selected_type = nullptr;
     }
 
     void renderSearchBar(string& current_search) {
@@ -183,8 +222,17 @@ namespace {
     void renderNodeCreationPopup() {
 
         if (ImGui::BeginPopupEx(NODE_CREATION_WINDOW_ID, ImGuiPopupFlags_None)) {
-            renderNodeType(*node_info);
+            renderNodeType(node_info);
 
+            ImGui::Separator();
+            if (ImGui::Button("Cancel")) {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Add")) {
+                createNewNode();
+                ImGui::CloseCurrentPopup();
+            }
             ImGui::EndPopup();
         }
     }
@@ -258,5 +306,11 @@ void TreeViewWindow::render() {
 }
 
 void TreeViewWindow::clean_up() {
+    for (Node* node : allocated_nodes) {
+        delete node;
+        node = nullptr;
+    }
+    spdlog::debug("Destroyed node");
 
+    allocated_nodes.clear();
 }
