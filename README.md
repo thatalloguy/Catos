@@ -74,7 +74,7 @@ progress: ~35%
 ---
 - [ ] Editor 
 - - [x] Inspecting/Editing any object registered to the registry.
-- - [ ] TreeView: window where you can create,edit,select,delete nodes.
+- - [x] TreeView: window where you can create,edit,select,delete nodes.
 - - [ ] Console window.
 - - [ ] World View tab
 - - [ ] Asset browser.

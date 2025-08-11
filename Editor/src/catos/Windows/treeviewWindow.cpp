@@ -312,7 +312,9 @@ void TreeViewWindow::render() {
     if (!is_context_menu_open)
         hovered_node = nullptr;
 
+    ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 18.0f);
     renderNode(root, current_search, {0, 0});
+    ImGui::PopStyleVar();
     ImGui::End();
 
     updateDragDrop();
