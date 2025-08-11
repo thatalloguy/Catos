@@ -44,7 +44,7 @@ namespace {
     }
 
 
-    void renderNode(Node* node, string& current_search) {
+    void renderNode(Node* node, string& current_search, const ImVec2& parent_screen_pos) {
 
         ImGuiTreeNodeFlags flags{};
 
@@ -77,8 +77,27 @@ namespace {
             pop_colors = true;
         }
 
+        ImDrawList* drawlist = ImGui::GetWindowDrawList();
 
+        ImVec2 current_screen_pos = ImGui::GetCursorScreenPos();
+
+        //Draw the line to the parent
+        if (!node->is_root()) {
+
+            drawlist->AddRect(
+                {ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y +ImGui::GetFrameHeight() / 2},
+                {parent_screen_pos.x, ImGui::GetCursorScreenPos().y +ImGui::GetFrameHeight() / 2},
+                IM_COL32(100, 100, 100, 255)
+                );
+
+            drawlist->AddRect(
+                {parent_screen_pos.x, ImGui::GetCursorScreenPos().y +ImGui::GetFrameHeight() / 2},
+                {parent_screen_pos.x, parent_screen_pos.y + ImGui::GetFrameHeight() / 2},
+                IM_COL32(100, 100, 100, 255)
+                );
+        }
         open = ImGui::TreeNodeEx(reinterpret_cast<const void*>(leaf_id_counter), flags, node->name.c_str());
+
         leaf_id_counter++;
 
         if (pop_colors) {
@@ -131,10 +150,9 @@ namespace {
             ImGui::EndDragDropTarget();
         }
 
-
         if (open) {
             for (auto* child:  node->children()) {
-                renderNode(child, current_search);
+                renderNode(child, current_search, current_screen_pos);
             }
 
 
@@ -279,7 +297,7 @@ void TreeViewWindow::init(App &app, int id) {
 
 
 void TreeViewWindow::render() {
-    std::string name =  "TreeViewWindow##" + std::to_string(_id);
+    std::string name =  "TreeView##" + std::to_string(_id);
 
     ImGui::Begin(name.c_str());
 
@@ -294,7 +312,7 @@ void TreeViewWindow::render() {
     if (!is_context_menu_open)
         hovered_node = nullptr;
 
-    renderNode(root, current_search);
+    renderNode(root, current_search, {0, 0});
     ImGui::End();
 
     updateDragDrop();
