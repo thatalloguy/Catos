@@ -13,7 +13,7 @@ namespace catos {
         void render() override;
         void clean_up() override;
 
-        DockPosition get_dock_pos() override { return DockPosition::Right; };
+        DockPosition get_dock_pos() override { return DockPosition::None; };
 
     };
 

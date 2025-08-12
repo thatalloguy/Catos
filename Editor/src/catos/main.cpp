@@ -7,6 +7,8 @@
 #include "Windows/dummyWindow.h"
 #include "Windows/inspectorWindow.h"
 #include "Windows/treeviewWindow.h"
+#include "core/console.h"
+#include "Windows/consoleWindow.h"
 
 struct Loo {
     void f() {
@@ -16,9 +18,9 @@ struct Loo {
 
 int main() {
     //
+    catos::Console::initialize();
 
     spdlog::set_level(spdlog::level::debug);
-
     catos::App app{};
 
     auto registry = &catos::Registry::get();
@@ -44,10 +46,17 @@ int main() {
     editor.registerEditorWindow<catos::DummyWindow>("DummyWindow");
     editor.registerEditorWindow<catos::InspectorWindow>("Inspector");
     editor.registerEditorWindow<catos::TreeViewWindow>("TreeView");
+    editor.registerEditorWindow<catos::ConsoleWindow>("Console");
 
     editor.new_editor("DummyWindow");
     editor.new_editor("Inspector");
     editor.new_editor("TreeView");
+    editor.new_editor("Console");
+
+    spdlog::info("Here is some info!");
+    spdlog::warn("Here is a warning!");
+    spdlog::error("Here is a error!");
+    spdlog::critical("Here is something critical!");
 
     editor.set_current_root(&root);
 
