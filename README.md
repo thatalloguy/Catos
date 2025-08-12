@@ -72,7 +72,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - [ ] Editor 
 - - [x] Inspecting/Editing any object registered to the registry.
 - - [x] TreeView: window where you can create,edit,select,delete nodes.
-- - [ ] Console window.
+- - [x] Console window.
 - - [ ] World View tab
 - - [ ] Asset browser.
 - - [ ] Undo/redo
