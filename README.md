@@ -13,10 +13,8 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - [x] Windows with visual studio and cl
 - [ ] Ubuntu with Clang
 ️
-#
-#
-progress: ~35%
-#### ToDo
+### ToDo
+
 ---
 - [x] Reflection system
 - - [x] Methods
@@ -31,7 +29,6 @@ progress: ~35%
 ---
 - Nodes
 - - [x] Node
-- - [ ] Attaching scripts to nodes.
 ---
 - [x] Scripting.
 - - [x] Loading Dll's / c++ scripts.
