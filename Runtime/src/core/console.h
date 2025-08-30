@@ -75,8 +75,6 @@ namespace catos {
                 getLevel(msg.level),
                 fmt::to_string(formatted).c_str()
             );
-
-            std::cout << "logging\n";
         }
 
         void flush_() override

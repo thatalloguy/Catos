@@ -55,6 +55,12 @@ namespace catos {
 
         DockPosition get_dock_pos() override { return DockPosition::Right; };
 
+    private:
+        float f_cache = 0.0f;
+        string str_cache = "";
+        int i_cache = 0;
+        math::Vector3 v3_cache{0,0,0};
+
     };
 
 }

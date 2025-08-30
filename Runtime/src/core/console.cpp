@@ -30,7 +30,6 @@ namespace catos::Console {
 
 
     void log(LogLevel level, const char* message) {
-        std::cout << "logged";
         logs.push_back({level, message});
     }
 

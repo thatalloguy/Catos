@@ -43,6 +43,10 @@ namespace {
             ImGui::InputInt(name, (int*)value);
         } else if (hash == string_hash) {
             ImGui::InputText(name, (catos::string*)value);
+            if (ImGui::IsItemActivated()) {
+                spdlog::info("HE");
+            }
+
         } else if (hash== vec3_hash) {
             ImGui::DragFloat3(name, ((math::Vector3*)value)->value_ptr());
             ((math::Vector3*)value)->x = ((math::Vector3*)value)->_[0];

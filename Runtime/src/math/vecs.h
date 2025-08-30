@@ -72,6 +72,7 @@ namespace catos::math {
     };
 
     struct Vector3: public Vector3i {
+        Vector3() = default;
 
         Vector3(float x, float y, float z) : Vector3i(x, y, z) {
             _[0] = x;

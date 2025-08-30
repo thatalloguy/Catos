@@ -43,6 +43,8 @@ namespace catos {
         virtual ~Property() = default;
 
         virtual void* get_value(const void* obj_ptr) = 0;
+        virtual void cache_value(const void* obj_ptr) = 0;
+
         virtual int get_length(const void* obj_ptr) = 0;
 
         virtual void set_value(const void* instance,  catos::any val) = 0;
@@ -78,6 +80,8 @@ namespace catos {
         std::string type_name;
         size_t type_hash;
 
+        U cache;
+
         ///PropertyImpl exist in order to avoid having to deal with templates at the user-side.
         PropertyImpl(U T::* memPtr) : memberPtr(memPtr) {
             type_name = typeid(U).name();
@@ -103,6 +107,11 @@ namespace catos {
         void* get_value(const void* objPtr) override {
             const T* obj = static_cast<const T*>(objPtr);
             return const_cast<void*>(reinterpret_cast<const void*>(&(obj->*memberPtr)));
+        }
+
+        void cache_value(const void *obj_ptr) override {
+            const T* obj = static_cast<const T*>(obj_ptr);
+            cache = (obj->*memberPtr);
         }
 
         void set_value(const void* instance, catos::any val) override {
