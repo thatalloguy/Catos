@@ -2,11 +2,6 @@
 // Created by allos on 30/08/2025.
 //
 #pragma once
-#include "stl/vector.h"
-
-#ifndef CATOS_MAX_ACTION_STACK_SIZE
-#define CATOS_MAX_ACTION_STACK_SIZE 50
-#endif
 
 namespace catos {
 
@@ -18,10 +13,10 @@ namespace catos {
         virtual ~Action() = default;
 
         //undo
-        virtual void execute();
+        virtual void execute() = 0;
 
         //redo
-        virtual void revoke();
+        virtual void revoke() = 0;
 
     protected: // unused
     private: // unused
@@ -39,9 +34,8 @@ namespace catos {
         bool push_present_stack(Action* action);
         bool push_past_stack(Action* action);
 
+
         void clear_stacks();
-        void clear_present_stack();
-        void clear_past_stack();
     }
 
 

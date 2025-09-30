@@ -4,40 +4,68 @@
 
 #include "actionManager.h"
 
+#include "spdlog/spdlog.h"
+#include "stl/vector.h"
+
 // globals
 namespace {
-    catos::Action* present_stack[CATOS_MAX_ACTION_STACK_SIZE];
-
-    catos::Action* past_stack[CATOS_MAX_ACTION_STACK_SIZE];
+    catos::vector<catos::Action*> present;
+    catos::vector<catos::Action*> past;
 }
 
 namespace catos {
 
 
     void ActionManager::undo() {
+        if (present.length() <= 0) {
+            spdlog::warn("No undo history");
+            return;
+        }
+
+
+        Action* action = present[0];
+
+        action->revoke();
+
+        present.remove(0);
+        past.push_back(action);
 
     }
     void ActionManager::redo() {
 
+        if (past.length() <= 0) {
+            spdlog::warn("No redo history");
+            return;
+        }
+
+
+        Action* action = past[0];
+        action->execute();
+
+        past.remove(0);
+
+        present.push_back(action);
+
     }
 
-    bool ActionManager::push_present_stack(Action* action){
+    bool ActionManager::push_present_stack(Action* action) {
+        present.push_back(action);
         return true;
     }
-    bool ActionManager::push_past_stack(Action* action){
+    bool ActionManager::push_past_stack(Action* action) {
+        past.push_back(action);
         return true;
     }
 
-    void ActionManager::clear_stacks(){
+    void ActionManager::clear_stacks() {
+        for (Action* action : present) {
+            delete action;
+        }
 
+        for (Action* action : past) {
+            delete action;
+        }
     }
 
-    void ActionManager::clear_present_stack(){
-
-    }
-
-    void ActionManager::clear_past_stack(){
-
-    }
 
 }

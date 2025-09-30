@@ -8,80 +8,84 @@
 #include "Windows/inspectorWindow.h"
 #include "Windows/treeviewWindow.h"
 #include "core/console.h"
-#include "stl/array.h"
+#include "Editor/actionManager.h"
 #include "Windows/consoleWindow.h"
 
-struct Loo {
-    void f() {
+template<typename T>
+class TestAction: public catos::Action {
+public:
 
+    TestAction(int id, T n,  T* instance) {
+        this->id = id;
+        this->_old = *instance;
+        this->_new = n;
+
+        this->ptr = instance;
+        *instance = n;
     }
+    void execute() override {
+        spdlog::info("Executed, {}", id);
+        *ptr = _new;
+    }
+
+    void revoke() override {
+        *ptr = _old;
+        spdlog::info("Revoked, {}", id);
+    }
+private:
+    int id = 0;
+    T _old;
+    T _new;
+    T* ptr;
 };
 
 int main() {
-    //
-    // catos::Console::initialize();
-    //
-    // spdlog::set_level(spdlog::level::debug);
-    // catos::App app{};
-    //
-    // auto registry = &catos::Registry::get();
-    //
-    // registry->register_class<catos::Node>("Node").property("name", &catos::Node::name, "...");
-    // registry->register_class<catos::DummyNode>("DummyNode").inherits("Node").property("data", &catos::DummyNode::_data, "...");
-    // registry->register_class<catos::DummyNode2>("DummyNode2").inherits("DummyNode");
-    // registry->register_class<catos::DummyNode3>("DummyNode3").inherits("Node");
-    //
-    // catos::Editor editor(app);
-    //
-    // catos::Node root{false};
-    // catos::Node parent{false};
-    // catos::DummyNode child{false};
-    //
-    // root.initialize("root");
-    // parent.initialize("parent");
-    // child.initialize("child");
-    //
-    // child.set_parent(&parent);
-    // parent.set_parent(&root);
-    //
-    // editor.registerEditorWindow<catos::DummyWindow>("DummyWindow");
-    // editor.registerEditorWindow<catos::InspectorWindow>("Inspector");
-    // editor.registerEditorWindow<catos::TreeViewWindow>("TreeView");
-    // editor.registerEditorWindow<catos::ConsoleWindow>("Console");
-    //
-    // editor.new_editor("DummyWindow");
-    // editor.new_editor("Inspector");
-    // editor.new_editor("TreeView");
-    // editor.new_editor("Console");
-    //
-    // spdlog::info("Here is some info!");
-    // spdlog::warn("Here is a warning!");
-    // spdlog::error("Here is a error!");
-    // spdlog::critical("Here is something critical!");
-    //
-    // editor.set_current_root(&root);
-    //
-    // editor.run();
-    //
-    // editor.clean_up();
 
-    catos::array<int, 5> ar;
+    catos::Console::initialize();
 
-    for (int i=0; i<5; i++) {
-        ar.push(i+1);
-    }
+    spdlog::set_level(spdlog::level::debug);
+    catos::App app{};
 
-    for (auto val: ar) {
-        spdlog::info("Val {}", val);
-    }
+    auto registry = &catos::Registry::get();
 
-    spdlog::info("_____________");
-    ar.push(6);
+    registry->register_class<catos::Node>("Node").property("name", &catos::Node::name, "...");
+    registry->register_class<catos::DummyNode>("DummyNode").inherits("Node").property("data", &catos::DummyNode::_data, "...");
+    registry->register_class<catos::DummyNode2>("DummyNode2").inherits("DummyNode");
+    registry->register_class<catos::DummyNode3>("DummyNode3").inherits("Node");
 
+    catos::Editor editor(app);
 
-    for (auto val: ar) {
-        spdlog::info("Val {}", val);
-    }
+    catos::Node root{false};
+    catos::Node parent{false};
+    catos::DummyNode child{false};
+
+    root.initialize("root");
+    parent.initialize("parent");
+    child.initialize("child");
+
+    child.set_parent(&parent);
+    parent.set_parent(&root);
+
+    editor.registerEditorWindow<catos::DummyWindow>("DummyWindow");
+    editor.registerEditorWindow<catos::InspectorWindow>("Inspector");
+    editor.registerEditorWindow<catos::TreeViewWindow>("TreeView");
+    editor.registerEditorWindow<catos::ConsoleWindow>("Console");
+
+    editor.new_editor("DummyWindow");
+    editor.new_editor("Inspector");
+    editor.new_editor("TreeView");
+    editor.new_editor("Console");
+
+    spdlog::info("Here is some info!");
+    spdlog::warn("Here is a warning!");
+    spdlog::error("Here is a error!");
+    spdlog::critical("Here is something critical!");
+
+    editor.set_current_root(&root);
+
+    editor.run();
+
+    editor.clean_up();
 
     return 0;
 }
