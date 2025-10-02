@@ -36,6 +36,7 @@ namespace {
 
 
     void renderValue(size_t hash, void* value, const char* name) {
+        static bool hasChanged = false;
 
         if (hash == float_hash) {
             ImGui::InputFloat(name, (float*)value);
@@ -43,8 +44,9 @@ namespace {
             ImGui::InputInt(name, (int*)value);
         } else if (hash == string_hash) {
             ImGui::InputText(name, (catos::string*)value);
-            if (ImGui::IsItemActivated()) {
-                spdlog::info("HE");
+
+            if (ImGui::IsItemDeactivatedAfterEdit()) {
+                spdlog::info("DADD");
             }
 
         } else if (hash== vec3_hash) {

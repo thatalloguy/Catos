@@ -86,7 +86,7 @@ namespace catos {
         Editor(App& app, Window* window=nullptr);
 
         template<typename T>
-        constexpr void registerEditorWindow(const std::string& name) {
+        constexpr void register_editor_window(const std::string& name) {
             _editors[name] =  [] {return (EditorWindow*) new T(); };
         }
 

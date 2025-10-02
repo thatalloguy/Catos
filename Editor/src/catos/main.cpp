@@ -66,10 +66,10 @@ int main() {
     child.set_parent(&parent);
     parent.set_parent(&root);
 
-    editor.registerEditorWindow<catos::DummyWindow>("DummyWindow");
-    editor.registerEditorWindow<catos::InspectorWindow>("Inspector");
-    editor.registerEditorWindow<catos::TreeViewWindow>("TreeView");
-    editor.registerEditorWindow<catos::ConsoleWindow>("Console");
+    editor.register_editor_window<catos::DummyWindow>("DummyWindow");
+    editor.register_editor_window<catos::InspectorWindow>("Inspector");
+    editor.register_editor_window<catos::TreeViewWindow>("TreeView");
+    editor.register_editor_window<catos::ConsoleWindow>("Console");
 
     editor.new_editor("DummyWindow");
     editor.new_editor("Inspector");
