@@ -97,7 +97,7 @@ namespace catos {
 
     public:
 
-        float _data{0.1f};
+        string _data{"Hello world"};
 
     };
 
