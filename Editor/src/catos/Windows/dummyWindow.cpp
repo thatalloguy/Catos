@@ -5,6 +5,7 @@
 #include "dummyWindow.h"
 
 #include "imgui.h"
+#include "../Editor/actionManager.h"
 #include "../Editor/utils.h"
 #include "spdlog/spdlog.h"
 using namespace catos;
@@ -30,6 +31,13 @@ void DummyWindow::render() {
     ImGui::Begin(name.c_str());
 
     ImGui::Text("Current FPS: %i", (int) ImGui::GetIO().Framerate);
+
+    if (ImGui::Button("Undo")) ActionManager::undo();
+
+
+
+    if (ImGui::Button("Redo")) ActionManager::redo();
+
 
     ImGui::End();
 }

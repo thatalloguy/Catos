@@ -7,6 +7,9 @@ file(GLOB_RECURSE EDITOR_SRC
         src/catos/Windows/*.h
         src/catos/Windows/*.cpp
 
+        src/catos/Editor/actions/*.h
+        src/catos/Editor/actions/*.cpp
+
         ${IMGUI_SOURCE}
         ${IMGUI_SOURCE_BACKEND}
 )

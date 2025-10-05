@@ -147,7 +147,7 @@ void Editor::render() {
     utils::create_dockspace(dockspace_id);
     init_dock_space();
 
-    for (auto pair : _windows) {
+    for (std::pair<const int, EditorWindow*>& pair : _windows) {
         pair.second->render();
     }
 
@@ -158,7 +158,7 @@ void Editor::render() {
 
 void Editor::clean_up() {
 
-    for (auto pair : _windows) {
+    for (std::pair<const int, EditorWindow*>& pair : _windows) {
         pair.second->clean_up();
         delete pair.second;
     }

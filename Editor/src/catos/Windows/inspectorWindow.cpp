@@ -5,7 +5,9 @@
 #include "inspectorWindow.h"
 
 #include "imgui.h"
+#include "../Editor/actionManager.h"
 #include "../Editor/utils.h"
+#include "../Editor/actions/changeValueAction.h"
 #include "spdlog/spdlog.h"
 using namespace catos;
 
@@ -34,21 +36,33 @@ namespace {
         }
     }
 
+    template<typename T>
+    void UpdateHistory(const char* name, T* value) {
+        static T cache;
+
+        if (ImGui::IsItemActivated()) {
+            cache = *(T*)value;
+        }
+        if (ImGui::IsItemDeactivatedAfterEdit()) {
+            ActionManager::push_present_stack(new actions::ChangeValueAction(
+                cache,
+                (T*)value
+                ));
+        }
+    }
 
     void renderValue(size_t hash, void* value, const char* name) {
         static bool hasChanged = false;
 
         if (hash == float_hash) {
             ImGui::InputFloat(name, (float*)value);
+            UpdateHistory(name, (float*)value);
         } else if (int_hash == hash) {
             ImGui::InputInt(name, (int*)value);
+            UpdateHistory(name, (int*)value);
         } else if (hash == string_hash) {
             ImGui::InputText(name, (catos::string*)value);
-
-            if (ImGui::IsItemDeactivatedAfterEdit()) {
-                spdlog::info("DADD");
-            }
-
+            UpdateHistory(name, (string*)value);
         } else if (hash== vec3_hash) {
             ImGui::DragFloat3(name, ((math::Vector3*)value)->value_ptr());
             ((math::Vector3*)value)->x = ((math::Vector3*)value)->_[0];
@@ -65,7 +79,7 @@ namespace {
         ImGui::Indent();
         ImGui::SetNextItemOpen(true);
         if (ImGui::TreeNodeEx(info.name.c_str(), ImGuiTreeNodeFlags_Framed)) {
-            for (auto pair : info.properties) {
+            for (std::pair<const std::string, Property *>& pair : info.properties) {
                 if (_registry->is_type_registered(pair.second->get_type_hash())) {
                     void* sub_obj = pair.second->get_value(instance);
                     renderObject(registry, pair.second->get_type_hash(), sub_obj);

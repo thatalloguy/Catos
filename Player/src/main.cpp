@@ -16,7 +16,7 @@ int main() {
 
     catos::Platform platform{};
 
-    auto lib = platform.load_shared_library("../../../Resources/test.dll");
+    void* lib = platform.load_shared_library("../../../Resources/test.dll");
 
     if (lib) {
         PluginEntryPointFn func = (PluginEntryPointFn) platform.get_proc_adress(lib, "catos_entry_point");

@@ -22,12 +22,13 @@ namespace catos {
             return;
         }
 
+        spdlog::debug("Undid action");
 
-        Action* action = present[0];
+        Action* action = present.back();
 
         action->revoke();
 
-        present.remove(0);
+        present.pop_back();
         past.push_back(action);
 
     }
@@ -38,11 +39,13 @@ namespace catos {
             return;
         }
 
+        spdlog::debug("Redid action");
 
-        Action* action = past[0];
+
+        Action* action = past.back();
         action->execute();
 
-        past.remove(0);
+        past.pop_back();
 
         present.push_back(action);
 
