@@ -1,15 +1,14 @@
 # Catos Engine
-[![Language](https://img.shields.io/badge/Native_language-C++-blue.svg)](https://isocpp.org/)
-[![Language](https://img.shields.io/badge/Scripting_Language-Python-yellow.svg)](https://www.python.org/)
+[![Language](https://img.shields.io/badge/Written_in-C++-blue.svg)](https://isocpp.org/)
 
 ![image](https://github.com/user-attachments/assets/bac6a8e8-cb13-4629-87ea-2bb2ab6255e8)
 
 ###### my personal cross-platform game engine
 
-Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.html)
+~~Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.html)~~ OUTDATED!
 
 ### Compiles on:
-- [x] Macos with Clang
+- [x] Macos with Clang (not tested but it compiles)
 - [x] Windows with visual studio and cl
 - [ ] Ubuntu with Clang
 ️
@@ -41,8 +40,8 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Support for (custom) STL objects (string, vector, hashmap)
 ---
 - [ ] Renderer (High level):
-- - [x] Shadows.
-- - [x] GLTF loader.
+- - [ ] Shadows.
+- - [ ] GLTF loader.
 - - [ ] PBR render pipeline.
 - - [ ] (Skeleton) Animations.
 ---
@@ -75,7 +74,7 @@ Check out the [Documentation](https://thatalloguy.github.io/catos/html/index.htm
 - - [x] Console window.
 - - [ ] World View tab
 - - [ ] Asset browser.
-- - [ ] Undo/redo
+- - [x] Undo/redo
 - - [ ] Copy/paste
 ---
 - [ ] Launcher
