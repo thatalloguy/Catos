@@ -55,9 +55,9 @@ int main() {
 
     catos::Editor editor(app);
 
-    catos::Node root{false};
-    catos::Node parent{false};
-    catos::DummyNode child{false};
+    catos::Node root{};
+    catos::Node parent{};
+    catos::DummyNode child{};
 
     root.initialize("root");
     parent.initialize("parent");

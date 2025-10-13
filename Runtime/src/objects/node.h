@@ -36,15 +36,14 @@ namespace catos {
     public:
 
 
-        Node(bool manage_memory=true): _manage_memory(manage_memory) {};
+        Node() = default;
         virtual ~Node() = default;
 
         virtual void initialize(const string& name);
 
         virtual void update();
         virtual void render();
-
-        virtual void destroy();
+        virtual void destroy(bool bin_children=false);
 
         virtual size_t get_node_type_hash() ;
 
@@ -72,7 +71,6 @@ namespace catos {
         string _path{""};
 
     protected:
-        bool _manage_memory{true};
         string _type{"Node"};
 
         Node* _parent{nullptr};
@@ -86,9 +84,7 @@ namespace catos {
     class DummyNode: public Node {
     public:
 
-        DummyNode(bool manage_memory=true) {
-            Node::_manage_memory = manage_memory;
-        };
+        DummyNode() = default;
 
 
         size_t get_node_type_hash() override{

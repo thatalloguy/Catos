@@ -136,9 +136,9 @@ namespace catos::tests {
 
     TEST_CASE("NODES::CHILDREN") {
 
-        catos::Node root{false};
-        catos::Node parent{false};
-        catos::Node child{false};
+        catos::Node root{};
+        catos::Node parent{};
+        catos::Node child{};
 
         root.initialize("root");
 

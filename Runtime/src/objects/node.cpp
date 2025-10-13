@@ -28,11 +28,11 @@ void catos::Node::render() {
 
 }
 
-void catos::Node::destroy() {
+void catos::Node::destroy(bool bin_children) {
 
     for (auto child: _children) {
         child->destroy();
-        if (_manage_memory) {
+        if (bin_children) {
             delete child;
         }
     }

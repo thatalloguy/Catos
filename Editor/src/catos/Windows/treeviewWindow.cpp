@@ -5,6 +5,7 @@
 #include "treeviewWindow.h"
 #include "../Editor/utils.h"
 #include "../Editor/actions/reparentNodeAction.h"
+#include "../Editor/actions/deleteNodeAction.h"
 
 using namespace catos;
 
@@ -41,7 +42,14 @@ namespace {
             node
         });
 
+        if (selected_node == node) selected_node = node->get_parent();
         node->destroy();
+
+
+        ActionManager::push_present_stack(new actions::DeleteNodeAction{
+                node
+        });
+
     }
 
 
