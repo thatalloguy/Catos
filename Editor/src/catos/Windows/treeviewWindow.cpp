@@ -4,6 +4,7 @@
 
 #include "treeviewWindow.h"
 #include "../Editor/utils.h"
+#include "../Editor/actions/reparentNodeAction.h"
 
 using namespace catos;
 
@@ -275,7 +276,15 @@ namespace {
     void updateDragDrop() {
 
         if (payload_node && target_node) {
+            Node* prev_parent = payload_node->get_parent();
+
             payload_node->set_parent(target_node);
+
+            ActionManager::push_present_stack(new actions::ReparentNodeAction{
+                    prev_parent,
+                    payload_node->get_parent(),
+                    payload_node
+            });
 
             payload_node = nullptr;
             target_node = nullptr;
