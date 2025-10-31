@@ -5,41 +5,34 @@
 
 #include "core/entry_point.h"
 
-
-typedef void(* PluginEntryPointFn)(catos::Registry& registry);
+#include <direct.h>
 
 int main() {
 
+
     catos::Registry registry{};
 
-    //game.initializeSystems();
+    catos::Game game{
+        catos::GameCreationInfo{
+            "../../../Resources/test.dll"
+        },
+        registry
+    };
 
-    catos::Platform platform{};
 
-    void* lib = platform.load_shared_library("../../../Resources/test.dll");
+    game.initializeSystems();
+    game.loadProject();
 
-    if (lib) {
-        PluginEntryPointFn func = (PluginEntryPointFn) platform.get_proc_adress(lib, "catos_entry_point");
-        if (func) {
-            func(registry);
-        } else {
-            spdlog::error("Could not find function: {} {}",  (void*) lib, (void*) func);
-        }
-    } else {
-        spdlog::error("Could not load lib");
+
+
+
+    while (game.is_alive()) {
+        game.update();
+
+        game.render();
     }
 
-    platform.free_shared_library(lib);
-
-
-    //
-    // while (game.is_alive()) {
-    //     game.update();
-    //
-    //     game.render();
-    // }
-
-    // game.destroySystems();
+    game.destroySystems();
 
     return 0;
 }

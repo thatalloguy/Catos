@@ -14,6 +14,13 @@
 
 namespace catos {
 
+    class Registry;
+
+    typedef void(* PluginEntryPointFn)(Registry* registry);
+    typedef void(* PluginUpdatePointFn)(float delta_time);
+    typedef void(* PluginRenderPointFn)();
+    typedef void(* PluginRenderPointFn)();
+
 
     class Platform {
     public:

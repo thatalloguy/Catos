@@ -5,15 +5,20 @@
 
 #ifndef CATOS_VERSION
 #define CATOS_VERSION "0.0.1"
-#include "core/registry.h"
-#include "core/window.h"
-#include "renderer/renderer.h"
 #endif
 
-#include "core/application.h"
-#include "stl/string.h"
+
+#include <core/timer.h>
+#include <core/platform.h>
+#include <core/window.h>
+#include <renderer/renderer.h>
+
+#include <core/application.h>
+#include <stl/string.h>
 
 namespace catos {
+
+    class Registry;
 
     namespace player_utils {
 
@@ -27,11 +32,11 @@ namespace catos {
         string engine_version{CATOS_VERSION};
     };
 
-    class game: public App {
+    class Game: public App {
 
     public:
-        game(const GameCreationInfo& info);
-        virtual ~game();
+        Game(const GameCreationInfo& info, Registry& registry);
+        ~Game();
 
         virtual void initializeSystems();
         virtual void loadProject();
@@ -44,8 +49,18 @@ namespace catos {
         virtual void destroySystems();
 
     protected:
+        Registry& _registry;
+        Timer _frame_timer{};
         Window _window{};
         Renderer& _renderer{Renderer::getInstance()};
+
+        string _lib_path;
+        Platform _platform{};
+        void* _lib = nullptr;
+
+        PluginEntryPointFn _entry_func{nullptr};
+        PluginUpdatePointFn _update_func{nullptr};
+        PluginRenderPointFn _render_func{nullptr};
 
 
     };

@@ -1,16 +1,12 @@
 //
 // Created by allos on 5/5/2024.
 //
-
-
 #pragma once
 
-#include "types.h"
 #include <unordered_map>
 #include <typeinfo>
 
 namespace catos {
-
 
     /// Main class that holds all information.
     class App {
