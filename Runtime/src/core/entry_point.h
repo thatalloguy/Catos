@@ -15,6 +15,8 @@ extern "C" {
 #endif
 
     CATOS_API void catos_entry_point(catos::Registry& registry);
+    CATOS_API void catos_update(float delta_time);
+    CATOS_API void catos_render();
 
 
 #ifdef __cplusplus
