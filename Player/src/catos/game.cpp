@@ -68,13 +68,14 @@ bool catos::Game::is_alive() {
 void catos::Game::update() {
     float delta_time = _frame_timer.elapsed() * 10;
     _frame_timer.reset();
+     if (_lib)  _render_func();
     _window.update();
 
     if (_lib) _update_func(delta_time);
 }
 
 void catos::Game::render() {
-   if (_lib)  _render_func();
+
 }
 
 void catos::Game::destroySystems() {

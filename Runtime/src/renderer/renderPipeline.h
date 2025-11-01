@@ -31,7 +31,7 @@ namespace catos {
 
         RenderPipelineStatus setBeginPass(RenderPass& pass);
 
-        RenderPipelineStatus addMesh(LoadedMesh& mesh);
+        RenderPipelineStatus addMesh(Mesh& mesh);
 
         void draw(Matrix4& camera);
 
@@ -43,7 +43,7 @@ namespace catos {
         Renderer& _renderer;
 
         RenderPass* beginPass;
-        vector<LoadedMesh*> _meshes;
+        vector<Mesh*> _meshes;
 
     };
 

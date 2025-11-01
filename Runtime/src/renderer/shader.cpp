@@ -78,6 +78,7 @@ catos::ShaderProgram catos::Shader::loadShader(const char *src, catos::ShaderTyp
     if (!success) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         spdlog::error("Shader Compilation Error: {}", infoLog);
+        spdlog::info("Source: {}", src);
         throw ShaderStatus::COMPILATION_FAILED;
     }
 

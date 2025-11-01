@@ -55,8 +55,8 @@ namespace catos::renderPasses {
         void onPassEnd(RenderPass& pass) override;
 
 
-        void onMeshPrepare(RenderPass& pass, LoadedMesh& mesh) override;
-        void onMeshEnd(RenderPass& pass, LoadedMesh& mesh) override;
+        void onMeshPrepare(RenderPass& pass, Mesh& mesh) override;
+        void onMeshEnd(RenderPass& pass, Mesh& mesh) override;
 
         void addDirectLight(DirectLightUniform& light);
         void addPointLight(PointLightUniform& light);

@@ -17,7 +17,7 @@ catos::RenderPipelineStatus catos::RenderPipeline::setBeginPass(RenderPass& pass
 }
 
 
-catos::RenderPipelineStatus catos::RenderPipeline::addMesh(LoadedMesh& mesh) {
+catos::RenderPipelineStatus catos::RenderPipeline::addMesh(Mesh& mesh) {
     _meshes.push_back(&mesh);
 
     return RenderPipelineStatus::SUCCESS;
@@ -53,8 +53,8 @@ void catos::RenderPipeline::draw(Matrix4& cameraMat) {
         for (auto mesh: _meshes) {
             pass->getShader().bind();
             //todo need better way to do this :|
-            pass->getShader().setInt("albedo", 1);
-            pass->getShader().setTransform("cameraMat", cameraMat.value_ptr());
+            // pass->getShader().setInt("albedo", 1);
+            pass->getShader().setTransform("cam", cameraMat.value_ptr());
 
             if (previous != nullptr) {
                 glActiveTexture(GL_TEXTURE0);

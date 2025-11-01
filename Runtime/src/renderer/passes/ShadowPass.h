@@ -15,8 +15,8 @@ namespace catos::renderPasses {
 
         void onPassPrepare(RenderPass& pass, Matrix4& camera_matrix) override;
         void onPassEnd(RenderPass& pass) override;
-        void onMeshPrepare(RenderPass& pass, LoadedMesh& mesh) override;
-        void onMeshEnd(RenderPass& pass, LoadedMesh& mesh) override;
+        void onMeshPrepare(RenderPass& pass, Mesh& mesh) override;
+        void onMeshEnd(RenderPass& pass, Mesh& mesh) override;
         void setDistance(float new_distance);
         void setOrigin(const Vector3i& vec);
         void setDirection(const Vector3i& vec);

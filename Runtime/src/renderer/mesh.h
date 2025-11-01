@@ -43,7 +43,7 @@ namespace catos {
 
         float* transform;
 
-        void init(MeshCreationInfo& meshCreationInfo) {
+        void init(const MeshCreationInfo& meshCreationInfo) {
             //Generate needed buffers
             glGenBuffers(1, &VBO);
             glGenVertexArrays(1, &VAO);
@@ -83,7 +83,7 @@ namespace catos {
         {
             glBindVertexArray(VAO);
             shader.setTransform("transform", transform);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDrawArrays(GL_TRIANGLES, 0, size);
 
         }
 

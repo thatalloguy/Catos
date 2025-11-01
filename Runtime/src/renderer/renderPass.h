@@ -49,8 +49,8 @@ namespace catos {
         virtual void onPassEnd(RenderPass& pass) {};
 
 
-        virtual void onMeshPrepare(RenderPass& pass, LoadedMesh& mesh) {};
-        virtual void onMeshEnd(RenderPass& pass, LoadedMesh& mesh) {};
+        virtual void onMeshPrepare(RenderPass& pass, Mesh& mesh) {};
+        virtual void onMeshEnd(RenderPass& pass, Mesh& mesh) {};
 
     };
 
